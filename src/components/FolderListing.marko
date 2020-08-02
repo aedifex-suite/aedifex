@@ -1,0 +1,61 @@
+import path from 'path'
+import chokidar from 'chokidar'
+
+class {
+  onCreate(input) {
+    this.state = {
+      root: '',
+      selected: {},
+      focused: '',
+      opened: [],
+      files: [],
+      ready: false,
+    }
+
+    if (input.dir) {
+      this.watchDir(input.dir)
+    }
+  }
+  onDestroy() {
+    this.watcher.close()
+  }
+  watchDir(dir) {
+    const w = chokidar.watch(['**.yaml', '**.yml'], {
+      ignored: /(^|[\/\\])\../, // ignore dotfiles
+      cwd: dir,
+      persistent: true
+    })
+    w
+    .on('add', p => {
+      this.state.files.push(p)
+    })
+    .on('unlink', p => {
+      this.state.files = this.state.files.filter(f=>f!==p)
+    })
+    .on('ready', () => {
+      this.state.root = dir
+      this.state.ready = true
+    })
+    this.watcher = w
+  }
+  clickItem(p) {
+    this.state.focused = p
+    this.emit('select', path.resolve(this.state.root, p))
+  }
+}
+
+style {
+  .FolderListing {
+    list-style: none;
+    padding: 0; margin:0;
+  }
+  .FolderListing__item {
+  }
+  .FolderListing__item.-focused {
+    border: 1px solid red;
+  }
+}
+
+ul.FolderListing
+  for|item, index| of=state.files
+    li.FolderListing__item on-click('clickItem', item) class=[state.focused===item?'-focused':null] -- ${index}: ${item}

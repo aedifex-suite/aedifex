@@ -1,0 +1,108 @@
+import { remote } from 'electron'
+import YAMLFile from '../models/YAMLFile'
+import BestiaryEntrySchema from '../schemata/BestiaryEntrySchema'
+import * as fs from 'fs'
+import * as path from 'path'
+
+class {
+  onCreate() {
+    this.state = {
+      files: [],
+      selectedFilepath: '',
+      selectedID: '',
+    }
+    // Add YAMLFile entries.
+    YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
+    // TODO: If previous run had open files, restore those instead of making a new file.
+    this.state.files.push(new YAMLFile(''))
+  }
+  openFile(p, fullPath) {
+    console.log('select:', p)
+    if (!this.state.files.find(f=>f.path===p)) {
+      let f = new YAMLFile(p)
+      this.state.files.push(f)
+    }
+    this.state.selectedFilepath = p
+  }
+  selectFile(item, index) {
+    this.state.selectedID = item.id
+  }
+}
+
+style {
+  :root {
+    --primary: #51789d;
+    --secondary: #0c1a13;
+    --tertiary: #667e94;
+    --quaternary: #f3e5ec;
+  }
+  @font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/PTSans-Regular.ttf');
+  }
+  @font-face {
+    font-family: 'PT Sans';
+    font-style: italic;
+    font-weight: 400;
+    src: url('../assets/fonts/PTSans-Italic.ttf');
+  }
+  @font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../assets/fonts/PTSans-Bold.ttf');
+  }
+  @font-face {
+    font-family: 'PT Sans';
+    font-style: italic;
+    font-weight: 700;
+    src: url('../assets/fonts/PTSans-BoldItalic.ttf');
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    height: 100%;
+  }
+  body {
+    background-color: black;
+    color: var(--secondary);
+    margin: 0;
+    height: 100%;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
+    font-family: 'PT Sans', sans-serif;
+  }
+  [draggable] {
+    user-select: none;
+  }
+  .Main {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .Main__Left {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+div.Main
+  div.Main__Left
+    FolderListing dir='.' glob='**.ya?ml' on-select('openFile')
+  div.Main__Right
+    $ let file = state.files.find(f=>f.path===state.selectedID)
+    Tabs tabs=state.files.map(f=>({
+        id: f.path,
+        title: f.title,
+        icon: file?file.type+"-icon.png":'',
+      })) selected=state.selectedID on-select('selectFile')
+      if(file)
+        FileView file=file
+      else
+        div -- unreadable file

@@ -1,0 +1,52 @@
+class {
+  selectFile(item, index) {
+    this.emit('select', item, index)
+  }
+}
+style {
+  :root {
+    --content-bg: #222;
+    --tab-bg: #333;
+  }
+  .Tabs {
+  }
+  .Tabs__List {
+    display: flex;
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .Tabs__List__Item {
+    padding: 0; margin: 0;
+    display: flex;
+    align-items: center;
+    padding: .15em .5em;
+    border-left: 1px solid var(--content-bg);
+    border-right: 1px solid var(--content-bg);
+    background: var(--tab-bg);
+    font-size: 13px;
+    color: #888;
+  }
+  .Tabs__List__Item__Title {
+    padding: .25em .5em;
+    letter-spacing: .025rem;
+  }
+  .Tabs__List__Item.-selected {
+    background: var(--content-bg);
+    color: #ccc;
+  }
+  .Tabs__Content {
+    background: var(--content-bg);
+  }
+}
+
+div.Tabs
+  ul.Tabs__List
+    for|item, index| of=input.tabs
+      li.Tabs__List__Item class=[
+        item.id === input.selected ? '-selected' : null,
+      ] on-click('selectFile', item, index)
+        if(item.icon)
+          img.Tabs__List__Item__Icon src='assets/'+item.icon
+        span.Tabs__List__Item__Title -- ${item.title}
+  div.Tabs__Content
+    <${input.renderBody}/>

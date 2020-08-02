@@ -1,0 +1,22 @@
+class {
+}
+
+style {
+  .FileView {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .FileView__Editor {
+  }
+  .FileView__Viewer {
+  }
+}
+
+div.FileView
+  div.FileView__Editor
+    if(input.file.type === 'bestiary')
+      BestiaryEditor file=input.file
+  div.FileView__Viewer
+    if(input.file.type === 'bestiary')
+      BestiaryViewer file=input.file
