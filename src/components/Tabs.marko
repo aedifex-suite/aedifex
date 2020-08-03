@@ -1,6 +1,10 @@
 class {
-  selectFile(item, index) {
+  selectFile(item, index, e) {
     this.emit('select', item, index)
+  }
+  closeFile(item, index, e) {
+    e.stopPropagation()
+    this.emit('close', item, index)
   }
 }
 style {
@@ -31,6 +35,8 @@ style {
   .Tabs__List__Item__Close {
     transition: opacity .2s;
     opacity: 0;
+    min-width: 1em;
+    min-height: 1em;
   }
   .Tabs__List__Item:hover .Tabs__List__Item__Close {
     opacity: 1.0;
@@ -57,6 +63,6 @@ div.Tabs
         if(item.icon)
           img.Tabs__List__Item__Icon src='assets/'+item.icon
         span.Tabs__List__Item__Title -- ${item.title}
-        span.Tabs__List__Item__Close -- &times;
+        span.Tabs__List__Item__Close on-click('closeFile', item, index) -- &times;
   div.Tabs__Content
     <${input.renderBody}/>
