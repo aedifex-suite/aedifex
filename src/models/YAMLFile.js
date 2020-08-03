@@ -4,11 +4,27 @@ const fs = require('fs').promises
 const path = require('path')
 
 class YAMLFile extends unreson.StateObject {
-  constructor(p) {
+  constructor(p, type) {
     super()
     this._path = p
     this._loaded = false
-    this.load()
+    this._saved = true
+    this._type = type
+
+    this._id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
+
+    this.addListener('change', () => {
+      this._saved = false
+    })
+    this.addListener('undo', () => {
+      this._saved = false
+    })
+    this.addListener('redo', () => {
+      this._saved = false
+    })
   }
 
   async load() {
@@ -24,7 +40,9 @@ class YAMLFile extends unreson.StateObject {
         this._state = obj
       }
     } else {
-      this._type = Object.keys(YAMLFile._typeMap)[0]
+      if (!this._type) {
+        this._type = Object.keys(YAMLFile._typeMap)[0]
+      }
       let schm = YAMLFile._typeMap[this._type]
       if (schm) {
         this._state = schm.create()
@@ -33,6 +51,28 @@ class YAMLFile extends unreson.StateObject {
   }
 
   async save() {
+    let text = yaml.stringify(this._state)
+    let result = await fs.writeFile(this.path, text, {encoding: 'utf8'})
+    if (!result) {
+      this._saved = true
+      return true
+    }
+    return false
+  }
+
+  // unsaved returns if the file has unsaved changes.
+  get unsaved() {
+    return !this._saved
+  }
+
+  // close closes the file.
+  async close() {
+    return true
+  }
+
+  // id gets the unique random ID of the file.
+  get id() {
+    return this._id
   }
 
   // path returns the full underlying path of the file.
