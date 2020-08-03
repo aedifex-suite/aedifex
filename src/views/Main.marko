@@ -1,4 +1,3 @@
-import { remote } from 'electron'
 import YAMLFile from '../models/YAMLFile'
 import BestiaryEntrySchema from '../schemata/BestiaryEntrySchema'
 import * as fs from 'fs'
@@ -34,39 +33,20 @@ class {
   async closeFile(item, index) {
     let file = this.state.files.find(f=>f.id===item.id)
     if (file) {
-      if (file.unsaved) {
-        let result = remote.dialog.showMessageBoxSync({
-          type: "question",
-          buttons: ["Save", "Don't Save", "Cancel"],
-          defaultId: 2,
-          title: "Unsaved changes",
-          message: `Do you want to save the changes you made to ${file.path}?`,
-          detail: "Your changes will be lost if you don't save them.",
-        })
-        let shouldClose = false
-        if (result === 0) { // Save
-          result = await file.save()
-          if (result) {
-            shouldClose = true
+      let result = await file.close()
+      if (result === 'close') {
+        if (item.id === this.state.selectedID) {
+          let prev = this.state.files[index-1]
+          let next = this.state.files[index+1]
+          if (next) {
+            this.state.selectedID = next.id
+          } else if (prev) {
+            this.state.selectedID = prev.id
+          } else {
+            this.state.selectedID = ''
           }
-        } else if (result === 1) { // Don't Save
-          shouldClose = true
         }
-        if (shouldClose) {
-          // If we closed the selected ID, select a different file.
-          if (item.id === this.state.selectedID) {
-            let prev = this.state.files[index-1]
-            let next = this.state.files[index+1]
-            if (next) {
-              this.state.selectedID = next.id
-            } else if (prev) {
-              this.state.selectedID = prev.id
-            } else {
-              this.state.selectedID = ''
-            }
-          }
-          this.state.files = this.state.files.filter(f=>f.id!==file.id)
-        }
+        this.state.files = this.state.files.filter(f=>f.id!==file.id)
       }
     }
   }
@@ -136,6 +116,11 @@ style {
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
   }
+  .Main__Right {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 div.Main
@@ -150,7 +135,4 @@ div.Main
         title: f.title,
         icon: (file?file.type:'undefined')+"-icon.png",
       })) selected=state.selectedID on-select('selectFile') on-close('closeFile')
-      if(file)
-        FileView file=file
-      else
-        div -- unreadable file
+      FileView file=file
