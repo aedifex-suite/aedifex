@@ -7,16 +7,29 @@ style {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
   }
+  .FileView.-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .FileView__Message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .FileView__Editor {
   }
   .FileView__Viewer {
   }
 }
 
-div.FileView
-  div.FileView__Editor
-    if(input.file.type === 'bestiary')
-      BestiaryEditor file=input.file
-  div.FileView__Viewer
-    if(input.file.type === 'bestiary')
-      BestiaryViewer file=input.file
+if(input.file)
+  div.FileView
+      div.FileView__Editor
+        if(input.file.type === 'bestiary')
+          BestiaryEditor file=input.file
+      div.FileView__Viewer
+        if(input.file.type === 'bestiary')
+          BestiaryViewer file=input.file
+else
+  div.FileView.-single
+    div.FileView__Message
+      span -- Open or Create a file.
