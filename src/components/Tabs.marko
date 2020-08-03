@@ -14,6 +14,7 @@ style {
     display: flex;
     list-style: none;
     padding: 0; margin: 0;
+    user-select: none;
   }
   .Tabs__List__Item {
     padding: 0; margin: 0;
@@ -25,6 +26,14 @@ style {
     background: var(--tab-bg);
     font-size: 13px;
     color: #888;
+    cursor: pointer;
+  }
+  .Tabs__List__Item__Close {
+    transition: opacity .2s;
+    opacity: 0;
+  }
+  .Tabs__List__Item:hover .Tabs__List__Item__Close {
+    opacity: 1.0;
   }
   .Tabs__List__Item__Title {
     padding: .25em .5em;
@@ -48,5 +57,6 @@ div.Tabs
         if(item.icon)
           img.Tabs__List__Item__Icon src='assets/'+item.icon
         span.Tabs__List__Item__Title -- ${item.title}
+        span.Tabs__List__Item__Close -- &times;
   div.Tabs__Content
     <${input.renderBody}/>
