@@ -11,8 +11,15 @@ class {
       files: [],
       ready: false,
     }
-
+    
     if (input.dir) {
+      this.watchDir(input.dir)
+    }
+  }
+  onInput(input) {
+    if (!this.state) return
+    if (this.watcher) this.watcher.close()
+    if (this.state.root !== input.dir) {
       this.watchDir(input.dir)
     }
   }
