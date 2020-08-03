@@ -14,15 +14,61 @@ class {
     // Add YAMLFile entries.
     YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
     // TODO: If previous run had open files, restore those instead of making a new file.
-    this.state.files.push(new YAMLFile(''))
+    this.newFile('bestiary')
   }
-  openFile(p, fullPath) {
-    console.log('select:', p)
+  async newFile(type) {
+    let f = new YAMLFile('', type)
+    await f.load()
+    this.state.files.push(f)
+      this.state.selectedID = f.id
+  }
+  async openFile(p, fullPath) {
     if (!this.state.files.find(f=>f.path===p)) {
       let f = new YAMLFile(p)
+      await f.load()
       this.state.files.push(f)
+      this.state.selectedID = f.id
     }
     this.state.selectedFilepath = p
+  }
+  async closeFile(item, index) {
+    let file = this.state.files.find(f=>f.id===item.id)
+    if (file) {
+      if (file.unsaved) {
+        let result = remote.dialog.showMessageBoxSync({
+          type: "question",
+          buttons: ["Save", "Don't Save", "Cancel"],
+          defaultId: 2,
+          title: "Unsaved changes",
+          message: `Do you want to save the changes you made to ${file.path}?`,
+          detail: "Your changes will be lost if you don't save them.",
+        })
+        let shouldClose = false
+        if (result === 0) { // Save
+          result = await file.save()
+          if (result) {
+            shouldClose = true
+          }
+        } else if (result === 1) { // Don't Save
+          shouldClose = true
+        }
+        if (shouldClose) {
+          // If we closed the selected ID, select a different file.
+          if (item.id === this.state.selectedID) {
+            let prev = this.state.files[index-1]
+            let next = this.state.files[index+1]
+            if (next) {
+              this.state.selectedID = next.id
+            } else if (prev) {
+              this.state.selectedID = prev.id
+            } else {
+              this.state.selectedID = ''
+            }
+          }
+          this.state.files = this.state.files.filter(f=>f.id!==file.id)
+        }
+      }
+    }
   }
   selectFile(item, index) {
     this.state.selectedID = item.id
@@ -87,21 +133,23 @@ style {
   }
   .Main__Left {
     display: grid;
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 div.Main
   div.Main__Left
+    Toolbar
+      button -- &#128193;
     FolderListing dir='.' glob='**.ya?ml' on-select('openFile')
   div.Main__Right
-    $ let file = state.files.find(f=>f.path===state.selectedID)
+    $ let file = state.files.find(f=>f.id===state.selectedID)
     Tabs tabs=state.files.map(f=>({
-        id: f.path,
+        id: f.id,
         title: f.title,
-        icon: file?file.type+"-icon.png":'',
-      })) selected=state.selectedID on-select('selectFile')
+        icon: (file?file.type:'undefined')+"-icon.png",
+      })) selected=state.selectedID on-select('selectFile') on-close('closeFile')
       if(file)
         FileView file=file
       else
