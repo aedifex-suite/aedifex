@@ -2,6 +2,7 @@ const yaml = require('yaml')
 const unreson = require('unreson')
 const fs = require('fs').promises
 const path = require('path')
+const dialog = require('electron').remote.dialog
 
 class YAMLFile extends unreson.StateObject {
   constructor(p, type) {
@@ -67,7 +68,28 @@ class YAMLFile extends unreson.StateObject {
 
   // close closes the file.
   async close() {
-    return true
+    let shouldClose = false
+    if (!this._saved) {
+      let result = dialog.showMessageBoxSync({
+        type: "question",
+        buttons: ["Save", "Don't Save", "Cancel"],
+        defaultId: 2,
+        title: "Unsaved changes",
+        message: `Do you want to save the changes you made to ${this.path}?`,
+        detail: "Your changes will be lost if you don't save them.",
+      })
+      if (result === 0) { // Save
+        result = await this.save()
+        if (result) {
+          return 'close'
+        }
+      } else if (result === 1) { // Don't Save
+        return 'close'
+      }
+    } else {
+      return 'close'
+    }
+    return 'cancel'
   }
 
   // id gets the unique random ID of the file.
