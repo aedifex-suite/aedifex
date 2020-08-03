@@ -20,6 +20,7 @@ class {
     if (!this.state) return
     if (this.watcher) this.watcher.close()
     if (this.state.root !== input.dir) {
+      this.state.files = []
       this.watchDir(input.dir)
     }
   }
@@ -53,16 +54,30 @@ class {
 
 style {
   .FolderListing {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .FolderListing__Header {
+    font-weight: bold;
+    color: #888;
+  }
+  .FolderListing__Items {
     list-style: none;
     padding: 0; margin:0;
+    background: #222;
   }
-  .FolderListing__item {
+  .FolderListing__Items__item {
+    color: #888;
   }
-  .FolderListing__item.-focused {
-    border: 1px solid red;
+  .FolderListing__Items__item.-focused {
+    color: #ccc;
+    background: #444;
   }
 }
 
-ul.FolderListing
-  for|item, index| of=state.files
-    li.FolderListing__item on-click('clickItem', item) class=[state.focused===item?'-focused':null] -- ${index}: ${item}
+div.FolderListing
+  header.FolderListing__Header -- ${path.basename(state.root)}
+  ul.FolderListing__Items
+    for|item, index| of=state.files
+      li.FolderListing__Items__item on-click('clickItem', item) class=[state.focused===item?'-focused':null] -- ${index}: ${item}

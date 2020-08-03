@@ -2,6 +2,7 @@ import YAMLFile from '../models/YAMLFile'
 import BestiaryEntrySchema from '../schemata/BestiaryEntrySchema'
 import * as fs from 'fs'
 import * as path from 'path'
+import { remote } from 'electron'
 
 class {
   onCreate() {
@@ -9,6 +10,7 @@ class {
       files: [],
       selectedFilepath: '',
       selectedID: '',
+      openDir: '',
     }
     // Add YAMLFile entries.
     YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
@@ -52,6 +54,16 @@ class {
   }
   selectFile(item, index) {
     this.state.selectedID = item.id
+  }
+  openDir() {
+    let [result] = remote.dialog.showOpenDialogSync({
+      title: "Open Directory",
+      properties: ['openDirectory'],
+    })
+
+    if (result) {
+      this.state.openDir = result
+    }
   }
 }
 
@@ -126,8 +138,11 @@ style {
 div.Main
   div.Main__Left
     Toolbar
-      button -- &#128193;
-    FolderListing dir='.' glob='**.ya?ml' on-select('openFile')
+      button on-click('openDir') -- &#128193;
+    if(state.openDir)
+      FolderListing dir=state.openDir glob='**.ya?ml' on-select('openFile')
+    else
+      div
   div.Main__Right
     $ let file = state.files.find(f=>f.id===state.selectedID)
     Tabs tabs=state.files.map(f=>({
