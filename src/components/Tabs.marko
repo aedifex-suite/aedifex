@@ -9,8 +9,9 @@ class {
 }
 style {
   :root {
-    --content-bg: #222;
-    --tab-bg: #333;
+    --content-bg: #141414;
+    --tabs-bg: #181818;
+    --tab-bg: #222;
   }
   .Tabs {
     display: grid;
@@ -22,6 +23,7 @@ style {
     list-style: none;
     padding: 0; margin: 0;
     user-select: none;
+    background: var(--tabs-bg);
   }
   .Tabs__List__Item {
     padding: 0; margin: 0;
@@ -42,6 +44,9 @@ style {
     min-height: 1em;
   }
   .Tabs__List__Item:hover .Tabs__List__Item__Close {
+    opacity: 1.0;
+  }
+  .Tabs__List__Item.-selected .Tabs__List__Item__Close {
     opacity: 1.0;
   }
   .Tabs__List__Item__Title {
