@@ -31,7 +31,7 @@ function createMainWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
-    frame: false,
+    frame: process.platform === 'win32' ? false : true,
   })
   window.removeMenu()
 
