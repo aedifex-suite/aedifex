@@ -68,12 +68,13 @@ class {
       this.state.selectedID = f.id
   }
   async openFile(p, fullPath) {
-    if (!this.state.files.find(f=>f.path===p)) {
-      let f = new YAMLFile(p)
+    let f = this.state.files.find(f=>f.path===p)
+    if (!f) {
+      f = new YAMLFile(p)
       await f.load()
       this.state.files.push(f)
-      this.state.selectedID = f.id
     }
+    this.state.selectedID = f.id
     this.state.selectedFilepath = p
   }
   async closeFile(item, index) {
