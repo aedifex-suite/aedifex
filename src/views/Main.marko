@@ -1,21 +1,63 @@
+import { ipcRenderer } from 'electron'
 import YAMLFile from '../models/YAMLFile'
 import BestiaryEntrySchema from '../schemata/BestiaryEntrySchema'
 import * as fs from 'fs'
 import * as path from 'path'
 import { remote } from 'electron'
+import * as _Config from '../models/_Config'
 
 class {
   onCreate() {
+    _Config.load({
+      win: {
+        x: 0,
+        y: 0,
+        width: 1280,
+        height: 720,
+        fullscreen: false,
+      },
+      openFiles: [],
+    })
+
     this.state = {
       files: [],
       selectedFilepath: '',
       selectedID: '',
       openDir: '',
     }
+
     // Add YAMLFile entries.
     YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
-    // TODO: If previous run had open files, restore those instead of making a new file.
-    this.newFile('bestiary')
+
+    // Restore files or show empty file.
+    if (_Config.settings.openFiles.length > 0) {
+      for (let p of _Config.settings.openFiles) {
+        this.openFile(p)
+      }
+    } else {
+      this.newFile('bestiary')
+    }
+
+    // Add hook for app closing.
+    ipcRenderer.on('app-close', _ => {
+      this.close()
+    })
+  }
+  async close() {
+    _Config.settings.openFiles = []
+    for (let file of this.state.files) {
+      // Attempt to close the file and bail out of program close if cancel is pressed.
+      let result = await file.close()
+      if (result === 'cancel') {
+        return
+      }
+      // Otherwise store in the openFiles list.
+      if (file.path !== "") {
+        _Config.settings.openFiles.push(file.path)
+      }
+    }
+    await _Config.save(true)
+    ipcRenderer.send('closed')
   }
   async newFile(type) {
     let f = new YAMLFile('', type)
