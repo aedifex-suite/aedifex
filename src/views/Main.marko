@@ -17,13 +17,14 @@ class {
         fullscreen: false,
       },
       openFiles: [],
+      openDir: '',
     })
 
     this.state = {
       files: [],
       selectedFilepath: '',
       selectedID: '',
-      openDir: '',
+      openDir: _Config.settings.openDir,
     }
 
     // Add YAMLFile entries.
@@ -45,6 +46,7 @@ class {
   }
   async close() {
     _Config.settings.openFiles = []
+    _Config.settings.openDir = this.state.openDir
     for (let file of this.state.files) {
       // Attempt to close the file and bail out of program close if cancel is pressed.
       let result = await file.close()
