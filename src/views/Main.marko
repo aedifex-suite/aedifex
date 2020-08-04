@@ -136,15 +136,15 @@ style {
 }
 
 div.Main
+  $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
     Toolbar
       button on-click('openDir') -- &#128193;
     if(state.openDir)
-      FolderListing dir=state.openDir glob='**.ya?ml' on-select('openFile')
+      FolderListing dir=state.openDir on-select('openFile') selected=file?file.path:''
     else
       div
   div.Main__Right
-    $ let file = state.files.find(f=>f.id===state.selectedID)
     Tabs tabs=state.files.map(f=>({
         id: f.id,
         title: f.title,
