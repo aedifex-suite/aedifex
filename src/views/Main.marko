@@ -155,7 +155,7 @@ style {
     margin: 0;
     height: 100%;
     display: grid;
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
     overflow: hidden;
     font-family: 'PT Sans', sans-serif;
@@ -180,6 +180,9 @@ style {
   }
 }
 
+Titlebar title='aedifex'
+  @menu
+    div -- File
 div.Main
   $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
