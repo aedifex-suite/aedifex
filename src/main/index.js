@@ -1,25 +1,37 @@
 'use strict'
 
 const electron      = require('electron')
+const ipc           = electron.ipcMain
 const app           = electron.app
 const BrowserWindow = electron.BrowserWindow
 const path  = require('path')
 const os    = require('os')
 const formatUrl = require('url').format
 
-require('electron-reload')(__dirname)
+const isDevelopment = (process.env.NODE_ENV || 'development') === 'development'
+const liveReload = !process.env.NO_LIVE_RELOAD
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+if (liveReload) {
+  try {
+    require('electron-reload')(__dirname, {
+      electron: path.resolve(__dirname, '..', 'node_modules', '.bin', 'electron'+(process.platform=='win32'?'.cmd':''))
+    })
+  } catch(e) {
+    console.log(e)
+  }
+}
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
+let status = 0
 
 function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-    }
+    },
+    frame: false,
   })
   window.removeMenu()
 
@@ -32,6 +44,13 @@ function createMainWindow() {
     protocol: 'file',
     slashes: true
   }))
+
+  window.on('close', e => {
+    if (status == 0) {
+      e.preventDefault()
+      window.webContents.send('app-close')
+    }
+  })
 
   window.on('closed', () => {
     mainWindow = null
@@ -78,6 +97,11 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   mainWindow = createMainWindow()
+})
+
+ipc.on('closed', _ => {
+  status = 1
+  app.quit()
 })
 
 // disable hardware acceleration on arm platforms for performance
