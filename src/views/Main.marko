@@ -170,7 +170,7 @@ style {
   }
   .Main__Left {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
   }
   .Main__Right {
@@ -182,12 +182,12 @@ style {
 
 Titlebar title='aedifex'
   @menu
-    div -- File
+    div
+      img src='assets/aedifex-icon.png'
+    div.Titlebar__Controls__Button on-click('openDir') -- Open Dir
 div.Main
   $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
-    Toolbar
-      button on-click('openDir') -- &#128193;
     if(state.openDir)
       FolderListing dir=state.openDir on-select('openFile') selected=file?file.path:''
     else
