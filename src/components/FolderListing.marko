@@ -72,10 +72,15 @@ style {
   .FolderListing__Items__item {
     color: #888;
     padding: .15em .5em;
+    border: 0;
+    border-left: 2px solid transparent;
   }
   .FolderListing__Items__item.-focused {
     color: #ccc;
     background: #444;
+  }
+  .FolderListing__Items__item.-selected {
+    border-left: 2px solid gold;
   }
 }
 
@@ -83,4 +88,4 @@ div.FolderListing
   header.FolderListing__Header -- ${path.basename(state.root)}
   ul.FolderListing__Items
     for|item, index| of=state.files
-      li.FolderListing__Items__item on-click('clickItem', item) class=[state.focused===item?'-focused':null] -- ${index}: ${item}
+      li.FolderListing__Items__item on-click('clickItem', item) class=[state.focused===item?'-focused':null,path.resolve(state.root, item)===input.selected?'-selected':null] -- ${item}
