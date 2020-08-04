@@ -28,7 +28,7 @@ class {
     this.watcher.close()
   }
   watchDir(dir) {
-    const w = chokidar.watch(['**.yaml', '**.yml'], {
+    const w = chokidar.watch(['**/*.yaml', '**/*.yml'], {
       ignored: /(^|[\/\\])\../, // ignore dotfiles
       cwd: dir,
       persistent: true
