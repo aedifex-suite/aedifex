@@ -1,2 +1,40 @@
+import * as dd from 'dot-dotty'
 
-div -- bestiary viewer!
+class {
+  onCreate(input) {
+    this.onFileUpdate = this.onFileUpdate.bind(this)
+    if (input.file) {
+      input.file.on('change', this.onFileUpdate)
+      input.file.on('undo', this.onFileUpdate)
+      input.file.on('redo', this.onFileUpdate)
+    }
+  }
+  onDestroy() {
+    if (this.input) {
+      input.file.off('change', this.onFileUpdate)
+      input.file.off('undo', this.onFileUpdate)
+      input.file.off('redo', this.onFileUpdate)
+    }
+  }
+  onFileUpdate() {
+    this.forceUpdate()
+  }
+}
+
+$ let dot = dd(input.file)
+section
+  h2 -- Defense
+  div -- AC
+  div -- HP ${Math.floor((dot['state.ability scores.con']-10)/2)}
+  div -- Fort ${Math.floor((dot['state.ability scores.con']-10)/2)}, Reflex, Will
+section
+  h2 -- Statistics
+  span
+    span -- Str
+    span -- ${dot['state.ability scores.str']}
+  span
+    span -- Dex
+    span -- ${dot['state.ability scores.dex']}
+  span
+    span -- Con
+    span -- ${dot['state.ability scores.con']}

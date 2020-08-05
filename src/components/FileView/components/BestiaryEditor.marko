@@ -1,2 +1,38 @@
+import * as dd from 'dot-dotty'
 
-div -- bestiary editor!
+class {
+  onCreate(input) {
+    this.onFileUpdate = this.onFileUpdate.bind(this)
+    if (input.file) {
+      input.file.on('change', this.onFileUpdate)
+      input.file.on('undo', this.onFileUpdate)
+      input.file.on('redo', this.onFileUpdate)
+    }
+  }
+  onDestroy() {
+    if (this.input) {
+      input.file.off('change', this.onFileUpdate)
+      input.file.off('undo', this.onFileUpdate)
+      input.file.off('redo', this.onFileUpdate)
+    }
+  }
+  onFileUpdate() {
+    this.forceUpdate()
+  }
+}
+
+style {
+}
+
+$ let dot = dd(input.file)
+section
+  h2 -- Ability Scores
+  label
+    span -- Strength
+    input type='number' value=dot['state.ability scores.str'] on-change(e=>dot['state.ability scores.str']=Number(e.target.value))
+  label
+    span -- Dexterity
+    input type='number' value=dot['state.ability scores.dex'] on-change(e=>dot['state.ability scores.dex']=Number(e.target.value))
+  label
+    span -- Constitution
+    input type='number' value=dot['state.ability scores.con'] on-change(e=>dot['state.ability scores.con']=Number(e.target.value))
