@@ -41,7 +41,7 @@ class YAMLFile extends unreson.StateObject {
         this._state = obj
       }
     } else {
-      if (!this._type) {
+      if (!this._type || typeof this._type !== 'string') {
         this._type = Object.keys(YAMLFile._typeMap)[0]
       }
       let schm = YAMLFile._typeMap[this._type]

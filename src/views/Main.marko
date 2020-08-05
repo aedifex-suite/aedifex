@@ -65,7 +65,7 @@ class {
     let f = new YAMLFile('', type)
     await f.load()
     this.state.files.push(f)
-      this.state.selectedID = f.id
+    this.state.selectedID = f.id
   }
   async openFile(p, fullPath) {
     let f = this.state.files.find(f=>f.path===p)
@@ -185,6 +185,7 @@ Titlebar title='aedifex'
     div
       img src='assets/aedifex-icon.png'
     div.Titlebar__Controls__Button on-click('openDir') -- Open Dir
+    div.Titlebar__Controls__Button on-click('newFile') -- New File
 div.Main
   $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
