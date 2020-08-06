@@ -1,6 +1,7 @@
 const schisma = require('schisma')
+const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
 
-AbilityScoreSchema = schisma({
+/*AbilityScoreSchema = schisma({
   $type: Number,
   $default: 10,
   $validate: v => {
@@ -8,7 +9,7 @@ AbilityScoreSchema = schisma({
       return 'cannot be less than 0'
     }
   }
-})
+})*/
 
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
@@ -17,12 +18,30 @@ const BestiaryEntrySchema = schisma({
     hitdie: 8,
   },
   "ability scores": {
-    str: AbilityScoreSchema,
-    dex: AbilityScoreSchema,
-    con: AbilityScoreSchema,
-    wis: AbilityScoreSchema,
-    int: AbilityScoreSchema,
-    cha: AbilityScoreSchema,
+    str: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
+    dex: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
+    con: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
+    wis: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
+    int: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
+    cha: {
+      $type: NumberValuesSchema,
+      $default: { value: 10 },
+    },
   }
 })
 

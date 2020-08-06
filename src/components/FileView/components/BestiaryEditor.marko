@@ -28,7 +28,7 @@ class {
   }
   updateAbilityScore(which, e) {
     let d = this.dot
-    let k = `state.ability scores.${which}`
+    let k = `state.ability scores.${which}.value`
     let v = Number(e.target.value)
     if (d[k] === undefined) return
     if (v < 0) {
@@ -95,12 +95,12 @@ section.Editor__Core
     span.Editor__Entry__name -- Level(s)
 section.Editor__Statistics
   h2 -- Statistics
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str']?'-errors':null]
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str.value']?'-errors':null]
     span.Editor__Entry__name -- Strength
-    input.Editor__Entry__input type='number' value=d['state.ability scores.str'] size=4 on-change('updateAbilityScore', 'str')
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex']?'-errors':null]
+    input.Editor__Entry__input type='number' value=d['state.ability scores.str.value'] size=4 on-change('updateAbilityScore', 'str')
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex.value']?'-errors':null]
     span.Editor__Entry__name -- Dexterity
-    input.Editor__Entry__input type='number' value=d['state.ability scores.dex'] size=4 on-change('updateAbilityScore', 'dex')
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con']?'-errors':null]
+    input.Editor__Entry__input type='number' value=d['state.ability scores.dex.value'] size=4 on-change('updateAbilityScore', 'dex')
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con.value']?'-errors':null]
     span.Editor__Entry__name -- Constitution
-    input.Editor__Entry__input type='number' value=d['state.ability scores.con'] size="4" on-change('updateAbilityScore', 'con')
+    input.Editor__Entry__input type='number' value=d['state.ability scores.con.value'] size="4" on-change('updateAbilityScore', 'con')

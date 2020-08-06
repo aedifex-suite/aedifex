@@ -61,9 +61,9 @@ section
   h2 -- Defense
   div -- AC
   $ let [hp, hpErr] = utils.averageHP(dot['state.core.hd'], dot['state.core.hitdie'])
-  $ let [conhp, conhpErr] = utils.conHP(dot['state.core.hd'], dot['state.ability scores.con'])
+  $ let [conhp, conhpErr] = utils.conHP(dot['state.core.hd'], dot['state.ability scores.con.value'])
   div -- HP ${hp+conhp} (${dot['state.core.hd']}d${dot['state.core.hitdie']}+${conhp})
-  div -- Fort ${Math.floor((dot['state.ability scores.con']-10)/2)}, Reflex, Will
+  div -- Fort ${Math.floor((dot['state.ability scores.con.value']-10)/2)}, Reflex, Will
 section
   h2 -- Statistics
   if(dot['state.ability scores'])
@@ -72,6 +72,6 @@ section
         span.AbilityScores__item
           $ let key = entry[0], value = entry[1]
           span.AbilityScores__item__name -- ${key}&#32; 
-          span.AbilityScores__item__value -- ${value}
+          span.AbilityScores__item__value -- ${value.value}
           if(index !== Object.entries(dot['state.ability scores']).length-1)
             span -- ,&nbsp;
