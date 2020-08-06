@@ -2,11 +2,18 @@ import * as dd from 'dot-dotty'
 
 class {
   onCreate(input) {
+    this.state = {
+      warnings: {},
+      errors: {},
+    }
     this.onFileUpdate = this.onFileUpdate.bind(this)
     if (input.file) {
       input.file.on('change', this.onFileUpdate)
       input.file.on('undo', this.onFileUpdate)
       input.file.on('redo', this.onFileUpdate)
+      this.dot = dd(input.file, {
+        throwErrors: false,
+      })
     }
   }
   onDestroy() {
@@ -19,20 +26,35 @@ class {
   onFileUpdate() {
     this.forceUpdate()
   }
+  updateAbilityScore(which, e) {
+    let d = this.dot
+    let k = `state.ability scores.${which}`
+    let v = Number(e.target.value)
+    if (d[k] === undefined) return
+    if (v < 0) {
+      this.state.errors[k] = 'cannot be less than 0'
+    } else {
+      delete this.state.errors[k]
+    }
+    d[k] = v
+  }
 }
 
 style {
+  .Entry.-errors {
+    background: rgba(255,0,0,0.5);
+  }
 }
 
-$ let dot = dd(input.file)
+$ let d = component.dot
 section
   h2 -- Ability Scores
-  label
+  label.Entry.AbilityScore class=[state.errors['state.ability scores.str']?'-errors':null]
     span -- Strength
-    input type='number' value=dot['state.ability scores.str'] on-change(e=>dot['state.ability scores.str']=Number(e.target.value))
-  label
+    input type='number' value=d['state.ability scores.str'] on-change('updateAbilityScore', 'str')
+  label.Entry.AbilityScore class=[state.errors['state.ability scores.dex']?'-errors':null]
     span -- Dexterity
-    input type='number' value=dot['state.ability scores.dex'] on-change(e=>dot['state.ability scores.dex']=Number(e.target.value))
-  label
+    input type='number' value=d['state.ability scores.dex'] on-change('updateAbilityScore', 'dex')
+  label.Entry.AbilityScore class=[state.errors['state.ability scores.con']?'-errors':null]
     span -- Constitution
-    input type='number' value=dot['state.ability scores.con'] on-change(e=>dot['state.ability scores.con']=Number(e.target.value))
+    input type='number' value=d['state.ability scores.con'] on-change('updateAbilityScore', 'con')
