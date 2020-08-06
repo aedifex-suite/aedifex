@@ -1,3 +1,4 @@
+import * as utils from 'utils/utils'
 import * as dd from 'dot-dotty'
 
 class {
@@ -59,8 +60,8 @@ section
 section
   h2 -- Defense
   div -- AC
-  $ let hp = Math.floor((dot['state.core.hitdie']+1)/2 * dot['state.core.hd'])
-  $ let conhp = Math.floor((dot['state.ability scores.con']-10)/2) * dot['state.core.hd']
+  $ let [hp, hpErr] = utils.averageHP(dot['state.core.hd'], dot['state.core.hitdie'])
+  $ let [conhp, conhpErr] = utils.conHP(dot['state.core.hd'], dot['state.ability scores.con'])
   div -- HP ${hp+conhp} (${dot['state.core.hd']}d${dot['state.core.hitdie']}+${conhp})
   div -- Fort ${Math.floor((dot['state.ability scores.con']-10)/2)}, Reflex, Will
 section
