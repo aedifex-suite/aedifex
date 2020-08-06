@@ -91,16 +91,21 @@ section.Editor__Core
     select.Editor__Entry__input name='die' id='die' on-change('updateField', 'core.hitdie')
       for|value| of=[4,6,8,10,12]
         option value=value selected=d['state.core.hitdie']===value -- ${value}
-  label.Editor__Entry
-    span.Editor__Entry__name -- Level(s)
-section.Editor__Statistics
-  h2 -- Statistics
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str.value']?'-errors':null]
-    span.Editor__Entry__name -- Strength
-    input.Editor__Entry__input type='number' value=d['state.ability scores.str.value'] size=4 on-change('updateAbilityScore', 'str')
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex.value']?'-errors':null]
-    span.Editor__Entry__name -- Dexterity
-    input.Editor__Entry__input type='number' value=d['state.ability scores.dex.value'] size=4 on-change('updateAbilityScore', 'dex')
-  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con.value']?'-errors':null]
-    span.Editor__Entry__name -- Constitution
-    input.Editor__Entry__input type='number' value=d['state.ability scores.con.value'] size="4" on-change('updateAbilityScore', 'con')
+  Section class="Editor__Levels" default='closed'
+    @heading
+      span -- Levels
+    @content
+      button -- +
+Section class="Editor__Statistics" default='open'
+  @heading
+    span -- Statistics
+  @content
+    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str.value']?'-errors':null]
+      span.Editor__Entry__name -- Strength
+      input.Editor__Entry__input type='number' value=d['state.ability scores.str.value'] size=4 on-change('updateAbilityScore', 'str')
+    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex.value']?'-errors':null]
+      span.Editor__Entry__name -- Dexterity
+      input.Editor__Entry__input type='number' value=d['state.ability scores.dex.value'] size=4 on-change('updateAbilityScore', 'dex')
+    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con.value']?'-errors':null]
+      span.Editor__Entry__name -- Constitution
+      input.Editor__Entry__input type='number' value=d['state.ability scores.con.value'] size="4" on-change('updateAbilityScore', 'con')
