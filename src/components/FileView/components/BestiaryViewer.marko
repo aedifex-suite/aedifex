@@ -60,9 +60,9 @@ section
 section
   h2 -- Defense
   div -- AC
-  $ let [hp, hpErr] = utils.averageHP(dot['state.core.hd'], dot['state.core.hitdie'])
+  $ let [hp, hpErr] = utils.averageHP(dot['state.hitdice'], dot['state.hitpips'])
   $ let [conhp, conhpErr] = utils.conHP(dot['state.core.hd'], dot['state.ability scores.con.value'])
-  div -- HP ${hp+conhp} (${dot['state.core.hd']}d${dot['state.core.hitdie']}+${conhp})
+  div -- HP ${hp+conhp} (${dot['state.hitdice']}d${dot['state.hitpips']}+${conhp})
   div -- Fort ${Math.floor((dot['state.ability scores.con.value']-10)/2)}, Reflex, Will
 section
   h2 -- Statistics
