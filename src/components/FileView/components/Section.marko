@@ -1,0 +1,36 @@
+import * as _Config from 'models/_Config'
+
+class {
+  onCreate(input) {
+    if (_Config.settings.sections[input.class] === undefined) {
+      _Config.settings.sections[input.class] = input.default === 'closed' ? false : true
+    }
+    this.state = {
+      closed: _Config.settings.sections[input.class],
+    }
+  }
+  onDestroy() {
+    _Config.settings.sections[this.input.class] = this.state.closed
+  }
+  onToggle(e) {
+    this.state.closed = !e.target.open
+    _Config.settings.sections[this.input.class] = this.state.closed
+  }
+}
+
+style {
+  .Section {
+  }
+  .Section__heading {
+    user-select: none;
+    cursor: pointer;
+  }
+  .Section__content {
+  }
+}
+
+details.Section class=input.class open=!state.closed on-toggle('onToggle')
+  summary.Section__heading
+    <${input.heading}/>
+  section.Section__content
+    <${input.content}/>
