@@ -21,20 +21,56 @@ class {
   }
 }
 
-$ let dot = dd(input.file)
+style {
+  .AbilityScores {
+  }
+  .AbilityScores__item {
+  }
+  .AbilityScores__item__name {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .AbilityScores__item__value {
+  }
+}
+
+$ let dot = dd(input.file, {throwErrors: false})
+section
+  h1 -- ${dot['state.name']} CR ${dot['state.cr']||'-'} 
+  div.XP
+    label -- XP
+    span -- ${dot['state.xp']||'-'}
+  if(dot['state.class'])
+    div.Class
+  div.AlignmentSizeTypes
+    span.Alignment -- ${dot['state.alignment']}
+    span.Size -- ${dot['state.size']}
+    span.Types -- ${dot['state.creature-type']} ${dot['state.race']?`(${dot['state.race']})`:''}
+  div
+    label -- Init
+      span -- ${dot['state.init']};
+    span -- Senses
+      if(dot['state.senses'])
+        for|sense, index| of=dot['state.senses']
+          span -- ${sense.name} ${sense.value} ft.${(index!==dot['state.senses'].length-1)?',':''}
+        span -- ;
+      if(dot['state.skills.Perception']!==undefined)
+        span -- Perception ${dot['state.skills.Perception']>0?'+':'-'} ${dot['state.skills.Perception']}
 section
   h2 -- Defense
   div -- AC
-  div -- HP ${Math.floor((dot['state.ability scores.con']-10)/2)}
+  $ let hp = Math.floor((dot['state.core.hitdie']+1)/2 * dot['state.core.hd'])
+  $ let conhp = Math.floor((dot['state.ability scores.con']-10)/2) * dot['state.core.hd']
+  div -- HP ${hp+conhp} (${dot['state.core.hd']}d${dot['state.core.hitdie']}+${conhp})
   div -- Fort ${Math.floor((dot['state.ability scores.con']-10)/2)}, Reflex, Will
 section
   h2 -- Statistics
-  span
-    span -- Str
-    span -- ${dot['state.ability scores.str']}
-  span
-    span -- Dex
-    span -- ${dot['state.ability scores.dex']}
-  span
-    span -- Con
-    span -- ${dot['state.ability scores.con']}
+  if(dot['state.ability scores'])
+    div.AbilityScores__item
+      for|entry, index| of=Object.entries(dot['state.ability scores'])
+        span.AbilityScores__item
+          $ let key = entry[0], value = entry[1]
+          span.AbilityScores__item__name -- ${key}&#32; 
+          span.AbilityScores__item__value -- ${value}
+          if(index !== Object.entries(dot['state.ability scores']).length-1)
+            span -- ,&nbsp;

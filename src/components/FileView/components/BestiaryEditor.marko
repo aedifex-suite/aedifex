@@ -38,23 +38,69 @@ class {
     }
     d[k] = v
   }
+  updateField(which, e) {
+    let d = this.dot
+    let k = `state.${which}`
+    if (which === 'core.hd') {
+      let v = Number(e.target.value)
+      if (v < 0) {
+        this.state.errors[k] = 'cannot be less than 0'
+        return
+      } else {
+        delete this.state.errors
+      }
+      d[k] = v
+    } else if (which === 'core.hitdie') {
+      let v = Number(e.target.value)
+      if (v < 0) {
+        this.state.errors[k] = 'cannot be less than 0'
+        return
+      } else {
+        delete this.state.errors
+      }
+      d[k] = v
+    }
+  }
 }
 
 style {
-  .Entry.-errors {
+  .Editor__Entry {
+    display: block;
+  }
+  .Editor__Entry.-errors {
     background: rgba(255,0,0,0.5);
+  }
+  .Editor__Entry__name {
+    display: inline-block;
+    min-width: 7em;
+  }
+  .Editor__Entry__input {
+  }
+  .Editor__Statistics .Editor__Entry__input {
+    width: 3em;
   }
 }
 
 $ let d = component.dot
-section
-  h2 -- Ability Scores
-  label.Entry.AbilityScore class=[state.errors['state.ability scores.str']?'-errors':null]
-    span -- Strength
-    input type='number' value=d['state.ability scores.str'] on-change('updateAbilityScore', 'str')
-  label.Entry.AbilityScore class=[state.errors['state.ability scores.dex']?'-errors':null]
-    span -- Dexterity
-    input type='number' value=d['state.ability scores.dex'] on-change('updateAbilityScore', 'dex')
-  label.Entry.AbilityScore class=[state.errors['state.ability scores.con']?'-errors':null]
-    span -- Constitution
-    input type='number' value=d['state.ability scores.con'] on-change('updateAbilityScore', 'con')
+section.Editor__Core
+  h2 -- Core
+  label.Editor__Entry
+    span.Editor__Entry__name -- HD
+    input.Editor__Entry__input type='number' value=d['state.core.hd'] size=4 on-change('updateField', 'core.hd')
+    span.Editor__Entry__name -- d
+    select.Editor__Entry__input name='die' id='die' on-change('updateField', 'core.hitdie')
+      for|value| of=[4,6,8,10,12]
+        option value=value selected=d['state.core.hitdie']===value -- ${value}
+  label.Editor__Entry
+    span.Editor__Entry__name -- Level(s)
+section.Editor__Statistics
+  h2 -- Statistics
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str']?'-errors':null]
+    span.Editor__Entry__name -- Strength
+    input.Editor__Entry__input type='number' value=d['state.ability scores.str'] size=4 on-change('updateAbilityScore', 'str')
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex']?'-errors':null]
+    span.Editor__Entry__name -- Dexterity
+    input.Editor__Entry__input type='number' value=d['state.ability scores.dex'] size=4 on-change('updateAbilityScore', 'dex')
+  label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con']?'-errors':null]
+    span.Editor__Entry__name -- Constitution
+    input.Editor__Entry__input type='number' value=d['state.ability scores.con'] size="4" on-change('updateAbilityScore', 'con')

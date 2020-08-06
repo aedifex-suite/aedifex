@@ -12,6 +12,10 @@ AbilityScoreSchema = schisma({
 
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
+  core: {
+    hd: 1,
+    hitdie: 8,
+  },
   "ability scores": {
     str: AbilityScoreSchema,
     dex: AbilityScoreSchema,
