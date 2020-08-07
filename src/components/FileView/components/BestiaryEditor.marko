@@ -100,21 +100,9 @@ Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
   @content
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.str.value']?'-errors':null]
-      span.Editor__Entry__name -- Strength
-      input.Editor__Entry__input type='number' value=d['state.ability scores.str.value'] size=4 on-change('updateAbilityScore', 'str')
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.dex.value']?'-errors':null]
-      span.Editor__Entry__name -- Dexterity
-      input.Editor__Entry__input type='number' value=d['state.ability scores.dex.value'] size=4 on-change('updateAbilityScore', 'dex')
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.con.value']?'-errors':null]
-      span.Editor__Entry__name -- Constitution
-      input.Editor__Entry__input type='number' value=d['state.ability scores.con.value'] size="4" on-change('updateAbilityScore', 'con')
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.wis.value']?'-errors':null]
-      span.Editor__Entry__name -- Wisdom
-      input.Editor__Entry__input type='number' value=d['state.ability scores.wis.value'] size="4" on-change('updateAbilityScore', 'wis')
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.int.value']?'-errors':null]
-      span.Editor__Entry__name -- Intelligence
-      input.Editor__Entry__input type='number' value=d['state.ability scores.int.value'] size="4" on-change('updateAbilityScore', 'int')
-    label.Editor__Entry.AbilityScore class=[state.errors['state.ability scores.cha.value']?'-errors':null]
-      span.Editor__Entry__name -- Charisma
-      input.Editor__Entry__input type='number' value=d['state.ability scores.cha.value'] size="4" on-change('updateAbilityScore', 'cha')
+    NumberValues label="Strength" d=d t="ability scores.str" on-change('updateAbilityScore', 'str')
+    NumberValues label="Dexterity" d=d t="ability scores.dex" on-change('updateAbilityScore', 'dex')
+    NumberValues label="Constitution" d=d t="ability scores.con" on-change('updateAbilityScore', 'con')
+    NumberValues label="Wisdom" d=d t="ability scores.wis" on-change('updateAbilityScore', 'wis')
+    NumberValues label="Intelligence" d=d t="ability scores.int" on-change('updateAbilityScore', 'int')
+    NumberValues label="Charisma" d=d t="ability scores.cha" on-change('updateAbilityScore', 'cha')
