@@ -59,6 +59,8 @@ class {
         delete this.state.errors
       }
       d[k] = v
+    } else if (which === 'name') {
+      d[k] = e.target.value
     }
   }
 }
@@ -84,6 +86,9 @@ style {
 $ let d = component.dot
 section.Editor__Core
   h2 -- Core
+  label.Editor__Entry
+    span.Editor__Entry__name -- Name
+    input.Editor__Entry__input value=d['state.name'] size=8 on-change('updateField', 'name')
   label.Editor__Entry
     span.Editor__Entry__name -- HD
     input.Editor__Entry__input type='number' value=d['state.hitdice'] size=4 on-change('updateField', 'hitdice')

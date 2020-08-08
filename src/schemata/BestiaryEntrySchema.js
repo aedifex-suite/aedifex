@@ -51,6 +51,7 @@ const BestiarySpellSchema = schisma({
 
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
+  name: String,
   description: '',
   // Defense
   "natural ac": Number,
