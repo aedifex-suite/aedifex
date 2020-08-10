@@ -66,15 +66,14 @@ section
     $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
     $ lvlhps.push(lvlhp)
     $ lvlhpsErr.push(lvlhpErr)
-  $ let [conhp, conhpErr] = utils.conHP(dot['core.hd'], dot['ability scores.con.value'])
+  $ let [conhp, conhpErr] = utils.conHP(dot['core.hd']+(dot['levels'].reduce((a,b)=>a+b.level,0)), dot['ability scores.con.value'])
   div
     span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)}
     span -- (
       span -- ${dot['hitdice']}d${dot['hitpips']}+${conhp}
       if(dot['levels'] && dot['levels'].length > 0)
-        span -- +
         for|level| of=dot['levels']
-          span -- ${level.level}d${level.hitpips}
+          span -- +${level.level}d${level.hitpips}
     span -- )
   div -- Fort ${Math.floor((dot['ability scores.con.value']-10)/2)}, Reflex, Will
 section
