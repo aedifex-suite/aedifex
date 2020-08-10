@@ -75,15 +75,15 @@ label.NumberValues
   span.NumberValues__label -- ${input.label}
   span.NumberValues__inputs
     span.NumberValues__inputs__base key='base'
-      input.NumberValues__inputs__value type='number' value=input.d[`state.${input.t}.value`] on-change('onChange')
+      input.NumberValues__inputs__value type='number' value=input.d[`${input.t}.value`] on-change('onChange')
       button.NumberValues__inputs__expand on-click('expand')
     if(state.expanded)
       div.NumberValues__inputs__expansion style={"margin-top": state.y, width: state.width }
         if(!input.noExtras)
           fieldset.NumberValues__inputs__group
             legend.NumberValues__inputs__group__title -- extras
-            if(input.d[`state.${input.t}.extras`])
-              for|extra| of=input.d[`state.${input.t}.extras`]
+            if(input.d[`${input.t}.extras`])
+              for|extra| of=input.d[`${input.t}.extras`]
                 span.NumberValues__inputs__base
                   input.NumberValues__inputs__value type='number' value=extra.value on-change('onExtraChange')
                   button.NumberValues__inputs__remove -- -

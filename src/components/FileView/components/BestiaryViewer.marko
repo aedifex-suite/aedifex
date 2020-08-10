@@ -35,43 +35,43 @@ style {
   }
 }
 
-$ let dot = dd(input.file, {throwErrors: false})
+$ let dot = dd(input.file, {throwErrors: false, prefix: 'state.'})
 section
-  h1 -- ${dot['state.name']} CR ${dot['state.cr']||'-'} 
+  h1 -- ${dot['name']} CR ${dot['cr']||'-'} 
   div.XP
     label -- XP
-    span -- ${dot['state.xp']||'-'}
-  if(dot['state.class'])
+    span -- ${dot['xp']||'-'}
+  if(dot['class'])
     div.Class
   div.AlignmentSizeTypes
-    span.Alignment -- ${dot['state.alignment']}
-    span.Size -- ${dot['state.size']}
-    span.Types -- ${dot['state.creature-type']} ${dot['state.race']?`(${dot['state.race']})`:''}
+    span.Alignment -- ${dot['alignment']}
+    span.Size -- ${dot['size']}
+    span.Types -- ${dot['creature-type']} ${dot['race']?`(${dot['race']})`:''}
   div
     label -- Init
-      span -- ${dot['state.init']};
+      span -- ${dot['init']};
     span -- Senses
-      if(dot['state.senses'])
-        for|sense, index| of=dot['state.senses']
-          span -- ${sense.name} ${sense.value} ft.${(index!==dot['state.senses'].length-1)?',':''}
+      if(dot['senses'])
+        for|sense, index| of=dot['senses']
+          span -- ${sense.name} ${sense.value} ft.${(index!==dot['senses'].length-1)?',':''}
         span -- ;
-      if(dot['state.skills.Perception']!==undefined)
-        span -- Perception ${dot['state.skills.Perception']>0?'+':'-'} ${dot['state.skills.Perception']}
+      if(dot['skills.Perception']!==undefined)
+        span -- Perception ${dot['skills.Perception']>0?'+':'-'} ${dot['skills.Perception']}
 section
   h2 -- Defense
   div -- AC
-  $ let [hp, hpErr] = utils.averageHP(dot['state.hitdice'], dot['state.hitpips'])
-  $ let [conhp, conhpErr] = utils.conHP(dot['state.core.hd'], dot['state.ability scores.con.value'])
-  div -- HP ${hp+conhp} (${dot['state.hitdice']}d${dot['state.hitpips']}+${conhp})
-  div -- Fort ${Math.floor((dot['state.ability scores.con.value']-10)/2)}, Reflex, Will
+  $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
+  $ let [conhp, conhpErr] = utils.conHP(dot['core.hd'], dot['ability scores.con.value'])
+  div -- HP ${hp+conhp} (${dot['hitdice']}d${dot['hitpips']}+${conhp})
+  div -- Fort ${Math.floor((dot['ability scores.con.value']-10)/2)}, Reflex, Will
 section
   h2 -- Statistics
-  if(dot['state.ability scores'])
+  if(dot['ability scores'])
     div.AbilityScores__item
-      for|entry, index| of=Object.entries(dot['state.ability scores'])
+      for|entry, index| of=Object.entries(dot['ability scores'])
         span.AbilityScores__item
           $ let key = entry[0], value = entry[1]
           span.AbilityScores__item__name -- ${key}&#32; 
           span.AbilityScores__item__value -- ${value.value}
-          if(index !== Object.entries(dot['state.ability scores']).length-1)
+          if(index !== Object.entries(dot['ability scores']).length-1)
             span -- ,&nbsp;

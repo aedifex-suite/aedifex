@@ -12,6 +12,7 @@ class {
       input.file.on('undo', this.onFileUpdate)
       input.file.on('redo', this.onFileUpdate)
       this.dot = dd(input.file, {
+        prefix: 'state.',
         throwErrors: false,
       })
     }
@@ -28,7 +29,7 @@ class {
   }
   updateAbilityScore(which, e) {
     let d = this.dot
-    let k = `state.ability scores.${which}.value`
+    let k = `ability scores.${which}.value`
     let v = Number(e.target.value)
     if (d[k] === undefined) return
     if (v < 0) {
@@ -40,7 +41,7 @@ class {
   }
   updateField(which, e) {
     let d = this.dot
-    let k = `state.${which}`
+    let k = which
     if (which === 'hitdice') {
       let v = Number(e.target.value)
       if (v < 0) {
@@ -88,14 +89,14 @@ section.Editor__Core
   h2 -- Core
   label.Editor__Entry
     span.Editor__Entry__name -- Name
-    input.Editor__Entry__input value=d['state.name'] size=8 on-change('updateField', 'name')
+    input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
   label.Editor__Entry
     span.Editor__Entry__name -- HD
-    input.Editor__Entry__input type='number' value=d['state.hitdice'] size=4 on-change('updateField', 'hitdice')
+    input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
     span.Editor__Entry__name -- d
     select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
       for|value| of=[4,6,8,10,12]
-        option value=value selected=d['state.hitpips']===value -- ${value}
+        option value=value selected=d['hitpips']===value -- ${value}
   Section class="Editor__Levels" default='closed'
     @heading
       span -- Levels
