@@ -61,8 +61,21 @@ section
   h2 -- Defense
   div -- AC
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
+  $ let [lvlhps, lvlhpsErr] = [[],[]]
+  for|level| of=dot['levels']
+    $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
+    $ lvlhps.push(lvlhp)
+    $ lvlhpsErr.push(lvlhpErr)
   $ let [conhp, conhpErr] = utils.conHP(dot['core.hd'], dot['ability scores.con.value'])
-  div -- HP ${hp+conhp} (${dot['hitdice']}d${dot['hitpips']}+${conhp})
+  div
+    span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)}
+    span -- (
+      span -- ${dot['hitdice']}d${dot['hitpips']}+${conhp}
+      if(dot['levels'] && dot['levels'].length > 0)
+        span -- +
+        for|level| of=dot['levels']
+          span -- ${level.level}d${level.hitpips}
+    span -- )
   div -- Fort ${Math.floor((dot['ability scores.con.value']-10)/2)}, Reflex, Will
 section
   h2 -- Statistics

@@ -11,6 +11,12 @@ const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
   }
 })*/
 
+const BestiaryLevelSchema = schisma({
+  name: String,
+  level: 1,
+  hitpips: 4,
+})
+
 const BestiaryFeatSchema = schisma({
   name: String,
 })
@@ -57,6 +63,7 @@ const BestiaryEntrySchema = schisma({
   "natural ac": Number,
   hitdice: 1,
   hitpips: 8,
+  levels: [BestiaryLevelSchema],
   fortitude: NumberValuesSchema,
   reflex: NumberValuesSchema,
   will: NumberValuesSchema,
@@ -124,4 +131,7 @@ const BestiaryEntrySchema = schisma({
   languages: [BestiaryLanguageSchema],
 })
 
-module.exports = BestiaryEntrySchema
+module.exports = {
+  BestiaryLevelSchema,
+  BestiaryEntrySchema
+}

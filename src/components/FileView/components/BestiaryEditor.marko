@@ -1,4 +1,5 @@
 import * as dd from 'dot-dotty'
+import { BestiaryLevelSchema } from 'schemata/BestiaryEntrySchema'
 
 class {
   onCreate(input) {
@@ -48,7 +49,7 @@ class {
         this.state.errors[k] = 'cannot be less than 0'
         return
       } else {
-        delete this.state.errors
+        delete this.state.errors[k]
       }
       d[k] = v
     } else if (which === 'hitpips') {
@@ -57,11 +58,40 @@ class {
         this.state.errors[k] = 'cannot be less than 0'
         return
       } else {
-        delete this.state.errors
+        delete this.state.errors[k]
       }
       d[k] = v
     } else if (which === 'name') {
       d[k] = e.target.value
+    }
+  }
+  addLevel() {
+    let d = this.dot
+    d['levels'].push(BestiaryLevelSchema.create({}))
+  }
+  updateLevelField(index, which, e) {
+    let d = this.dot
+    let k = `levels.${index}.${which}`
+    if (which === 'hitpips') {
+      let v = Number(e.target.value)
+      if (v < 0) {
+        this.state.errors[k] = 'cannot be less than 0'
+        return
+      } else {
+        delete this.state.errors[k]
+      }
+      d[k] = v
+    } else if (which === 'name') {
+      d[k] = e.target.value
+    } else if (which === 'level') {
+      let v = Number(e.target.value)
+      if (v < 0) {
+        this.state.errors[k] = 'cannot be less than 0'
+        return
+      } else {
+        delete this.state.errors[k]
+      }
+      d[k] = v
     }
   }
 }
@@ -99,9 +129,25 @@ section.Editor__Core
         option value=value selected=d['hitpips']===value -- ${value}
   Section class="Editor__Levels" default='closed'
     @heading
-      span -- Levels
+      span.Editor__Levels__heading -- Levels
     @content
-      button -- +
+      div.Editor__Levels__content
+        div.Editor__Levels__controls
+          button.Editor__Levels__controls__button on-click('addLevel') -- +
+        div.Editor__Levels__items
+          if(d['levels'])
+            for|level, index| of=d['levels']
+              div.Editor__Levels__level
+                div.Editor__Levels__level__name
+                  span.Editor__Entry__name -- Name
+                  input.Editor__Entry__input value=level.name on-change('updateLevelField', index, 'name')
+                div.Editor__Levels__level__level
+                  span.Editor__Entry__name -- Level
+                  input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
+                div.Editor__Levels__level__hitpips
+                  select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
+                    for|value| of=[4,6,8,10,12]
+                      option value=value selected=level.hitpips===value -- ${value}
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
