@@ -1,5 +1,5 @@
 import * as dd from 'dot-dotty'
-import { BestiaryLevelSchema } from 'schemata/BestiaryEntrySchema'
+import { BestiaryEntrySchema, BestiaryLevelSchema } from 'schemata/BestiaryEntrySchema'
 
 class {
   onCreate(input) {
@@ -26,6 +26,15 @@ class {
     }
   }
   onFileUpdate() {
+    this.state.errors = []
+    try {
+      let errs = BestiaryEntrySchema.validate(this.input.file._state)
+      for (let err of errs) {
+        this.state.errors[err.where] = err.message
+      }
+    } catch(e) {
+      console.log(e)
+    }
     this.forceUpdate()
   }
   updateAbilityScore(which, e) {
@@ -112,14 +121,40 @@ style {
   .Editor__Statistics .Editor__Entry__input {
     width: 3em;
   }
+  .errorable {
+    position: relative;
+  }
+  .errorable.-error > input {
+    border: 1px solid red;
+  }
+  .errorable:focus-within .errorable__error {
+    display: block;
+  }
+  .errorable__error {
+    display: none;
+    left: 0;
+    top: 100%;
+    position: absolute;
+    color: red;
+    background: #000;
+    padding: .25em;
+    margin: .25em;
+    opacity: 0.9;
+  }
 }
 
+macro|{ renderBody, field }| name='errorable'
+  span.errorable class=state.errors[field]?'-error':''
+    <${renderBody}/>
+    if(state.errors[field])
+      span.errorable__error -- ${state.errors[field]}
 $ let d = component.dot
 section.Editor__Core
   h2 -- Core
   label.Editor__Entry
     span.Editor__Entry__name -- Name
-    input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
+    errorable field=`name`
+      input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
   label.Editor__Entry
     span.Editor__Entry__name -- HD
     input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
@@ -140,7 +175,8 @@ section.Editor__Core
               div.Editor__Levels__level
                 div.Editor__Levels__level__name
                   span.Editor__Entry__name -- Name
-                  input.Editor__Entry__input value=level.name on-change('updateLevelField', index, 'name')
+                  errorable field=`levels.${index}.name`
+                    input.Editor__Entry__input value=level.name on-change('updateLevelField', index, 'name')
                 div.Editor__Levels__level__level
                   span.Editor__Entry__name -- Level
                   input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')

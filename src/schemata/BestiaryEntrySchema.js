@@ -12,8 +12,19 @@ const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
 })*/
 
 const BestiaryLevelSchema = schisma({
-  name: String,
-  level: 1,
+  name: {
+    $type: String,
+    $validate: v => {
+      if (v == '') return 'name must not be empty'
+    },
+  },
+  level: {
+    $type: 1,
+    $validate: v => {
+      if (v < 0) return 'level must be greater than 0'
+      if (isNaN(v)) return 'level must be a number'
+    },
+  },
   hitpips: 4,
 })
 
@@ -57,7 +68,12 @@ const BestiarySpellSchema = schisma({
 
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
-  name: String,
+  name: {
+    $type: String,
+    $validate: v => {
+      if (v == '') return 'name must not be empty'
+    },
+  },
   description: '',
   // Defense
   "natural ac": Number,
