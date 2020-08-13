@@ -78,7 +78,7 @@ section
     $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
     $ lvlhps.push(lvlhp)
     $ lvlhpsErr.push(lvlhpErr)
-  $ let [conhp, conhpErr] = utils.conHP(dot['core.hd']+(dot['levels'].reduce((a,b)=>a+b.level,0)), dot['ability scores.con.value'])
+  $ let [conhp, conhpErr] = utils.conHP(dot['hitdice']+(dot['levels'].reduce((a,b)=>a+b.level,0)), dot['ability scores.con.value'])
   div
     span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)}
     span -- (
