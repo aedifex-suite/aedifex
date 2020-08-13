@@ -11,13 +11,24 @@ const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
   }
 })*/
 
-const BestiaryLevelSchema = schisma({
-  name: {
-    $type: String,
-    $validate: v => {
-      if (v == '') return 'name must not be empty'
-    },
+const HitPipsSchema = schisma({
+  $type: 4,
+  $validate: v => {
+    if (v < 0) return 'field must be greater than 0'
+    if (isNaN(v)) return 'field must be a number'
+    if (![4,6,8,10,12].includes(v)) return 'field must be 4, 6, 8, 10, or 12'
   },
+})
+
+const StringSchema = schisma({
+  $type: String,
+  $validate: v => {
+    if (v == '') return 'field must not be empty'
+  },
+})
+
+const BestiaryLevelSchema = schisma({
+  class: StringSchema,
   level: {
     $type: 1,
     $validate: v => {
@@ -25,20 +36,20 @@ const BestiaryLevelSchema = schisma({
       if (isNaN(v)) return 'level must be a number'
     },
   },
-  hitpips: 4,
+  hitpips: HitPipsSchema,
 })
 
 const BestiaryFeatSchema = schisma({
-  name: String,
+  name: StringSchema,
 })
 
 const BestiaryLanguageSchema = schisma({
-  name: String,
+  name: StringSchema,
   distance: 0, // Only used if name == telepathy
 })
 
 const BestiarySkillSchema = schisma({
-  name: String,
+  name: StringSchema,
   value: Number,
 })
 
@@ -50,14 +61,14 @@ const BestiaryDamageSchema = schisma({
 })
 
 const BestiaryMeleeSchema = schisma({
-  name: String,
+  name: StringSchema,
   attacks: Number,
   tohit: Number,
   damage: [BestiaryDamageSchema],
 })
 
 const BestiarySpellSchema = schisma({
-  name: String,
+  name: StringSchema,
   dc: {
     $type: Number,
     $required: false,
@@ -68,17 +79,13 @@ const BestiarySpellSchema = schisma({
 
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
-  name: {
-    $type: String,
-    $validate: v => {
-      if (v == '') return 'name must not be empty'
-    },
-  },
+  name: StringSchema,
   description: '',
+  race: StringSchema,
   // Defense
   "natural ac": Number,
   hitdice: 1,
-  hitpips: 8,
+  hitpips: HitPipsSchema,
   levels: [BestiaryLevelSchema],
   fortitude: NumberValuesSchema,
   reflex: NumberValuesSchema,

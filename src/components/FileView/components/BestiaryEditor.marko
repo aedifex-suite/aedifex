@@ -90,7 +90,7 @@ class {
         delete this.state.errors[k]
       }
       d[k] = v
-    } else if (which === 'name') {
+    } else if (which === 'class') {
       d[k] = e.target.value
     } else if (which === 'level') {
       let v = Number(e.target.value)
@@ -175,9 +175,9 @@ section.Editor__Core
             for|level, index| of=d['levels']
               div.Editor__Levels__level
                 div.Editor__Levels__level__name
-                  span.Editor__Entry__name -- Name
-                  errorable field=`levels.${index}.name`
-                    input.Editor__Entry__input value=level.name on-change('updateLevelField', index, 'name')
+                  span.Editor__Entry__name -- Class
+                  errorable field=`levels.${index}.class`
+                    input.Editor__Entry__input value=level.class on-change('updateLevelField', index, 'class')
                 div.Editor__Levels__level__level
                   span.Editor__Entry__name -- Level
                   input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')

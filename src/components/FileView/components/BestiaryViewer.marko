@@ -33,6 +33,9 @@ style {
   }
   .AbilityScores__item__value {
   }
+  .RCL__Race, .RCL__CL__Class {
+    text-transform: capitalize;
+  }
 }
 
 $ let dot = dd(input.file, {throwErrors: false, prefix: 'state.'})
@@ -41,8 +44,17 @@ section
   div.XP
     label -- XP
     span -- ${dot['xp']||'-'}
-  if(dot['class'])
-    div.Class
+  if(dot['levels'] && dot['levels'].length > 0)
+    div.RCL
+      span.RCL__Race -- ${dot['race']}
+        --  
+      for|level, index| of=dot['levels']
+        span.RCL__CL
+          span.RCL__CL__Class -- ${level.class}
+          <span> </span>
+          span.RCL__CL__Level -- ${level.level}
+        if(index !== dot['levels'].length-1)
+          span -- /
   div.AlignmentSizeTypes
     span.Alignment -- ${dot['alignment']}
     span.Size -- ${dot['size']}
