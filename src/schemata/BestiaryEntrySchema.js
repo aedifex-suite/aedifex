@@ -36,6 +36,8 @@ const BestiaryLevelSchema = schisma({
       if (isNaN(v)) return 'level must be a number'
     },
   },
+  favored: Boolean,
+  prestige: Boolean,
   hitpips: HitPipsSchema,
 })
 

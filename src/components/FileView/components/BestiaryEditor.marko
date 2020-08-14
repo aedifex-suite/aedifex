@@ -101,6 +101,10 @@ class {
         delete this.state.errors[k]
       }
       d[k] = v
+    } else if (which === 'favored') {
+      d[k] = e.target.checked
+    } else if (which === 'prestige') {
+      d[k] = e.target.checked
     }
   }
 }
@@ -159,10 +163,11 @@ section.Editor__Core
   label.Editor__Entry
     span.Editor__Entry__name -- HD
     input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
-    span.Editor__Entry__name -- d
-    select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
-      for|value| of=[4,6,8,10,12]
-        option value=value selected=d['hitpips']===value -- ${value}
+    if(d['hitdice']>0)
+      span.Editor__Entry__name -- d
+      select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
+        for|value| of=[4,6,8,10,12]
+          option value=value selected=d['hitpips']===value -- ${value}
   Section class="Editor__Levels" default='closed'
     @heading
       span.Editor__Levels__heading -- Levels
@@ -174,6 +179,12 @@ section.Editor__Core
           if(d['levels'])
             for|level, index| of=d['levels']
               div.Editor__Levels__level
+                div.Editor__Levels__level__extra title='If favored is checked, bonus hit points are given equal to the class level'
+                  span.Editor__Entry__name -- Favored
+                  input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
+                div.Editor__Levels__level__extra
+                  span.Editor__Entry__name -- Prestige
+                  input.Editor__Entry__input type='checkbox' checked=level.prestige on-change('updateLevelField', index, 'prestige')
                 div.Editor__Levels__level__name
                   span.Editor__Entry__name -- Class
                   errorable field=`levels.${index}.class`
@@ -181,10 +192,10 @@ section.Editor__Core
                 div.Editor__Levels__level__level
                   span.Editor__Entry__name -- Level
                   input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
-                div.Editor__Levels__level__hitpips
-                  select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
-                    for|value| of=[4,6,8,10,12]
-                      option value=value selected=level.hitpips===value -- ${value}
+                  div.Editor__Levels__level__hitpips
+                    select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
+                      for|value| of=[4,6,8,10,12]
+                        option value=value selected=level.hitpips===value -- ${value}
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
