@@ -30,7 +30,27 @@ function conHP(hd=1, con=10) {
   return [Math.floor((con-10)/2) * hd, error]
 }
 
+/**
+ * collectHD returns a sorted map of hitpips to hitdice collected from the entry's hitdice and hitpips as well as the entry's levels.
+ * @param {BestiaryEntrySchema} entry The entry to target
+ * @returns {Map} Map of hitpips to hitdice count, sorted from highest to lowest.
+ */
+function collectHD(entry) {
+  let results = new Map()
+  if (entry.hitdice && entry.hitpips) {
+    results.set(entry.hitpips, entry.hitdice + (results.get(entry.hitpips)||0))
+  }
+  if (entry.levels) {
+    for (let level of entry.levels) {
+      results.set(level.hitpips, level.level + (results.get(level.hitpips)||0))
+    }
+  }
+  results = new Map([...results.entries()].sort((a,b)=>b[0]-a[0]))
+  return [results, undefined]
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
+  collectHD: collectHD,
 }
