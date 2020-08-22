@@ -77,8 +77,8 @@ section
   $ let favoredhp = 0
   for|level, index| of=dot['levels']
     $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
-    if(index===0)
-      $ lvlhp += level.hitpips/2 // I guess? First level should have max die roll, afaik
+    if(index===0&&dot['hitdice']===0)
+      $ lvlhp += level.hitpips/2 // First HD is max if it comes from a class level.
     $ lvlhps.push(lvlhp)
     $ lvlhpsErr.push(lvlhpErr)
     if(level.favored)
