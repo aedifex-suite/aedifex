@@ -87,11 +87,11 @@ section
   div
     span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)+favoredhp}
     span -- (
-      if(dot['hitdice']>0)
-        span -- ${dot['hitdice']}d${dot['hitpips']}
-      if(dot['levels'] && dot['levels'].length > 0)
-        for|level| of=dot['levels']
-          span -- +${level.level}d${level.hitpips}
+      if(dot['hitdice']>0&&dot['levels'] && dot['levels'].length > 0)
+        <span>${dot['hitdice']+dot['levels'].reduce((a,b)=>a+b.level,0)} HD; </span>
+      $ let [collectedhd, collectedhdErr] = utils.collectHD(input.file.state)
+      for|entry, index| of=Array.from(collectedhd)
+        span -- ${index!==0?'+':''}${entry[1]}d${entry[0]}
       span -- +${conhp+favoredhp}
     span -- )
   div -- Fort ${Math.floor((dot['ability scores.con.value']-10)/2)}, Reflex, Will
