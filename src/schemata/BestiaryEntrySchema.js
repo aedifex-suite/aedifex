@@ -1,5 +1,8 @@
 const schisma = require('schisma')
 const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
+const StringSchema  = require('schemata/String')
+const HitPipsSchema = require('schemata/HitPips')
+const DamageSchema  = require('schemata/Damage')
 
 /*AbilityScoreSchema = schisma({
   $type: Number,
@@ -10,22 +13,6 @@ const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
     }
   }
 })*/
-
-const HitPipsSchema = schisma({
-  $type: 4,
-  $validate: v => {
-    if (v < 0) return 'field must be greater than 0'
-    if (isNaN(v)) return 'field must be a number'
-    if (![4,6,8,10,12].includes(v)) return 'field must be 4, 6, 8, 10, or 12'
-  },
-})
-
-const StringSchema = schisma({
-  $type: String,
-  $validate: v => {
-    if (v == '') return 'field must not be empty'
-  },
-})
 
 const BestiaryLevelSchema = schisma({
   class: StringSchema,
@@ -55,18 +42,11 @@ const BestiarySkillSchema = schisma({
   value: Number,
 })
 
-const BestiaryDamageSchema = schisma({
-  dice: Number,
-  pips: Number,
-  bonus: Number,
-  types: [String],
-})
-
 const BestiaryMeleeSchema = schisma({
   name: StringSchema,
   attacks: Number,
   tohit: Number,
-  damage: [BestiaryDamageSchema],
+  damage: [DamageSchema],
 })
 
 const BestiarySpellSchema = schisma({
