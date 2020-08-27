@@ -120,3 +120,7 @@ section
       $ let baseattack = utils.getBaseAttack(input.file.state)
       span.CombatScores__item__name -- Base Atk
       <span.CombatScores__item__value> +${baseattack}; </span>
+    span.CombatScores__item
+      $ let cmb = utils.getCMB(input.file.state)
+      span.CombatScores__item__name -- CMB
+      <span.CombatScores__item__value> ${cmb>=0?`+${cmb}`:`-${cmb}`}; </span>
