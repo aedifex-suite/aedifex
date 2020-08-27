@@ -69,9 +69,30 @@ function getBaseAttack(entry) {
   return bestattack
 }
 
+const sizeModifiers = {
+  'fine': -8,
+  'diminutive': -4,
+  'tiny': -2,
+  'small': -1,
+  'medium': 0,
+  'large': 1,
+  'huge': 2,
+  'gargantuan': 4,
+  'colossal': 8,
+}
+
+function getCMB(entry) {
+  let baseattack = getBaseAttack(entry)
+  let strmod = Math.floor((entry["ability scores"].str.value-10)/2)
+  let sizemod = sizeModifiers[entry.size]
+  let other = 0 // TODO
+  return baseattack + strmod + sizemod + other
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
   collectHD: collectHD,
   getBaseAttack: getBaseAttack,
+  getCMB: getCMB,
 }
