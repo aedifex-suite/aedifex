@@ -49,8 +49,29 @@ function collectHD(entry) {
   return [results, undefined]
 }
 
+
+/**
+ * getBaseAttack returns the highest base attack from the base HD*BAB or each level's BAB * level. This presumes non-fractional BAB calculation.
+ * @param {BestiaryEntrySchema} entry The entry to target
+ * @returns {Number} Calculated highest base attack.
+ */
+function getBaseAttack(entry) {
+  let bestattack = Math.floor(entry.hitdice * entry.bab)
+  if (entry.levels) {
+    for (let i = 0; i < entry.levels.length; i++) {
+      let level = entry.levels[i]
+      let baseattack = Math.floor(level.bab * level.level)
+      if (baseattack > bestattack) {
+        bestattack = baseattack
+      }
+    }
+  }
+  return bestattack
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
   collectHD: collectHD,
+  getBaseAttack: getBaseAttack,
 }
