@@ -33,6 +33,12 @@ style {
   }
   .AbilityScores__item__value {
   }
+  .CombatScores__item__name {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .CombatScores__item__value {
+  }
   .RCL__Race, .RCL__CL__Class {
     text-transform: capitalize;
   }
@@ -110,4 +116,4 @@ section
     span.CombatScores__item
       $ let baseattack = utils.getBaseAttack(input.file.state)
       span.CombatScores__item__name -- Base Atk
-      span.CombatScores__item__value -- +${baseattack}
+      <span.CombatScores__item__value> +${baseattack}; </span>
