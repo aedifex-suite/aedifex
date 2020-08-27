@@ -168,6 +168,12 @@ section.Editor__Core
       select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
         for|value| of=[4,6,8,10,12]
           option value=value selected=d['hitpips']===value -- ${value}
+  label.Editor__Entry
+    if(d['hitdice']>0)
+      span.Editor__Entry__name -- BAB Progression
+        select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
+          for|value| of=[0.5,0.75,1]
+            option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
   Section class="Editor__Levels" default='closed'
     @heading
       span.Editor__Levels__heading -- Levels
@@ -196,6 +202,11 @@ section.Editor__Core
                     select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
                       for|value| of=[4,6,8,10,12]
                         option value=value selected=level.hitpips===value -- ${value}
+                div.Editor__Levels__level__bab
+                  span.Editor__Entry__name -- BAB
+                    select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
+                      for|value| of=[0.5,0.75,1]
+                        option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
