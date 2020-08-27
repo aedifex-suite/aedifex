@@ -72,6 +72,8 @@ class {
       d[k] = v
     } else if (which === 'name') {
       d[k] = e.target.value
+    } else if (which === 'size') {
+      d[k] = e.target.value
     } else if (which === 'bab') {
       d[k] = Number(e.target.value)
     }
@@ -164,6 +166,12 @@ section.Editor__Core
     span.Editor__Entry__name -- Name
     errorable field=`name`
       input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
+  label.Editor__Entry
+    span.Editor__Entry__name -- Size
+    errorable field=`size`
+      select.Editor__Entry__input name='size' id='size' on-change('updateField', 'size')
+        for|value| of=['fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal']
+          option value=value selected=d['size']===value -- ${value}
   label.Editor__Entry
     span.Editor__Entry__name -- HD
     input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
