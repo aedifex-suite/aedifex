@@ -106,3 +106,8 @@ section
           span.AbilityScores__item__value -- ${value.value}
           if(index !== Object.entries(dot['ability scores']).length-1)
             span -- ,&nbsp;
+  div.CombatScores
+    span.CombatScores__item
+      $ let baseattack = utils.getBaseAttack(input.file.state)
+      span.CombatScores__item__name -- Base Atk
+      span.CombatScores__item__value -- +${baseattack}
