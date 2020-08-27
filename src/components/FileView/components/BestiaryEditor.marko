@@ -72,6 +72,8 @@ class {
       d[k] = v
     } else if (which === 'name') {
       d[k] = e.target.value
+    } else if (which === 'bab') {
+      d[k] = Number(e.target.value)
     }
   }
   addLevel() {
@@ -105,6 +107,8 @@ class {
       d[k] = e.target.checked
     } else if (which === 'prestige') {
       d[k] = e.target.checked
+    } else if (which === 'bab') {
+      d[k] = Number(e.target.value)
     }
   }
 }
