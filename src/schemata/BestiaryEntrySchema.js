@@ -14,6 +14,15 @@ const DamageSchema  = require('schemata/Damage')
   }
 })*/
 
+const SizeSchema = schisma({
+  $type: String,
+  $default: 'medium',
+  $validate: v => {
+    if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+    if (!['fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal'].includes(v)) return "field must be 'fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal'"
+  },
+})
+
 const BABSchema = schisma({
   $type: Number,
   $default: 0.75,
@@ -75,6 +84,7 @@ const BestiaryEntrySchema = schisma({
   name: StringSchema,
   description: '',
   race: StringSchema,
+  size: SizeSchema,
   // Defense
   "natural ac": Number,
   hitdice: 1,
