@@ -14,6 +14,16 @@ const DamageSchema  = require('schemata/Damage')
   }
 })*/
 
+const BABSchema = schisma({
+  $type: Number,
+  $default: 0.75,
+  $validate: v => {
+    if (v < 0) return 'field must be greater than 0'
+    if (isNaN(v)) return 'field must be a number'
+    if (![0.5,0.75,1].includes(v)) return 'field must be 0.5, 0.75, or 1'
+  },
+})
+
 const BestiaryLevelSchema = schisma({
   class: StringSchema,
   level: {
@@ -26,6 +36,7 @@ const BestiaryLevelSchema = schisma({
   favored: Boolean,
   prestige: Boolean,
   hitpips: HitPipsSchema,
+  bab: BABSchema,
 })
 
 const BestiaryFeatSchema = schisma({
@@ -68,6 +79,7 @@ const BestiaryEntrySchema = schisma({
   "natural ac": Number,
   hitdice: 1,
   hitpips: HitPipsSchema,
+  bab: BABSchema,
   levels: [BestiaryLevelSchema],
   fortitude: NumberValuesSchema,
   reflex: NumberValuesSchema,
@@ -128,7 +140,6 @@ const BestiaryEntrySchema = schisma({
       $default: { value: 10 },
     },
   },
-  bab: Number,
   cmb: Number,
   cmd: Number,
   feats: [BestiaryFeatSchema],
