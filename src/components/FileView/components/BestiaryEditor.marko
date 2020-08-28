@@ -169,6 +169,8 @@ class {
     let k = `items.${index}.${which}`
     if (which === 'name') {
       d[k] = e.target.value
+    } else if (which === 'equipped') {
+      d[k] = e.target.checked ? true : false
     }
   }
   addItemModifier(index) {
@@ -383,6 +385,9 @@ Section class="Editor__Items" default='open'
               span.Editor__Entry__name -- Name
               errorable field=`items.${index}.name`
                 input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
+            div.Editor__Items__item__equipped
+              span.Editor__Entry__name -- Equipped
+                input.Editor__Entry__input type='checkbox' checked=item.equipped on-change('updateItemField', index, 'equipped')
             div.Editor__Items__item__modifiers
               button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
               for|modifier, modIndex| of=item.modifies
