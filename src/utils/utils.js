@@ -178,6 +178,16 @@ function getSave(entry, which) {
   return Math.floor(basesave)
 }
 
+/**
+ * getInitiative returns the calculated initiative of the entry.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @returns {Number} The calculated initiative.
+ */
+function getInitiative(entry) {
+  let dexmod = getAbilityScoreMod(entry, 'dex')
+  return dexmod
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
@@ -188,4 +198,5 @@ module.exports = {
   getShortAlignment: getShortAlignment,
   getSave: getSave,
   getAbilityScoreMod: getAbilityScoreMod,
+  getInitiative: getInitiative,
 }
