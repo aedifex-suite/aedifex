@@ -115,6 +115,12 @@ class {
       d[k] = e.target.checked
     } else if (which === 'bab') {
       d[k] = Number(e.target.value)
+    } else if (which === 'saves.fortitude') {
+      d[k] = e.target.checked?'good':'bad'
+    } else if (which === 'saves.reflex') {
+      d[k] = e.target.checked?'good':'bad'
+    } else if (which === 'saves.will') {
+      d[k] = e.target.checked?'good':'bad'
     }
   }
 }
@@ -233,6 +239,14 @@ section.Editor__Core
                     select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
                       for|value| of=[0.5,0.75,1]
                         option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+                div.Editor__Levels__level__saves
+                  span.Editor__Entry__name -- Good Saves
+                  span.Editor__Entry__label -- Fortitude
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
+                  span.Editor__Entry__label -- Reflex
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
+                  span.Editor__Entry__label -- Will
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
