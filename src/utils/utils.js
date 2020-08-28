@@ -89,10 +89,21 @@ function getCMB(entry) {
   return baseattack + strmod + sizemod + other
 }
 
+function getCMD(entry) {
+  let base = 10
+  let baseattack = getBaseAttack(entry)
+  let strmod = Math.floor((entry["ability scores"].str.value-10)/2)
+  let dexmod = Math.floor((entry["ability scores"].dex.value-10)/2)
+  let sizemod = sizeModifiers[entry.size]
+  let other = 0 // TODO: This could be deflection, dodge, insight, morale, profale, sacred, as well as penalties (to Touch AC)
+  return base + baseattack + strmod + dexmod + sizemod + other
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
   collectHD: collectHD,
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
+  getCMD: getCMD,
 }
