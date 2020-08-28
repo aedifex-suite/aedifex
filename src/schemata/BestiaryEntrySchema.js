@@ -102,6 +102,7 @@ const BestiaryItemModifierSchema = schisma({
 
 const BestiaryItemSchema = schisma({
   name: StringSchema,
+  equipped: Boolean,
   modifies: [BestiaryItemModifierSchema],
 })
 
