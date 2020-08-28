@@ -146,7 +146,16 @@ function getShortAlignment(alignment) {
  * @returns {Number} The calculated ability score modifier.
  */
 function getAbilityScoreMod(entry, which) {
-  return Math.floor((entry["ability scores"][which].value - 10) / 2)
+  let base = Math.floor((entry["ability scores"][which].value - 10) / 2)
+  let mod = 0
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot === `ability scores.${which}`) {
+        mod += Number(modifier.value)
+      }
+    }
+  }
+  return base + mod
 }
 
 /**
