@@ -99,6 +99,24 @@ function getCMD(entry) {
   return base + baseattack + strmod + dexmod + sizemod + other
 }
 
+const shortAlignments = {
+  'neutral': 'N',
+  'good': 'G',
+  'evil': 'E',
+  'lawful': 'L',
+  'chaotic': 'C',
+}
+
+function getShortAlignment(alignment) {
+  let a = '-'
+  if (alignment.law === 'neutral' && alignment.moral === 'neutral') {
+    a = 'N'
+  } else {
+    a = shortAlignments[alignment.law]+shortAlignments[alignment.moral]
+  }
+  return a
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
@@ -106,4 +124,5 @@ module.exports = {
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
   getCMD: getCMD,
+  getShortAlignment: getShortAlignment,
 }
