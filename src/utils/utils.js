@@ -117,6 +117,10 @@ function getShortAlignment(alignment) {
   return a
 }
 
+function getAbilityScoreMod(entry, which) {
+  return Math.floor((entry["ability scores"][which].value - 10) / 2)
+}
+
 function getSave(entry, which) {
   let basesave = entry.saves[which]==='good'?2:0
   basesave += (entry.saves[which]==='good'?0.5:0.34) * entry.hitdice // NOTE: I don't know if 0.34 is correct, but it works up to lvl 20.
@@ -130,6 +134,13 @@ function getSave(entry, which) {
       }
     }
   }
+  if (which === 'fortitude') {
+    basesave += getAbilityScoreMod(entry, 'con')
+  } else if (which === 'reflex') {
+    basesave += getAbilityScoreMod(entry, 'dex')
+  } else if (which === 'will') {
+    basesave += getAbilityScoreMod(entry, 'wis')
+  }
   return Math.floor(basesave)
 }
 
@@ -142,4 +153,5 @@ module.exports = {
   getCMD: getCMD,
   getShortAlignment: getShortAlignment,
   getSave: getSave,
+  getAbilityScoreMod: getAbilityScoreMod,
 }
