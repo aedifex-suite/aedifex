@@ -76,6 +76,10 @@ class {
       d[k] = e.target.value
     } else if (which === 'bab') {
       d[k] = Number(e.target.value)
+    } else if (which === 'alignment.moral') {
+      d[k] = e.target.value
+    } else if (which === 'alignment.law') {
+      d[k] = e.target.value
     }
   }
   addLevel() {
@@ -172,6 +176,16 @@ section.Editor__Core
       select.Editor__Entry__input name='size' id='size' on-change('updateField', 'size')
         for|value| of=['fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal']
           option value=value selected=d['size']===value -- ${value}
+  label.Editor__Entry
+    span.Editor__Entry__name -- Alignment
+    errorable field=`alignment.law`
+      select.Editor__Entry__input name='alignment.law' id='alignment.law' on-change('updateField', 'alignment.law')
+        for|value| of=['lawful', 'neutral', 'chaotic']
+          option value=value selected=d['alignment.law']===value -- ${value}
+    errorable field=`alignment.moral`
+      select.Editor__Entry__input name='alignment.moral' id='alignment.moral' on-change('updateField', 'alignment.moral')
+        for|value| of=['good', 'neutral', 'evil']
+          option value=value selected=d['alignment.moral']===value -- ${value}
   label.Editor__Entry
     span.Editor__Entry__name -- HD
     input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
