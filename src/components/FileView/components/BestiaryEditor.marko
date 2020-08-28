@@ -3,7 +3,9 @@ import {
   BestiaryEntrySchema,
   BestiaryLevelSchema,
   BestiaryFeatSchema,
-  BestiaryFeatModifierSchema
+  BestiaryFeatModifierSchema,
+  BestiaryItemSchema,
+  BestiaryItemModifierSchema
 } from 'schemata/BestiaryEntrySchema'
 
 class {
@@ -152,6 +154,30 @@ class {
   updateFeatModifierField(index, modIndex, which, e) {
     let d = this.dot
     let k = `feats.${index}.modifies.${modIndex}.${which}`
+    if (which === 'dot') {
+      d[k] = e.target.value
+    } else if (which === 'value') {
+      d[k] = Number(e.target.value)
+    }
+  }
+  addItem() {
+    let d = this.dot
+    d['items'].push(BestiaryItemSchema.create({}))
+  }
+  updateItemField(index, which, e) {
+    let d = this.dot
+    let k = `items.${index}.${which}`
+    if (which === 'name') {
+      d[k] = e.target.value
+    }
+  }
+  addItemModifier(index) {
+    let d = this.dot
+    d[`items.${index}.modifies`].push(BestiaryItemModifierSchema.create({}))
+  }
+  updateItemModifierField(index, modIndex, which, e) {
+    let d = this.dot
+    let k = `items.${index}.modifies.${modIndex}.${which}`
     if (which === 'dot') {
       d[k] = e.target.value
     } else if (which === 'value') {
@@ -328,11 +354,47 @@ Section class="Editor__Feats" default='open'
                   label.Editor__Feats__item__modifier__dot
                     span.Editor__Entry__name -- Target
                     errorable field=`feats.${index}.modifies.${modIndex}.dot`
-                      input.Editor__Entry__input list='target-fields' value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
+                      input.Editor__Entry__input list='feat-target-fields' value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
                   label.Editor__Feats__item__modifier__value
                     span.Editor__Entry__name -- Value
                     input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
-datalist id='target-fields'
+datalist id='feat-target-fields'
+  for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
+    option value=`ability scores.${key}` -- ${value}
+  for|value| of=['fortitude', 'reflex', 'will']
+    option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}
+  option value='hitpoints' -- HP
+  option value='attack' -- Attack
+  option value='ac' -- AC
+  for|item, index| of=d['items']
+    for|itemMod, modIndex| of=item.modifies
+      option value=`items.${index}.modifies.${modIndex}` -- ${item.name}: ${itemMod.dot}
+Section class="Editor__Items" default='open'
+  @heading
+    span -- Items
+  @content
+    div.Editor__Items__content
+      div.Editor__Items__controls
+        button.Editor__Items__controls__button on-click('addItem') -- add item
+      div.Editor__Items__items
+        for|item, index| of=d['items']
+          div.Editor__Items__item
+            div.Editor__Items__item__name
+              span.Editor__Entry__name -- Name
+              errorable field=`items.${index}.name`
+                input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
+            div.Editor__Items__item__modifiers
+              button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
+              for|modifier, modIndex| of=item.modifies
+                div.Editor__Items__item__modifier
+                  label.Editor__Items__item__modifier__dot
+                    span.Editor__Entry__name -- Target
+                    errorable field=`items.${index}.modifies.${modIndex}.dot`
+                      input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
+                  label.Editor__Items__item__modifier__value
+                    span.Editor__Entry__name -- Value
+                    input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
+datalist id='item-target-fields'
   for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
     option value=`ability scores.${key}` -- ${value}
   for|value| of=['fortitude', 'reflex', 'will']
