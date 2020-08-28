@@ -49,7 +49,6 @@ function collectHD(entry) {
   return [results, undefined]
 }
 
-
 /**
  * getBaseAttack returns the highest base attack from the base HD*BAB or each level's BAB * level. This presumes non-fractional BAB calculation.
  * @param {BestiaryEntrySchema} entry The entry to target
@@ -69,6 +68,9 @@ function getBaseAttack(entry) {
   return bestattack
 }
 
+/**
+ * sizeModifiers is a mapping of string->number values of sizes to their respective bonuses/penalties.
+ */
 const sizeModifiers = {
   'fine': -8,
   'diminutive': -4,
@@ -81,6 +83,11 @@ const sizeModifiers = {
   'colossal': 8,
 }
 
+/**
+ * getCMB returns the combat maneuver bonus.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @returns {Number} Calculated CMB.
+ */
 function getCMB(entry) {
   let baseattack = getBaseAttack(entry)
   let strmod = Math.floor((entry["ability scores"].str.value-10)/2)
@@ -89,6 +96,11 @@ function getCMB(entry) {
   return baseattack + strmod + sizemod + other
 }
 
+/**
+ * getCMD returns the combat maneuver defense.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @returns {Number} Calculated CMD.
+ */
 function getCMD(entry) {
   let base = 10
   let baseattack = getBaseAttack(entry)
@@ -99,6 +111,9 @@ function getCMD(entry) {
   return base + baseattack + strmod + dexmod + sizemod + other
 }
 
+/**
+ * shortAlignments is a string->string mapping of full alignment names to their single-character counterparts.
+ */
 const shortAlignments = {
   'neutral': 'N',
   'good': 'G',
@@ -107,6 +122,13 @@ const shortAlignments = {
   'chaotic': 'C',
 }
 
+/**
+ * getShortAlignment returns the single-letter alignment from an AlignmentSchema-valid object.
+ * @param {Object} alignment The alignment object.
+ * @param {String} alignment.law The law alignment, may be "lawful", "neutral", or "chaotic".
+ * @param {String} alignment.moral The moral alignment, may be "good", "neutral", or "evil".
+ * @returns {String} The 1 or 2 letter version of the alignment.
+ */
 function getShortAlignment(alignment) {
   let a = '-'
   if (alignment.law === 'neutral' && alignment.moral === 'neutral') {
@@ -117,10 +139,22 @@ function getShortAlignment(alignment) {
   return a
 }
 
+/**
+ * getAbilityScoreMod gets the ability score modifier for a given entry and ability score.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @param {String} which The ability score, may be "str", "con", "dex", "wis", "int", or "cha".
+ * @returns {Number} The calculated ability score modifier.
+ */
 function getAbilityScoreMod(entry, which) {
   return Math.floor((entry["ability scores"][which].value - 10) / 2)
 }
 
+/**
+ * getSave gets the save score for a given entry and save. It will use the highest save possible calculated from the creature's base save and HD or the creature's best level's save.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @param {String} which The save, may be "fortitude", "reflex", or "will".
+ * @returns {Number} The calculated save.
+ */
 function getSave(entry, which) {
   let basesave = entry.saves[which]==='good'?2:0
   basesave += (entry.saves[which]==='good'?0.5:0.34) * entry.hitdice // NOTE: I don't know if 0.34 is correct, but it works up to lvl 20.
