@@ -125,9 +125,11 @@ const BestiaryEntrySchema = schisma({
   hitpips: HitPipsSchema,
   bab: BABSchema,
   levels: [BestiaryLevelSchema],
-  fortitude: NumberValuesSchema,
-  reflex: NumberValuesSchema,
-  will: NumberValuesSchema,
+  saves: {
+    fortitude: SaveSchema,
+    reflex: SaveSchema,
+    will: SaveSchema,
+  },
   dr: [{
     $type: {
       value: Number,
