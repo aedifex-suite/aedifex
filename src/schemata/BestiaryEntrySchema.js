@@ -52,6 +52,15 @@ const AlignmentSchema = schisma({
   },
 })
 
+const SaveSchema = schisma({
+  $type: String,
+  $default: 'bad',
+  $validate: v => {
+    if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+    if (v !== 'good' || v !== 'bad') return "field must be 'good' or 'bad'"
+  },
+})
+
 const BestiaryLevelSchema = schisma({
   class: StringSchema,
   level: {
@@ -65,6 +74,11 @@ const BestiaryLevelSchema = schisma({
   prestige: Boolean,
   hitpips: HitPipsSchema,
   bab: BABSchema,
+  saves: {
+    fortitude: SaveSchema,
+    reflex: SaveSchema,
+    will: SaveSchema,
+  },
 })
 
 const BestiaryFeatSchema = schisma({
