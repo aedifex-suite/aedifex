@@ -183,6 +183,7 @@ function getAbilityScore(entry, which) {
   }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    if (!entry.items[itemIndex].equipped) continue
     mod += getItemModifierField(entry, itemIndex, `ability scores.${which}`)
   }
   return base + mod
