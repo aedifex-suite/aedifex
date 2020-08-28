@@ -90,7 +90,7 @@ const sizeModifiers = {
  */
 function getCMB(entry) {
   let baseattack = getBaseAttack(entry)
-  let strmod = Math.floor((entry["ability scores"].str.value-10)/2)
+  let strmod = getAbilityScoreMod(entry, 'str')
   let sizemod = sizeModifiers[entry.size]
   let other = 0 // TODO
   return baseattack + strmod + sizemod + other
@@ -104,8 +104,8 @@ function getCMB(entry) {
 function getCMD(entry) {
   let base = 10
   let baseattack = getBaseAttack(entry)
-  let strmod = Math.floor((entry["ability scores"].str.value-10)/2)
-  let dexmod = Math.floor((entry["ability scores"].dex.value-10)/2)
+  let strmod = getAbilityScoreMod(entry, 'str')
+  let dexmod = getAbilityScoreMod(entry, 'dex')
   let sizemod = sizeModifiers[entry.size]
   let other = 0 // TODO: This could be deflection, dodge, insight, morale, profale, sacred, as well as penalties (to Touch AC)
   return base + baseattack + strmod + dexmod + sizemod + other
