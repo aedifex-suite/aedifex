@@ -28,6 +28,7 @@ class {
     this.watcher.close()
   }
   watchDir(dir) {
+    if (dir === "") return
     const w = chokidar.watch(['**/*.yaml', '**/*.yml'], {
       ignored: /(^|[\/\\])\../, // ignore dotfiles
       cwd: dir,
@@ -50,6 +51,9 @@ class {
     this.state.focused = p
     this.emit('select', path.resolve(this.state.root, p))
   }
+  closeFolder(e) {
+    this.emit('close', this.state.root)
+  }
 }
 
 style {
@@ -67,11 +71,30 @@ style {
     user-select: none;
   }
   .FolderListing__Header {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     text-transform: uppercase;
     color: var(--listing-folder-fg);
     cursor: default;
   }
+  .FolderListing__Header__Title {
+    padding: .25em .5em;
+  }
+  .FolderListing__Header__Close {
+    cursor: pointer;
+    transition: opacity .1s;
+    opacity: 0;
+    min-width: 1em;
+    min-height: 1em;
+  }
+  .FolderListing__Header:hover .FolderListing__Header__Close {
+    opacity: 0.5;
+  }
+  .FolderListing__Header:hover .FolderListing__Header__Close:hover {
+    opacity: 1;
+  }
+
   .FolderListing__Items {
     list-style: none;
     padding: 0; margin:0;
@@ -93,7 +116,9 @@ style {
 }
 
 div.FolderListing
-  header.FolderListing__Header -- ${path.basename(state.root)}
+  header.FolderListing__Header
+    span.FolderListing__Header__Title -- ${path.basename(state.root)}
+    span.FolderListing__Header__Close on-click('closeFolder') -- &times;
   ul.FolderListing__Items
     for|item, index| of=state.files
       li.FolderListing__Items__item on-click('clickItem', item) class=[state.focused===item?'-focused':null,path.resolve(state.root, item)===input.selected?'-selected':null] -- ${item}
