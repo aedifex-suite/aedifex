@@ -19,10 +19,10 @@ class {
     }
   }
   onDestroy() {
-    if (this.input) {
-      input.file.off('change', this.onFileUpdate)
-      input.file.off('undo', this.onFileUpdate)
-      input.file.off('redo', this.onFileUpdate)
+    if (this.input && this.input.file) {
+      this.input.file.off('change', this.onFileUpdate)
+      this.input.file.off('undo', this.onFileUpdate)
+      this.input.file.off('redo', this.onFileUpdate)
     }
   }
   onFileUpdate() {

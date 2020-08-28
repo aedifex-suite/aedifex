@@ -11,10 +11,10 @@ class {
     }
   }
   onDestroy() {
-    if (this.input) {
-      input.file.off('change', this.onFileUpdate)
-      input.file.off('undo', this.onFileUpdate)
-      input.file.off('redo', this.onFileUpdate)
+    if (this.input && this.input.file) {
+      this.input.file.off('change', this.onFileUpdate)
+      this.input.file.off('undo', this.onFileUpdate)
+      this.input.file.off('redo', this.onFileUpdate)
     }
   }
   onFileUpdate() {
@@ -63,8 +63,7 @@ section
     span -- ${dot['xp']||'-'}
   if(dot['levels'] && dot['levels'].length > 0)
     div.RCL
-      span.RCL__Race -- ${dot['race']}
-        --  
+      <span.RCL__Race>${dot['race']} </span>
       for|level, index| of=dot['levels']
         span.RCL__CL
           span.RCL__CL__Class -- ${level.class}
@@ -92,14 +91,15 @@ section
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
   $ let [lvlhps, lvlhpsErr] = [[],[]]
   $ let favoredhp = 0
-  for|level, index| of=dot['levels']
-    $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
-    if(index===0&&dot['hitdice']===0)
-      $ lvlhp += level.hitpips/2 // First HD is max if it comes from a class level.
-    $ lvlhps.push(lvlhp)
-    $ lvlhpsErr.push(lvlhpErr)
-    if(level.favored)
-      $ favoredhp += level.level
+  if(dot['levels'] && dot['levels'].length>0)
+    for|level, index| of=dot['levels']
+      $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
+      if(index===0&&dot['hitdice']===0)
+        $ lvlhp += level.hitpips/2 // First HD is max if it comes from a class level.
+      $ lvlhps.push(lvlhp)
+      $ lvlhpsErr.push(lvlhpErr)
+      if(level.favored)
+        $ favoredhp += level.level
   $ let [conhp, conhpErr] = utils.conHP(dot['hitdice']+(dot['levels'].reduce((a,b)=>a+b.level,0)), dot['ability scores.con.value'])
   div
     span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)+favoredhp}
