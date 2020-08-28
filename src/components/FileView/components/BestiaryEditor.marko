@@ -213,12 +213,15 @@ section.Editor__Core
           for|value| of=[0.5,0.75,1]
             option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
   label.Editor__Entry
-    div.Editor__Levels__level__saves
-      span.Editor__Entry__name -- Good Saves
+  div.Editor__Levels__level__saves
+    span.Editor__Entry__name -- Good Saves
+    label.Editor__Entry__label
       span.Editor__Entry__label -- Fortitude
       input.Editor__Entry__input type='checkbox' checked=d['saves.fortitude']==='good' on-change('updateField', 'saves.fortitude')
+    label.Editor__Entry__label
       span.Editor__Entry__label -- Reflex
       input.Editor__Entry__input type='checkbox' checked=d['saves.reflex']==='good' on-change('updateField', 'saves.reflex')
+    label.Editor__Entry__label
       span.Editor__Entry__label -- Will
       input.Editor__Entry__input type='checkbox' checked=d['saves.will']==='good' on-change('updateField', 'saves.will')
   Section class="Editor__Levels" default='closed'
@@ -256,12 +259,15 @@ section.Editor__Core
                         option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
                 div.Editor__Levels__level__saves
                   span.Editor__Entry__name -- Good Saves
-                  span.Editor__Entry__label -- Fortitude
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
-                  span.Editor__Entry__label -- Reflex
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
-                  span.Editor__Entry__label -- Will
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Fortitude
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Reflex
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Will
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
