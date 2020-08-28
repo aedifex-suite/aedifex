@@ -33,6 +33,25 @@ const BABSchema = schisma({
   },
 })
 
+const AlignmentSchema = schisma({
+  moral: {
+    $type: String,
+    $default: 'neutral',
+    $validate: v => {
+      if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+      if(!['good', 'neutral', 'evil'].includes(v)) return "field must be 'good', 'neutral', or 'evil'"
+    },
+  },
+  law: {
+    $type: String,
+    $default: 'neutral',
+    $validate: v => {
+      if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+      if(!['lawful', 'neutral', 'chaotic'].includes(v)) return "field must be 'lawful', 'neutral', or 'chaotic'"
+    },
+  },
+})
+
 const BestiaryLevelSchema = schisma({
   class: StringSchema,
   level: {
@@ -85,6 +104,7 @@ const BestiaryEntrySchema = schisma({
   description: '',
   race: StringSchema,
   size: SizeSchema,
+  alignment: AlignmentSchema,
   // Defense
   "natural ac": Number,
   hitdice: 1,
