@@ -45,6 +45,14 @@ style {
   .RCL__Race, .RCL__CL__Class {
     text-transform: capitalize;
   }
+  .InitiativeSenses {
+  }
+  .InitiativeSenses__Initiative {
+    font-weight: bold;
+  }
+  .InitiativeSenses__Senses {
+    font-weight: bold;
+  }
   .Saves__item {
   }
   .Saves__item__name {
@@ -75,9 +83,10 @@ section
     <span.Alignment>${utils.getShortAlignment(dot['alignment'])} </span>
     <span.Size>${dot['size']} </span>
     <span.Types>${dot['creature-type']} ${dot['race']?`(${dot['race']})`:''}</span>
-  div
-    label -- Init
-      span -- ${dot['init']};
+  div.InitiativeSenses
+    $ let init = utils.getInitiative(input.file.state)
+    <span.InitiativeSenses__Initiative>Init</span>
+    <span> ${init>=0?`+${init}`:`-${init}`}; </span>
     span -- Senses
       if(dot['senses'])
         for|sense, index| of=dot['senses']
