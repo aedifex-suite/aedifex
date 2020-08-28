@@ -130,7 +130,7 @@ function getSave(entry, which) {
       }
     }
   }
-  return basesave
+  return Math.floor(basesave)
 }
 
 module.exports = {
