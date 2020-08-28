@@ -1,5 +1,10 @@
 import * as dd from 'dot-dotty'
-import { BestiaryEntrySchema, BestiaryLevelSchema, BestiaryFeatSchema } from 'schemata/BestiaryEntrySchema'
+import {
+  BestiaryEntrySchema,
+  BestiaryLevelSchema,
+  BestiaryFeatSchema,
+  BestiaryFeatModifierSchema
+} from 'schemata/BestiaryEntrySchema'
 
 class {
   onCreate(input) {
@@ -137,6 +142,17 @@ class {
     let d = this.dot
     let k = `feats.${index}.${which}`
     if (which === 'name') {
+      d[k] = e.target.value
+    }
+  }
+  addFeatModifier(index) {
+    let d = this.dot
+    d[`feats.${index}.modifies`].push(BestiaryFeatModifierSchema.create({}))
+  }
+  updateFeatModifierField(index, modIndex, which, e) {
+    let d = this.dot
+    let k = `feats.${index}.modifies.${modIndex}.${which}`
+    if (which === 'dot') {
       d[k] = e.target.value
     }
   }
@@ -303,4 +319,14 @@ Section class="Editor__Feats" default='open'
               span.Editor__Entry__name -- Name
               errorable field=`feats.${index}.name`
                 input.Editor__Entry__input value=feat.name on-change('updateFeatField', index, 'name')
-
+            div.Editor__Feats__item__modifiers
+              button.Editor__Feats__item__modifier__add on-click('addFeatModifier', index) -- add modifier
+              for|modifier, modIndex| of=feat.modifies
+                div.Editor__Feats__item__modifier
+                  div.Editor__Feats__item__modifier__dot
+                    span.Editor__Entry__name -- Target
+                    errorable field=`feats.${index}.modifies.${modIndex}.dot`
+                      input.Editor__Entry__input value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
+                  div.Editor__Feats__item__modifier__value
+                    span.Editor__Entry__name -- Value
+                    input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
