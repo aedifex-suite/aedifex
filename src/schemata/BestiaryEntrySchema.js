@@ -81,14 +81,16 @@ const BestiaryLevelSchema = schisma({
   },
 })
 
+const BestiaryFeatModifierSchema = schisma({
+  dot: String,
+  value: {
+    $typeof: [Number, String],
+  },
+})
+
 const BestiaryFeatSchema = schisma({
   name: StringSchema,
-  modifies: [{
-    dot: String,
-    value: {
-      $typeof: [Number, String],
-    },
-  }],
+  modifies: [BestiaryFeatModifierSchema],
 })
 
 const BestiaryLanguageSchema = schisma({
@@ -203,4 +205,5 @@ module.exports = {
   BestiaryEntrySchema,
   BestiaryLevelSchema,
   BestiaryFeatSchema,
+  BestiaryFeatModifierSchema,
 }
