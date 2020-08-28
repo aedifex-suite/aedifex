@@ -111,6 +111,9 @@ class {
       this.state.openDir = result
     }
   }
+  closeDir(e) {
+    this.state.openDir = ''
+  }
 }
 
 style {
@@ -196,7 +199,7 @@ div.Main
   $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
     if(state.openDir)
-      FolderListing dir=state.openDir on-select('openFile') selected=file?file.path:''
+      FolderListing dir=state.openDir on-select('openFile') on-close('closeDir') selected=file?file.path:''
     else
       div
   div.Main__Right
