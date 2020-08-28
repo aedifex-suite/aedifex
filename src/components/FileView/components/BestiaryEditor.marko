@@ -323,10 +323,18 @@ Section class="Editor__Feats" default='open'
               button.Editor__Feats__item__modifier__add on-click('addFeatModifier', index) -- add modifier
               for|modifier, modIndex| of=feat.modifies
                 div.Editor__Feats__item__modifier
-                  div.Editor__Feats__item__modifier__dot
+                  label.Editor__Feats__item__modifier__dot
                     span.Editor__Entry__name -- Target
                     errorable field=`feats.${index}.modifies.${modIndex}.dot`
-                      input.Editor__Entry__input value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
-                  div.Editor__Feats__item__modifier__value
+                      input.Editor__Entry__input list='target-fields' value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
+                  label.Editor__Feats__item__modifier__value
                     span.Editor__Entry__name -- Value
                     input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
+datalist id='target-fields'
+  for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
+    option value=`ability scores.${key}` -- ${value}
+  for|value| of=['fortitude', 'reflex', 'will']
+    option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}
+  option value='hitpoints' -- HP
+  option value='attack' -- Attack
+  option value='ac' -- AC
