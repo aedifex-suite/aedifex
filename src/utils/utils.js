@@ -140,6 +140,31 @@ function getShortAlignment(alignment) {
 }
 
 /**
+ * getItemModifierField gets the calculated field for a given entry. This parses feats for item modifiers.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @param {Number} itemIndex The item index to target.
+ * @param {String} which The field to target.
+ */
+function getItemModifierField(entry, itemIndex, which) {
+  let item = entry.items[itemIndex]
+  let value = 0
+  for (let itemModifierIndex = 0; itemModifierIndex < item.modifies.length; itemModifierIndex++) {
+    let itemModifier = item.modifies[itemModifierIndex]
+    if (itemModifier.dot !== which) continue
+    value += Number(itemModifier.value)
+    // Check for feat modifications.
+    for (const feat of entry.feats) {
+      for (const featModifier of feat.modifies) {
+        if (featModifier.dot === `items.${itemIndex}.modifies.${itemModifierIndex}`) {
+          value += Number(featModifier.value)
+        }
+      }
+    }
+  }
+  return value
+}
+
+/**
  * getAbilityScore gets the calculated ability score for a given entry.
  * @param {BestiaryEntrySchema} entry The entry to target.
  * @param {String} which The ability score, may be "str", "con", "dex", "wis", "int", or "cha".
@@ -148,12 +173,17 @@ function getShortAlignment(alignment) {
 function getAbilityScore(entry, which) {
   let base = entry["ability scores"][which].value
   let mod = 0
+  // Feats *rarely* give ability scores -- some deep eldritch bloodline does, I think.
   for (const feat of entry.feats) {
     for (const modifier of feat.modifies) {
       if (modifier.dot === `ability scores.${which}`) {
         mod += Number(modifier.value)
       }
     }
+  }
+  // Items modifiers.
+  for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    mod += getItemModifierField(entry, itemIndex, `ability scores.${which}`)
   }
   return base + mod
 }
