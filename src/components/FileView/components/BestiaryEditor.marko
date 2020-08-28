@@ -80,6 +80,12 @@ class {
       d[k] = e.target.value
     } else if (which === 'alignment.law') {
       d[k] = e.target.value
+    } else if (which === 'saves.fortitude') {
+      d[k] = e.target.checked?'good':'bad'
+    } else if (which === 'saves.reflex') {
+      d[k] = e.target.checked?'good':'bad'
+    } else if (which === 'saves.will') {
+      d[k] = e.target.checked?'good':'bad'
     }
   }
   addLevel() {
@@ -206,6 +212,15 @@ section.Editor__Core
         select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
           for|value| of=[0.5,0.75,1]
             option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+  label.Editor__Entry
+    div.Editor__Levels__level__saves
+      span.Editor__Entry__name -- Good Saves
+      span.Editor__Entry__label -- Fortitude
+      input.Editor__Entry__input type='checkbox' checked=d['saves.fortitude']==='good' on-change('updateField', 'saves.fortitude')
+      span.Editor__Entry__label -- Reflex
+      input.Editor__Entry__input type='checkbox' checked=d['saves.reflex']==='good' on-change('updateField', 'saves.reflex')
+      span.Editor__Entry__label -- Will
+      input.Editor__Entry__input type='checkbox' checked=d['saves.will']==='good' on-change('updateField', 'saves.will')
   Section class="Editor__Levels" default='closed'
     @heading
       span.Editor__Levels__heading -- Levels
