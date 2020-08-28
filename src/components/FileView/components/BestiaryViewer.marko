@@ -45,6 +45,14 @@ style {
   .RCL__Race, .RCL__CL__Class {
     text-transform: capitalize;
   }
+  .Saves__item {
+  }
+  .Saves__item__name {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .Saves__item__value {
+  }
 }
 
 $ let dot = dd(input.file, {throwErrors: false, prefix: 'state.'})
@@ -103,7 +111,19 @@ section
         span -- ${index!==0?'+':''}${entry[1]}d${entry[0]}
       span -- +${conhp+favoredhp}
     span -- )
-  div -- Fort ${Math.floor((dot['ability scores.con.value']-10)/2)}, Reflex, Will
+  div.Saves
+    span.Saves__item
+      $ let fort = utils.getSave(input.file.state, 'fortitude')
+      <span.Saves__item__name>Fort</span>
+      <span.Saves__item__value> ${fort>=0?`+${fort}`:`-${fort}`}, </span>
+    span.Saves__item
+      $ let reflex = utils.getSave(input.file.state, 'reflex')
+      <span.Saves__item__name>Reflex</span>
+      <span.Saves__item__value> ${reflex>=0?`+${reflex}`:`-${reflex}`}, </span>
+    span.Saves__item
+      $ let will = utils.getSave(input.file.state, 'will')
+      <span.Saves__item__name>Will</span>
+      <span.Saves__item__value> ${will>=0?`+${will}`:`-${will}`}</span>
 section
   h2 -- Statistics
   if(dot['ability scores'])
