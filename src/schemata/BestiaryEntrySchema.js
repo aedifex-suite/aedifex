@@ -93,6 +93,18 @@ const BestiaryFeatSchema = schisma({
   modifies: [BestiaryFeatModifierSchema],
 })
 
+const BestiaryItemModifierSchema = schisma({
+  dot: String,
+  value: {
+    $typeof: [Number, String],
+  },
+})
+
+const BestiaryItemSchema = schisma({
+  name: StringSchema,
+  modifies: [BestiaryItemModifierSchema],
+})
+
 const BestiaryLanguageSchema = schisma({
   name: StringSchema,
   distance: 0, // Only used if name == telepathy
@@ -197,6 +209,7 @@ const BestiaryEntrySchema = schisma({
   cmb: Number,
   cmd: Number,
   feats: [BestiaryFeatSchema],
+  items: [BestiaryItemSchema],
   skills: [BestiarySkillSchema],
   languages: [BestiaryLanguageSchema],
 })
@@ -206,4 +219,6 @@ module.exports = {
   BestiaryLevelSchema,
   BestiaryFeatSchema,
   BestiaryFeatModifierSchema,
+  BestiaryItemSchema,
+  BestiaryItemModifierSchema,
 }
