@@ -1,5 +1,5 @@
 import * as dd from 'dot-dotty'
-import { BestiaryEntrySchema, BestiaryLevelSchema } from 'schemata/BestiaryEntrySchema'
+import { BestiaryEntrySchema, BestiaryLevelSchema, BestiaryFeatSchema } from 'schemata/BestiaryEntrySchema'
 
 class {
   onCreate(input) {
@@ -127,6 +127,17 @@ class {
       d[k] = e.target.checked?'good':'bad'
     } else if (which === 'saves.will') {
       d[k] = e.target.checked?'good':'bad'
+    }
+  }
+  addFeat() {
+    let d = this.dot
+    d['feats'].push(BestiaryFeatSchema.create({}))
+  }
+  updateFeatField(index, which, e) {
+    let d = this.dot
+    let k = `feats.${index}.${which}`
+    if (which === 'name') {
+      d[k] = e.target.value
     }
   }
 }
@@ -278,3 +289,18 @@ Section class="Editor__Statistics" default='open'
     NumberValues label="Wisdom" d=d t="ability scores.wis" on-change('updateAbilityScore', 'wis')
     NumberValues label="Intelligence" d=d t="ability scores.int" on-change('updateAbilityScore', 'int')
     NumberValues label="Charisma" d=d t="ability scores.cha" on-change('updateAbilityScore', 'cha')
+Section class="Editor__Feats" default='open'
+  @heading
+    span -- Feats
+  @content
+    div.Editor__Feats__content
+      div.Editor__Feats__controls
+        button.Editor__Feats__controls__button on-click('addFeat') -- add feat
+      div.Editor__Feats__items
+        for|feat, index| of=d['feats']
+          div.Editor__Feats__item
+            div.Editor__Feats__item__name
+              span.Editor__Entry__name -- Name
+              errorable field=`feats.${index}.name`
+                input.Editor__Entry__input value=feat.name on-change('updateFeatField', index, 'name')
+
