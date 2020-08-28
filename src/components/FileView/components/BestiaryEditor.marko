@@ -154,6 +154,8 @@ class {
     let k = `feats.${index}.modifies.${modIndex}.${which}`
     if (which === 'dot') {
       d[k] = e.target.value
+    } else if (which === 'value') {
+      d[k] = Number(e.target.value)
     }
   }
 }
