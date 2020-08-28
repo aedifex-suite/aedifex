@@ -65,9 +65,9 @@ section
         if(index !== dot['levels'].length-1)
           span -- /
   div.AlignmentSizeTypes
-    span.Alignment -- ${dot['alignment']}
-    span.Size -- ${dot['size']}
-    span.Types -- ${dot['creature-type']} ${dot['race']?`(${dot['race']})`:''}
+    <span.Alignment>${utils.getShortAlignment(dot['alignment'])} </span>
+    <span.Size>${dot['size']} </span>
+    <span.Types>${dot['creature-type']} ${dot['race']?`(${dot['race']})`:''}</span>
   div
     label -- Init
       span -- ${dot['init']};
