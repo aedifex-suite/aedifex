@@ -119,12 +119,12 @@ function getShortAlignment(alignment) {
 
 function getSave(entry, which) {
   let basesave = entry.saves[which]==='good'?2:0
-  basesave += entry.saves[which]==='good'?0.5:0.34 * entry.hitdice // NOTE: I don't know if 0.34 is correct, but it works up to lvl 20.
+  basesave += (entry.saves[which]==='good'?0.5:0.34) * entry.hitdice // NOTE: I don't know if 0.34 is correct, but it works up to lvl 20.
   if (entry.levels) {
     for (let i = 0; i < entry.levels.length; i++) {
       let level = entry.levels[i]
       let save = level.saves[which]==='good'?2:0
-      save += level.saves[which]==='good'?0.5:0.34 * level.level
+      save += (level.saves[which]==='good'?0.5:0.34) * level.level
       if (save > basesave) {
         basesave = save
       }
