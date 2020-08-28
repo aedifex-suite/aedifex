@@ -140,13 +140,13 @@ function getShortAlignment(alignment) {
 }
 
 /**
- * getAbilityScoreMod gets the ability score modifier for a given entry and ability score.
+ * getAbilityScore gets the calculated ability score for a given entry.
  * @param {BestiaryEntrySchema} entry The entry to target.
  * @param {String} which The ability score, may be "str", "con", "dex", "wis", "int", or "cha".
- * @returns {Number} The calculated ability score modifier.
+ * @returns {Number} The calculated ability score.
  */
-function getAbilityScoreMod(entry, which) {
-  let base = Math.floor((entry["ability scores"][which].value - 10) / 2)
+function getAbilityScore(entry, which) {
+  let base = entry["ability scores"][which].value
   let mod = 0
   for (const feat of entry.feats) {
     for (const modifier of feat.modifies) {
@@ -156,6 +156,16 @@ function getAbilityScoreMod(entry, which) {
     }
   }
   return base + mod
+}
+
+/**
+ * getAbilityScoreMod gets the ability score modifier for a given entry and ability score.
+ * @param {BestiaryEntrySchema} entry The entry to target.
+ * @param {String} which The ability score, may be "str", "con", "dex", "wis", "int", or "cha".
+ * @returns {Number} The calculated ability score modifier.
+ */
+function getAbilityScoreMod(entry, which) {
+  return Math.floor((getAbilityScore(entry, which) - 10) / 2)
 }
 
 /**
@@ -206,6 +216,7 @@ module.exports = {
   getCMD: getCMD,
   getShortAlignment: getShortAlignment,
   getSave: getSave,
+  getAbilityScore, getAbilityScore,
   getAbilityScoreMod: getAbilityScoreMod,
   getInitiative: getInitiative,
 }
