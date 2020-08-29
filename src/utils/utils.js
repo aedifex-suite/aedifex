@@ -57,7 +57,7 @@ function getBonusHP(entry) {
   }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
-    if (!entry.items[itemIndex].equipped) continue
+    if (!entry.items[itemIndex].properties.equipped) continue
     hp += getItemModifierField(entry, itemIndex, 'hp')
   }
   return hp
@@ -136,7 +136,7 @@ function getCMB(entry) {
   }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
-    if (!entry.items[itemIndex].equipped) continue
+    if (!entry.items[itemIndex].properties.equipped) continue
     other += getItemModifierField(entry, itemIndex, 'cmb')
   }
 
@@ -230,7 +230,7 @@ function getAbilityScore(entry, which) {
   }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
-    if (!entry.items[itemIndex].equipped) continue
+    if (!entry.items[itemIndex].properties.equipped) continue
     mod += getItemModifierField(entry, itemIndex, `ability scores.${which}`)
   }
   return base + mod
@@ -284,7 +284,7 @@ function getSave(entry, which) {
   }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
-    if (!entry.items[itemIndex].equipped) continue
+    if (!entry.items[itemIndex].properties.equipped) continue
     basesave += getItemModifierField(entry, itemIndex, `saves.${which}`)
   }
   return Math.floor(basesave)

@@ -100,9 +100,46 @@ const BestiaryItemModifierSchema = schisma({
   },
 })
 
+const BestiaryItemTypeSchema = schisma({
+  $type: String,
+  $default: '',
+  $validate: v => {
+    if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+    if (!['weapon', 'armor', 'magic item', 'wealth', 'misc'].includes(v)) return "field must be 'weapon', 'armor', 'magic item', 'wealth', 'misc'"
+  },
+})
+
+const BestiaryItemWeaponSchema = schisma({
+  type: 'weapon',
+  equipped: Boolean,
+  attack: Number,
+  damage: String,
+})
+
+const BestiaryItemArmorSchema = schisma({
+  type: 'armor',
+  equipped: Boolean,
+  ac: Number,
+})
+
+const BestiaryItemMagicItemSchema = schisma({
+  type: 'magic item',
+  equipped: Boolean,
+})
+
+const BestiaryItemGoodsSchema = schisma({
+  type: 'goods',
+})
+
+const BestiaryItemWealthSchema = schisma({
+  type: 'wealth',
+})
+
 const BestiaryItemSchema = schisma({
   name: StringSchema,
-  equipped: Boolean,
+  properties: {
+    $typeof: [BestiaryItemWeaponSchema, BestiaryItemArmorSchema, BestiaryItemMagicItemSchema, BestiaryItemGoodsSchema, BestiaryItemWealthSchema],
+  },
   modifies: [BestiaryItemModifierSchema],
 })
 
@@ -222,4 +259,9 @@ module.exports = {
   BestiaryFeatModifierSchema,
   BestiaryItemSchema,
   BestiaryItemModifierSchema,
+  BestiaryItemArmorSchema,
+  BestiaryItemWeaponSchema,
+  BestiaryItemMagicItemSchema,
+  BestiaryItemWealthSchema,
+  BestiaryItemGoodsSchema,
 }

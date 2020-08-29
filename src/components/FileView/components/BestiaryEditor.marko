@@ -5,6 +5,11 @@ import {
   BestiaryFeatSchema,
   BestiaryFeatModifierSchema,
   BestiaryItemSchema,
+  BestiaryItemWeaponSchema,
+  BestiaryItemArmorSchema,
+  BestiaryItemMagicItemSchema,
+  BestiaryItemGoodsSchema,
+  BestiaryItemWealthSchema,
   BestiaryItemModifierSchema
 } from 'schemata/BestiaryEntrySchema'
 
@@ -184,6 +189,34 @@ class {
       d[k] = e.target.value
     } else if (which === 'value') {
       d[k] = Number(e.target.value)
+    }
+  }
+  changeItemType(index, e) {
+    let d = this.dot
+    let k = `items.${index}.properties`
+    if (e.target.value === 'armor') {
+      d[k] = BestiaryItemArmorSchema.conform(Object.assign(d[k], {type: 'armor'}))
+    } else if (e.target.value === 'weapon') {
+      d[k] = BestiaryItemWeaponSchema.conform(Object.assign(d[k], {type: 'weapon'}))
+    } else if (e.target.value === 'magic item') {
+      d[k] = BestiaryItemMagicItemSchema.conform(Object.assign(d[k], {type: 'magic item'}))
+    } else if (e.target.value === 'goods') {
+      d[k] = BestiaryItemGoodsSchema.conform(Object.assign(d[k], {type: 'goods'}))
+    } else if (e.target.value === 'wealth') {
+      d[k] = BestiaryItemWealthSchema.conform(Object.assign(d[k], {type: 'wealth'}))
+    }
+  }
+  updateItemPropertyField(index, which, e) {
+    let d = this.dot
+    let k = `items.${index}.properties.${which}`
+    if (which === 'ac') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'attack') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'damage') {
+      d[k] = e.target.value
+    } else if (which === 'equipped') {
+      d[k] = e.target.checked
     }
   }
 }
@@ -382,24 +415,30 @@ Section class="Editor__Items" default='open'
       div.Editor__Items__items
         for|item, index| of=d['items']
           div.Editor__Items__item
+            div.Editor__Items__item__type
+              span.Editor__Entry__name -- Type
+              select.Editor__Entry__input name='type' on-change('changeItemType', index)
+                for|value| of=['armor', 'weapon', 'magic item', 'goods', 'wealth']
+                  option value=value selected=item.properties.type===value -- ${value}
             div.Editor__Items__item__name
               span.Editor__Entry__name -- Name
               errorable field=`items.${index}.name`
                 input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
-            div.Editor__Items__item__equipped
-              span.Editor__Entry__name -- Equipped
-                input.Editor__Entry__input type='checkbox' checked=item.equipped on-change('updateItemField', index, 'equipped')
-            div.Editor__Items__item__modifiers
-              button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
-              for|modifier, modIndex| of=item.modifies
-                div.Editor__Items__item__modifier
-                  label.Editor__Items__item__modifier__dot
-                    span.Editor__Entry__name -- Target
-                    errorable field=`items.${index}.modifies.${modIndex}.dot`
-                      input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
-                  label.Editor__Items__item__modifier__value
-                    span.Editor__Entry__name -- Value
-                    input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
+            if(item.properties.equipped !== undefined)
+              div.Editor__Items__item__equipped
+                span.Editor__Entry__name -- Equipped
+                  input.Editor__Entry__input type='checkbox' checked=item.properties.equipped on-change('updateItemPropertyField', index, 'equipped')
+              div.Editor__Items__item__modifiers
+                button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
+                for|modifier, modIndex| of=item.modifies
+                  div.Editor__Items__item__modifier
+                    label.Editor__Items__item__modifier__dot
+                      span.Editor__Entry__name -- Target
+                      errorable field=`items.${index}.modifies.${modIndex}.dot`
+                        input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
+                    label.Editor__Items__item__modifier__value
+                      span.Editor__Entry__name -- Value
+                      input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
 datalist id='item-target-fields'
   for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
     option value=`ability scores.${key}` -- ${value}
