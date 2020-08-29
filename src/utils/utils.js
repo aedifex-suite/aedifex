@@ -93,6 +93,20 @@ function getCMB(entry) {
   let strmod = getAbilityScoreMod(entry, 'str')
   let sizemod = sizeModifiers[entry.size]
   let other = 0 // TODO
+  // Feat modifiers.
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot === 'cmb') {
+        other += Number(modifier.value)
+      }
+    }
+  }
+  // Items modifiers.
+  for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    if (!entry.items[itemIndex].equipped) continue
+    other += getItemModifierField(entry, itemIndex, 'cmb')
+  }
+
   return baseattack + strmod + sizemod + other
 }
 
