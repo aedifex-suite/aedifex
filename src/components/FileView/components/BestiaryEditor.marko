@@ -145,6 +145,12 @@ class {
     let d = this.dot
     d['feats'].push(BestiaryFeatSchema.create({}))
   }
+  removeFeat(index) {
+    let d = this.dot
+    this.input.file.queue()
+    d['feats'].splice(index, 1)
+    this.input.file.unqueue()
+  }
   updateFeatField(index, which, e) {
     let d = this.dot
     let k = `feats.${index}.${which}`
@@ -168,6 +174,12 @@ class {
   addItem() {
     let d = this.dot
     d['items'].push(BestiaryItemSchema.create({}))
+  }
+  removeItem(index) {
+    let d = this.dot
+    this.input.file.queue()
+    d['items'].splice(index, 1)
+    this.input.file.unqueue()
   }
   updateItemField(index, which, e) {
     let d = this.dot
@@ -257,6 +269,68 @@ style {
     margin: .25em;
     opacity: 0.9;
     z-index: 1000;
+  }
+  /* Feats */
+  .Editor__Feats__content {
+    padding: .25em;
+  }
+  .Editor__Feats__items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .Editor__Feats__item {
+    position: relative;
+    padding: 1em;
+    margin: .5em;
+    background: var(--listing-bg);
+  }
+  .Editor__Feats__item__controls {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--content-bg);
+  }
+  .Editor__Feats__item__controls__close {
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    cursor: default;
+  }
+  .Editor__Feats__item__controls__close:hover {
+    opacity: 1;
+  }
+  /* Items */
+  .Editor__Items__content {
+    padding: .25em;
+  }
+  .Editor__Items__items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .Editor__Items__item {
+    position: relative;
+    padding: 1em;
+    margin: .5em;
+    background: var(--listing-bg);
+  }
+  .Editor__Items__item__controls {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--content-bg);
+  }
+  .Editor__Items__item__controls__close {
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    cursor: default;
+  }
+  .Editor__Items__item__controls__close:hover {
+    opacity: 1;
   }
 }
 
@@ -378,6 +452,8 @@ Section class="Editor__Feats" default='open'
       div.Editor__Feats__items
         for|feat, index| of=d['feats']
           div.Editor__Feats__item
+            div.Editor__Feats__item__controls
+              span.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
             div.Editor__Feats__item__name
               span.Editor__Entry__name -- Name
               errorable field=`feats.${index}.name`
@@ -415,6 +491,8 @@ Section class="Editor__Items" default='open'
       div.Editor__Items__items
         for|item, index| of=d['items']
           div.Editor__Items__item
+            div.Editor__Items__item__controls
+              span.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
             div.Editor__Items__item__type
               span.Editor__Entry__name -- Type
               select.Editor__Entry__input name='type' on-change('changeItemType', index)
