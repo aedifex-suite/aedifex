@@ -31,6 +31,39 @@ function conHP(hd=1, con=10) {
 }
 
 /**
+ * getBonusHP gets the total bonus hit points. This includes con mod, items, feats, and favored levels.
+ * @param {BestiaryEntrySchema} entry The entry to target
+ * @returns {Number} Total bonus hit points.
+ */
+function getBonusHP(entry) {
+  let hp = 0
+  let totalLevel = entry.hitdice
+  // Collect total level and also add favored class HP
+  for (let level of entry.levels) {
+    totalLevel += level.level
+    if (level.favored) {
+      hp += level.level
+    }
+  }
+  // Add con mod
+  hp += getAbilityScoreMod(entry, 'con') * totalLevel // TODO: Undead check to use cha
+  // Feat modifiers.
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot === 'hp') {
+        hp += Number(modifier.value)
+      }
+    }
+  }
+  // Items modifiers.
+  for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    if (!entry.items[itemIndex].equipped) continue
+    hp += getItemModifierField(entry, itemIndex, 'hp')
+  }
+  return hp
+}
+
+/**
  * collectHD returns a sorted map of hitpips to hitdice collected from the entry's hitdice and hitpips as well as the entry's levels.
  * @param {BestiaryEntrySchema} entry The entry to target
  * @returns {Map} Map of hitpips to hitdice count, sorted from highest to lowest.
@@ -270,6 +303,7 @@ function getInitiative(entry) {
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
+  getBonusHP: getBonusHP,
   collectHD: collectHD,
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
