@@ -99,7 +99,7 @@ section
   div -- AC
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
   $ let [lvlhps, lvlhpsErr] = [[],[]]
-  $ let favoredhp = 0
+  $ let bonushp = utils.getBonusHP(input.file.state)
   if(dot['levels'] && dot['levels'].length>0)
     for|level, index| of=dot['levels']
       $ let [lvlhp, lvlhpErr] = utils.averageHP(level.level, level.hitpips)
@@ -107,18 +107,15 @@ section
         $ lvlhp += level.hitpips/2 // First HD is max if it comes from a class level.
       $ lvlhps.push(lvlhp)
       $ lvlhpsErr.push(lvlhpErr)
-      if(level.favored)
-        $ favoredhp += level.level
-  $ let [conhp, conhpErr] = utils.conHP(dot['hitdice']+(dot['levels'].reduce((a,b)=>a+b.level,0)), dot['ability scores.con.value'])
   div
-    span -- HP ${hp+conhp+lvlhps.reduce((a,b)=>a+b,0)+favoredhp}
+    span -- HP ${hp+lvlhps.reduce((a,b)=>a+b,0)+bonushp}
     span -- (
       if(dot['hitdice']>0&&dot['levels'] && dot['levels'].length > 0)
         <span>${dot['hitdice']+dot['levels'].reduce((a,b)=>a+b.level,0)} HD; </span>
       $ let [collectedhd, collectedhdErr] = utils.collectHD(input.file.state)
       for|entry, index| of=Array.from(collectedhd)
         span -- ${index!==0?'+':''}${entry[1]}d${entry[0]}
-      span -- +${conhp+favoredhp}
+      span -- +${bonushp}
     span -- )
   div.Saves
     span.Saves__item
