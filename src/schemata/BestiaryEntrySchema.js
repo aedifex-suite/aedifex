@@ -138,7 +138,7 @@ const BestiaryItemWealthSchema = schisma({
 const BestiaryItemSchema = schisma({
   name: StringSchema,
   properties: {
-    $typeof: [BestiaryItemWeaponSchema, BestiaryItemArmorSchema, BestiaryItemMagicItemSchema, BestiaryItemGoodsSchema, BestiaryItemWealthSchema],
+    $typeof: [BestiaryItemGoodsSchema, BestiaryItemWeaponSchema, BestiaryItemArmorSchema, BestiaryItemMagicItemSchema, BestiaryItemWealthSchema],
   },
   modifies: [BestiaryItemModifierSchema],
 })
