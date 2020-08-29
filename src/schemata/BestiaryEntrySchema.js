@@ -112,6 +112,7 @@ const BestiaryItemTypeSchema = schisma({
 const BestiaryItemWeaponSchema = schisma({
   type: 'weapon',
   equipped: Boolean,
+  enchantment: Number,
   attack: Number,
   damage: String,
 })
@@ -119,7 +120,7 @@ const BestiaryItemWeaponSchema = schisma({
 const BestiaryItemArmorSchema = schisma({
   type: 'armor',
   equipped: Boolean,
-  ac: Number,
+  enchantment: Number,
 })
 
 const BestiaryItemMagicItemSchema = schisma({
