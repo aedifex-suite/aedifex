@@ -227,6 +227,14 @@ function getSave(entry, which) {
   } else if (which === 'will') {
     basesave += getAbilityScoreMod(entry, 'wis')
   }
+  // Feat modifiers.
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot === `saves.${which}`) {
+        basesave += Number(modifier.value)
+      }
+    }
+  }
   // Items modifiers.
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
     if (!entry.items[itemIndex].equipped) continue
