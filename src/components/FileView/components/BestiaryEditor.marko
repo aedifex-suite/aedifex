@@ -331,99 +331,102 @@ macro|{ renderBody, field }| name='errorable'
       span.errorable__error -- ${state.errors[field]}
 $ let d = component.dot
 $ let statmap = {str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
-section.Editor__Core
-  h2 -- Core
-  label.Editor__Entry
-    span.Editor__Entry__name -- Name
-    errorable field=`name`
-      input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
-  label.Editor__Entry
-    span.Editor__Entry__name -- Size
-    errorable field=`size`
-      select.Editor__Entry__input name='size' id='size' on-change('updateField', 'size')
-        for|value| of=['fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal']
-          option value=value selected=d['size']===value -- ${value}
-  label.Editor__Entry
-    span.Editor__Entry__name -- Alignment
-    errorable field=`alignment.law`
-      select.Editor__Entry__input name='alignment.law' id='alignment.law' on-change('updateField', 'alignment.law')
-        for|value| of=['lawful', 'neutral', 'chaotic']
-          option value=value selected=d['alignment.law']===value -- ${value}
-    errorable field=`alignment.moral`
-      select.Editor__Entry__input name='alignment.moral' id='alignment.moral' on-change('updateField', 'alignment.moral')
-        for|value| of=['good', 'neutral', 'evil']
-          option value=value selected=d['alignment.moral']===value -- ${value}
-  label.Editor__Entry
-    span.Editor__Entry__name -- HD
-    input.Editor__Entry__input style='width:3em' type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
-    if(d['hitdice']>0)
-      span -- d
-      select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
-        for|value| of=[4,6,8,10,12]
-          option value=value selected=d['hitpips']===value -- ${value}
-  label.Editor__Entry
-    if(d['hitdice']>0)
-      span.Editor__Entry__name -- BAB Progression
-        select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
-          for|value| of=[0.5,0.75,1]
-            option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
-  label.Editor__Entry
-  div.Editor__Levels__level__saves
-    span.Editor__Entry__name -- Good Saves
-    label.Editor__Entry__label
-      span.Editor__Entry__label -- Fortitude
-      input.Editor__Entry__input type='checkbox' checked=d['saves.fortitude']==='good' on-change('updateField', 'saves.fortitude')
-    label.Editor__Entry__label
-      span.Editor__Entry__label -- Reflex
-      input.Editor__Entry__input type='checkbox' checked=d['saves.reflex']==='good' on-change('updateField', 'saves.reflex')
-    label.Editor__Entry__label
-      span.Editor__Entry__label -- Will
-      input.Editor__Entry__input type='checkbox' checked=d['saves.will']==='good' on-change('updateField', 'saves.will')
-  Section class="Editor__Levels" default='closed'
-    @heading
-      span.Editor__Levels__heading -- Levels
-    @content
-      div.Editor__Levels__content
-        div.Editor__Levels__controls
-          button.Editor__Levels__controls__button on-click('addLevel') -- +
-        div.Editor__Levels__items
-          if(d['levels'])
-            for|level, index| of=d['levels']
-              div.Editor__Levels__level
-                div.Editor__Levels__level__extra title='If favored is checked, bonus hit points are given equal to the class level'
-                  span.Editor__Entry__name -- Favored
-                  input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
-                div.Editor__Levels__level__extra
-                  span.Editor__Entry__name -- Prestige
-                  input.Editor__Entry__input type='checkbox' checked=level.prestige on-change('updateLevelField', index, 'prestige')
-                div.Editor__Levels__level__name
-                  span.Editor__Entry__name -- Class
-                  errorable field=`levels.${index}.class`
-                    input.Editor__Entry__input value=level.class on-change('updateLevelField', index, 'class')
-                div.Editor__Levels__level__level
-                  span.Editor__Entry__name -- Level
-                  input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
-                  div.Editor__Levels__level__hitpips
-                    span.Editor__Entry__name -- HD
-                    select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
-                      for|value| of=[4,6,8,10,12]
-                        option value=value selected=level.hitpips===value -- ${value}
-                div.Editor__Levels__level__bab
-                  span.Editor__Entry__name -- BAB
-                    select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
-                      for|value| of=[0.5,0.75,1]
-                        option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
-                div.Editor__Levels__level__saves
-                  span.Editor__Entry__name -- Good Saves
-                  label.Editor__Entry__label
-                    span.Editor__Entry__label -- Fortitude
-                    input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
-                  label.Editor__Entry__label
-                    span.Editor__Entry__label -- Reflex
-                    input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
-                  label.Editor__Entry__label
-                    span.Editor__Entry__label -- Will
-                    input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
+Section class="Editor__Core" default='open'
+  @heading
+    span.Editor__Core__heading -- Core
+  @content
+    div.Editor__Core__content
+      label.Editor__Entry
+        span.Editor__Entry__name -- Name
+        errorable field=`name`
+          input.Editor__Entry__input value=d['name'] size=8 on-change('updateField', 'name')
+      label.Editor__Entry
+        span.Editor__Entry__name -- Size
+        errorable field=`size`
+          select.Editor__Entry__input name='size' id='size' on-change('updateField', 'size')
+            for|value| of=['fine', 'diminutive', 'tiny', 'small', 'medium', 'large', 'huge', 'gargantuan', 'colossal']
+              option value=value selected=d['size']===value -- ${value}
+      label.Editor__Entry
+        span.Editor__Entry__name -- Alignment
+        errorable field=`alignment.law`
+          select.Editor__Entry__input name='alignment.law' id='alignment.law' on-change('updateField', 'alignment.law')
+            for|value| of=['lawful', 'neutral', 'chaotic']
+              option value=value selected=d['alignment.law']===value -- ${value}
+        errorable field=`alignment.moral`
+          select.Editor__Entry__input name='alignment.moral' id='alignment.moral' on-change('updateField', 'alignment.moral')
+            for|value| of=['good', 'neutral', 'evil']
+              option value=value selected=d['alignment.moral']===value -- ${value}
+      label.Editor__Entry
+        span.Editor__Entry__name -- HD
+        input.Editor__Entry__input style='width:3em' type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
+        if(d['hitdice']>0)
+          span -- d
+          select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
+            for|value| of=[4,6,8,10,12]
+              option value=value selected=d['hitpips']===value -- ${value}
+      label.Editor__Entry
+        if(d['hitdice']>0)
+          span.Editor__Entry__name -- BAB Progression
+            select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
+              for|value| of=[0.5,0.75,1]
+                option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+      label.Editor__Entry
+      div.Editor__Levels__level__saves
+        span.Editor__Entry__name -- Good Saves
+        label.Editor__Entry__label
+          span.Editor__Entry__label -- Fortitude
+          input.Editor__Entry__input type='checkbox' checked=d['saves.fortitude']==='good' on-change('updateField', 'saves.fortitude')
+        label.Editor__Entry__label
+          span.Editor__Entry__label -- Reflex
+          input.Editor__Entry__input type='checkbox' checked=d['saves.reflex']==='good' on-change('updateField', 'saves.reflex')
+        label.Editor__Entry__label
+          span.Editor__Entry__label -- Will
+          input.Editor__Entry__input type='checkbox' checked=d['saves.will']==='good' on-change('updateField', 'saves.will')
+Section class="Editor__Levels" default='closed'
+  @heading
+    span.Editor__Levels__heading -- Levels
+  @content
+    div.Editor__Levels__content
+      div.Editor__Levels__controls
+        button.Editor__Levels__controls__button on-click('addLevel') -- +
+      div.Editor__Levels__items
+        if(d['levels'])
+          for|level, index| of=d['levels']
+            div.Editor__Levels__level
+              div.Editor__Levels__level__extra title='If favored is checked, bonus hit points are given equal to the class level'
+                span.Editor__Entry__name -- Favored
+                input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
+              div.Editor__Levels__level__extra
+                span.Editor__Entry__name -- Prestige
+                input.Editor__Entry__input type='checkbox' checked=level.prestige on-change('updateLevelField', index, 'prestige')
+              div.Editor__Levels__level__name
+                span.Editor__Entry__name -- Class
+                errorable field=`levels.${index}.class`
+                  input.Editor__Entry__input value=level.class on-change('updateLevelField', index, 'class')
+              div.Editor__Levels__level__level
+                span.Editor__Entry__name -- Level
+                input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
+                div.Editor__Levels__level__hitpips
+                  span.Editor__Entry__name -- HD
+                  select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
+                    for|value| of=[4,6,8,10,12]
+                      option value=value selected=level.hitpips===value -- ${value}
+              div.Editor__Levels__level__bab
+                span.Editor__Entry__name -- BAB
+                  select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
+                    for|value| of=[0.5,0.75,1]
+                      option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+              div.Editor__Levels__level__saves
+                span.Editor__Entry__name -- Good Saves
+                label.Editor__Entry__label
+                  span.Editor__Entry__label -- Fortitude
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
+                label.Editor__Entry__label
+                  span.Editor__Entry__label -- Reflex
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
+                label.Editor__Entry__label
+                  span.Editor__Entry__label -- Will
+                  input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
