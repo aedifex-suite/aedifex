@@ -355,9 +355,9 @@ section.Editor__Core
           option value=value selected=d['alignment.moral']===value -- ${value}
   label.Editor__Entry
     span.Editor__Entry__name -- HD
-    input.Editor__Entry__input type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
+    input.Editor__Entry__input style='width:3em' type='number' value=d['hitdice'] size=4 on-change('updateField', 'hitdice')
     if(d['hitdice']>0)
-      span.Editor__Entry__name -- d
+      span -- d
       select.Editor__Entry__input name='die' id='die' on-change('updateField', 'hitpips')
         for|value| of=[4,6,8,10,12]
           option value=value selected=d['hitpips']===value -- ${value}
@@ -404,6 +404,7 @@ section.Editor__Core
                   span.Editor__Entry__name -- Level
                   input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
                   div.Editor__Levels__level__hitpips
+                    span.Editor__Entry__name -- HD
                     select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
                       for|value| of=[4,6,8,10,12]
                         option value=value selected=level.hitpips===value -- ${value}
