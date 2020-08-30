@@ -49,18 +49,6 @@ class {
     }
     this.forceUpdate()
   }
-  updateAbilityScore(which, e) {
-    let d = this.dot
-    let k = `ability scores.${which}.value`
-    let v = Number(e.target.value)
-    if (d[k] === undefined) return
-    if (v < 0) {
-      this.state.errors[k] = 'cannot be less than 0'
-    } else {
-      delete this.state.errors[k]
-    }
-    d[k] = v
-  }
   updateField(which, e) {
     let d = this.dot
     let k = which
@@ -98,6 +86,8 @@ class {
       d[k] = e.target.checked?'good':'bad'
     } else if (which === 'saves.will') {
       d[k] = e.target.checked?'good':'bad'
+    } else if (which.startsWith('ability scores')) {
+      d[k] = Number(e.target.value)
     }
   }
   addLevel() {
@@ -340,6 +330,7 @@ macro|{ renderBody, field }| name='errorable'
     if(state.errors[field])
       span.errorable__error -- ${state.errors[field]}
 $ let d = component.dot
+$ let statmap = {str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
 section.Editor__Core
   h2 -- Core
   label.Editor__Entry
@@ -436,12 +427,11 @@ Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
   @content
-    NumberValues label="Strength" d=d t="ability scores.str" on-change('updateAbilityScore', 'str')
-    NumberValues label="Dexterity" d=d t="ability scores.dex" on-change('updateAbilityScore', 'dex')
-    NumberValues label="Constitution" d=d t="ability scores.con" on-change('updateAbilityScore', 'con')
-    NumberValues label="Wisdom" d=d t="ability scores.wis" on-change('updateAbilityScore', 'wis')
-    NumberValues label="Intelligence" d=d t="ability scores.int" on-change('updateAbilityScore', 'int')
-    NumberValues label="Charisma" d=d t="ability scores.cha" on-change('updateAbilityScore', 'cha')
+    for|key,value| in=statmap
+      label.Editor__Entry
+        span.Editor__Entry__name -- ${value}
+        errorable field=`ability scores.${key}`
+          input.Editor__Entry__input type='number' value=d[`ability scores.${key}`] on-change('updateField', `ability scores.${key}`)
 Section class="Editor__Feats" default='open'
   @heading
     span -- Feats
@@ -470,7 +460,7 @@ Section class="Editor__Feats" default='open'
                     span.Editor__Entry__name -- Value
                     input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
 datalist id='feat-target-fields'
-  for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
+  for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
   for|value| of=['fortitude', 'reflex', 'will']
     option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}
@@ -537,7 +527,7 @@ Section class="Editor__Items" default='open'
                       span.Editor__Entry__name -- Value
                       input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
 datalist id='item-target-fields'
-  for|key,value| in={str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
+  for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
   for|value| of=['fortitude', 'reflex', 'will']
     option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}

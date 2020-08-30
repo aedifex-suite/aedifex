@@ -1,5 +1,4 @@
 const schisma = require('schisma')
-const { NumberValuesSchema } = require('schemata/NumberValuesSchema')
 const StringSchema  = require('schemata/String')
 const HitPipsSchema = require('schemata/HitPips')
 const DamageSchema  = require('schemata/Damage')
@@ -202,7 +201,7 @@ const BestiaryEntrySchema = schisma({
       value: Number,
     }
   }],
-  sr: NumberValuesSchema,
+  sr: Number,
   // Offense
   speed: {
     $type: Number,
@@ -220,30 +219,12 @@ const BestiaryEntrySchema = schisma({
   },
   // Statistics
   "ability scores": {
-    str: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
-    dex: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
-    con: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
-    wis: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
-    int: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
-    cha: {
-      $type: NumberValuesSchema,
-      $default: { value: 10 },
-    },
+    str: 10,
+    dex: 10,
+    con: 10,
+    wis: 10,
+    int: 10,
+    cha: 10,
   },
   cmb: Number,
   cmd: Number,

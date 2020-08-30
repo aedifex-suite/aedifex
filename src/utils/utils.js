@@ -218,7 +218,7 @@ function getItemModifierField(entry, itemIndex, which) {
  * @returns {Number} The calculated ability score.
  */
 function getAbilityScore(entry, which) {
-  let base = entry["ability scores"][which].value
+  let base = entry["ability scores"][which]
   let mod = 0
   // Feats *rarely* give ability scores -- some deep eldritch bloodline does, I think.
   for (const feat of entry.feats) {
