@@ -306,6 +306,7 @@ function getAC(entry) {
     'armor': 0,
     'deflection': 0,
     'dex': 0,
+    'size': sizeModifiers[entry.size] !== undefined ? -sizeModifiers[entry.size] : 0,
     'dodge': 0,
     'enhancement': 0,
     'insight': 0,
@@ -352,12 +353,42 @@ function getAC(entry) {
   return total
 }
 
+function getTouchAC(entry) {
+  let dexmod = getAbilityScoreMod(entry, 'dex')
+  let sizemod = sizeModifiers[entry.size] !== undefined ? -sizeModifiers[entry.size] : 0
+  let deflection = 0
+  // Feat modifiers.
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot === 'ac.deflection') {
+        if (modifier.value > deflection) {
+          deflection = modifier.value
+        }
+      }
+    }
+  }
+  // Items modifiers.
+  for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    let item = entry.items[itemIndex]
+    if (!item.properties.equipped) continue
+    for (const modifier of item.modifies) {
+      if (modifier.dot === 'ac.deflection') {
+        if (modifier.value > deflection) {
+          deflection = modifier.value
+        }
+      }
+    }
+  }
+  return 10 + dexmod + sizemod + deflection
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
   getBonusHP: getBonusHP,
   collectHD: collectHD,
   getAC: getAC,
+  getTouchAC: getTouchAC,
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
   getCMD: getCMD,
