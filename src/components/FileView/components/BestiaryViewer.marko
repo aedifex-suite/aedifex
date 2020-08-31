@@ -97,6 +97,7 @@ section
 section
   h2 -- Defense
   div -- AC ${utils.getAC(input.file.state)}
+    <span>, touch ${utils.getTouchAC(input.file.state)}</span>
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
   $ let [lvlhps, lvlhpsErr] = [[],[]]
   $ let bonushp = utils.getBonusHP(input.file.state)
