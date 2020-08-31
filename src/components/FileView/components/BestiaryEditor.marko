@@ -368,6 +368,7 @@ macro|{ renderBody, field }| name='errorable'
       span.errorable__error -- ${state.errors[field]}
 $ let d = component.dot
 $ let statmap = {str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'}
+$ let actargets = {armor: 'Armor', deflection: 'Deflection', dodge: 'Dodge', enhancement: 'Enhancement', insight: 'Insight', luck: 'Luck', natural: 'Natural', profane: 'Profane', sacred: 'Sacred', shield: 'Shield'}
 Section class="Editor__Core" default='open'
   @heading
     span.Editor__Core__heading -- Core
@@ -509,8 +510,9 @@ datalist id='feat-target-fields'
     option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}
   option value='hp' -- HP
   option value='attack' -- Attack
-  option value='ac' -- AC
   option value='cmb' -- CMB
+  for|key,value| in=actargets
+    option value=`ac.${key}` -- ${value} AC
   for|item, index| of=d['items']
     for|itemMod, modIndex| of=item.modifies
       option value=`items.${index}.modifies.${modIndex}` -- ${item.name}: ${itemMod.dot}
@@ -552,11 +554,6 @@ Section class="Editor__Items" default='open'
                 span.Editor__Entry__name -- Damage
                 errorable field=`items.${index}.properties.damage`
                   input.Editor__Entry__input value=item.properties.damage on-change('updateItemPropertyField', index, 'damage')
-            else-if(item.properties.type === 'armor')
-              div.Editor__Items__item__enchantment
-                span.Editor__Entry__name -- Enchantment
-                errorable field=`items.${index}.properties.enchantment`
-                  input.Editor__Entry__input type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
             if(item.properties.equipped !== undefined)
               div.Editor__Items__item__modifiers
                 button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
@@ -576,5 +573,6 @@ datalist id='item-target-fields'
     option value=`saves.${value}` -- ${value[0].toUpperCase()+value.slice(1)}
   option value='hp' -- HP
   option value='attack' -- Attack
-  option value='ac' -- AC
   option value='cmb' -- CMB
+  for|key,value| in=actargets
+    option value=`ac.${key}` -- ${value} AC
