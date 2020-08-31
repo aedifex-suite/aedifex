@@ -13,6 +13,19 @@ const DamageSchema  = require('schemata/Damage')
   }
 })*/
 
+const ACSchema = schisma({
+  type: {
+    $type: String,
+    $default: 'armor',
+    $validate: v => {
+      if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
+      const types = ['armor', 'deflection', 'dodge', 'enhancement', 'insight', 'luck', 'natural', 'profane', 'sacred', 'shield', 'size']
+      if (![types].includes(v)) return `field must be ${types.map(r=>"'"+r+"'").join(', ')}`
+    }
+  },
+  value: Number,
+})
+
 const SizeSchema = schisma({
   $type: String,
   $default: 'medium',
