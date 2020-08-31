@@ -300,11 +300,64 @@ function getInitiative(entry) {
   return dexmod
 }
 
+
+function getAC(entry) {
+  let ac = {
+    'armor': 0,
+    'deflection': 0,
+    'dex': 0,
+    'dodge': 0,
+    'enhancement': 0,
+    'insight': 0,
+    'luck': 0,
+    'natural': 0,
+    'profane': 0,
+    'sacred': 0,
+    'shield': 0,
+    'size': 0,
+  }
+  // Feat modifiers.
+  for (const feat of entry.feats) {
+    for (const modifier of feat.modifies) {
+      if (modifier.dot.startsWith('ac.')) {
+        let t = modifier.dot.slice(3)
+        let v = Number(modifier.value)
+        if (ac[t] !== undefined && v > ac[t]) {
+          ac[t] = v
+        }
+      }
+    }
+  }
+  // Items modifiers.
+  for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
+    let item = entry.items[itemIndex]
+    if (!item.properties.equipped) continue
+    for (const modifier of item.modifies) {
+      if (modifier.dot.startsWith('ac.')) {
+        let t = modifier.dot.slice(3)
+        let v = Number(modifier.value)
+        if (ac[t] !== undefined && v > ac[t]) {
+          ac[t] = v
+        }
+      }
+    }
+  }
+  // Get our dex mod.
+  ac['dex'] = getAbilityScoreMod(entry, 'dex')
+  // Return our total.
+  let total = 10
+  for(let v of Object.values(ac)) {
+    total += v
+  }
+  return total
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
   getBonusHP: getBonusHP,
   collectHD: collectHD,
+  getAC: getAC,
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
   getCMD: getCMD,
