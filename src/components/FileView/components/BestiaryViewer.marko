@@ -96,7 +96,7 @@ section
         span -- Perception ${dot['skills.Perception']>0?'+':'-'} ${dot['skills.Perception']}
 section
   h2 -- Defense
-  div -- AC
+  div -- AC ${utils.getAC(input.file.state)}
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
   $ let [lvlhps, lvlhpsErr] = [[],[]]
   $ let bonushp = utils.getBonusHP(input.file.state)
