@@ -592,7 +592,7 @@ Section class="Editor__Feats" default='open'
             @content
               Section class=`Editor__Feats__item__modifiers Editor__Feats__item__modifiers-${index}` default='open'
                 @heading
-                  span -- Modifiers
+                  span -- Modifiers (${feat.modifies.length})
                 @heading_open
                   button.Editor__Items__item__modifier__add on-click('addFeatModifier', index) -- +
                 @content
@@ -661,7 +661,7 @@ Section class="Editor__Items" default='open'
               if(item.properties.equipped !== undefined)
                 Section class=`Editor__Items__item__modifiers Editor__Items__item__modifiers-${index}` default='open'
                   @heading
-                    span -- Modifiers
+                    span -- Modifiers (${item.modifies.length})
                   @heading_open
                     button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- +
                   @content
