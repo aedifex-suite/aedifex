@@ -518,7 +518,7 @@ Section class="Editor__Levels" default='closed'
           for|level, index| of=d['levels']
             div.Editor__Levels__item
               div.Editor__Levels__item__controls
-                span.Editor__Levels__item__controls__close on-click('removeLevel', index) -- &times;
+                button.Editor__Levels__item__controls__close on-click('removeLevel', index) -- &times;
               div.Editor__Levels__item__extra title='If favored is checked, bonus hit points are given equal to the class level'
                 span.Editor__Entry__name -- Favored
                 input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
@@ -576,7 +576,7 @@ Section class="Editor__Feats" default='open'
               span -- ${feat.name}
             @heading_open
               span.Editor__Feats__item__controls
-                span.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
+                button.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
             @content
               div.Editor__Feats__item__name
                 span.Editor__Entry__name -- Name
@@ -591,7 +591,7 @@ Section class="Editor__Feats" default='open'
                   for|modifier, modIndex| of=feat.modifies
                     div.Editor__Feats__item__modifier
                       span.Editor__Feats__item__modifier__controls
-                        span.Editor__Feats__item__modifier__controls__close on-click('removeFeatModifier', index, modIndex) -- &times;
+                        button.Editor__Feats__item__modifier__controls__close on-click('removeFeatModifier', index, modIndex) -- &times;
                       label.Editor__Feats__item__modifier__dot
                         errorable field=`feats.${index}.modifies.${modIndex}.dot`
                           input.Editor__Entry__input list='feat-target-fields' value=modifier.dot placeholder='target field' on-change('updateFeatModifierField', index, modIndex, 'dot')
@@ -624,7 +624,7 @@ Section class="Editor__Items" default='open'
               span -- ${item.name}
             @heading_open
               span.Editor__Items__item__controls
-                span.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
+                button.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
             @content
               div.Editor__Items__item__type
                 span.Editor__Entry__name -- Type
@@ -662,7 +662,7 @@ Section class="Editor__Items" default='open'
                     for|modifier, modIndex| of=item.modifies
                       div.Editor__Items__item__modifier
                         span.Editor__Items__item__modifier__controls
-                          span.Editor__Items__item__modifier__controls__close on-click('removeItemModifier', index, modIndex) -- &times;
+                          button.Editor__Items__item__modifier__controls__close on-click('removeItemModifier', index, modIndex) -- &times;
                         label.Editor__Items__item__modifier__dot
                           errorable field=`items.${index}.modifies.${modIndex}.dot`
                             input.Editor__Entry__input list='item-target-fields' value=modifier.dot placeholder='target field' on-change('updateItemModifierField', index, modIndex, 'dot')
