@@ -374,7 +374,11 @@ style {
     position: relative;
     padding: 1em;
     margin: .5em;
-    background: var(--listing-bg);
+    background: #1f1f1f;
+    display: flex;
+  }
+  .Editor__Items__item__modifier__value > input {
+    width: 4em;
   }
   .Editor__Items__item__modifier__controls {
     position: absolute;
@@ -605,20 +609,14 @@ Section class="Editor__Items" default='open'
                   @content
                     button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
                     for|modifier, modIndex| of=item.modifies
-                      Section class=`Editor__Items__item__modifier Editor__Items__item__modifier-${index}` default='closed'
-                        @heading
-                          span -- ${modifier.dot}: ${modifier.value}
-                        @heading_open
-                          span.Editor__Items__item__modifier__controls
-                            span.Editor__Items__item__modifier__controls__close on-click('removeItemModifier', index, modIndex) -- &times;
-                        @content
-                          label.Editor__Items__item__modifier__dot
-                            span.Editor__Entry__name -- Target
-                            errorable field=`items.${index}.modifies.${modIndex}.dot`
-                              input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
-                          label.Editor__Items__item__modifier__value
-                            span.Editor__Entry__name -- Value
-                            input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
+                      div.Editor__Items__item__modifier
+                        span.Editor__Items__item__modifier__controls
+                          span.Editor__Items__item__modifier__controls__close on-click('removeItemModifier', index, modIndex) -- &times;
+                        label.Editor__Items__item__modifier__dot
+                          errorable field=`items.${index}.modifies.${modIndex}.dot`
+                            input.Editor__Entry__input list='item-target-fields' value=modifier.dot placeholder='target field' on-change('updateItemModifierField', index, modIndex, 'dot')
+                        label.Editor__Items__item__modifier__value
+                          input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
 datalist id='item-target-fields'
   for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
