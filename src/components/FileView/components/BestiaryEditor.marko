@@ -177,9 +177,9 @@ class {
     d['items'].splice(index, 1)
     this.input.file.unqueue()
   }
-  removeItemModifier(item, modIndex) {
+  removeItemModifier(index, modIndex) {
     let d = this.dot
-    let k = `items.${index}.modifiers`
+    let k = `items.${index}.modifies`
     this.input.file.queue()
     d[k].splice(modIndex, 1)
     this.input.file.unqueue()
