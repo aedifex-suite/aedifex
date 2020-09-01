@@ -177,6 +177,13 @@ class {
     d['items'].splice(index, 1)
     this.input.file.unqueue()
   }
+  removeItemModifier(item, modIndex) {
+    let d = this.dot
+    let k = `items.${index}.modifiers`
+    this.input.file.queue()
+    d[k].splice(modIndex, 1)
+    this.input.file.unqueue()
+  }
   updateItemField(index, which, e) {
     let d = this.dot
     let k = `items.${index}.${which}`
@@ -363,6 +370,31 @@ style {
   .Editor__Items__item__controls__close:hover {
     opacity: 1;
   }
+  .Editor__Items__item__modifier {
+    position: relative;
+    padding: 1em;
+    margin: .5em;
+    background: var(--listing-bg);
+  }
+  .Editor__Items__item__modifier__controls {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--content-bg);
+  }
+  .Editor__Items__item__modifier__controls__close {
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    cursor: default;
+    font-size: 150%;
+  }
+  .Editor__Items__item__controls__close:hover {
+    opacity: 1;
+  }
+
 }
 
 macro|{ renderBody, field }| name='errorable'
@@ -567,17 +599,26 @@ Section class="Editor__Items" default='open'
                   errorable field=`items.${index}.properties.damage`
                     input.Editor__Entry__input value=item.properties.damage on-change('updateItemPropertyField', index, 'damage')
               if(item.properties.equipped !== undefined)
-                div.Editor__Items__item__modifiers
-                  button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
-                  for|modifier, modIndex| of=item.modifies
-                    div.Editor__Items__item__modifier
-                      label.Editor__Items__item__modifier__dot
-                        span.Editor__Entry__name -- Target
-                        errorable field=`items.${index}.modifies.${modIndex}.dot`
-                          input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
-                      label.Editor__Items__item__modifier__value
-                        span.Editor__Entry__name -- Value
-                        input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
+                Section class=`Editor__Items__item__modifiers Editor__Items__item__modifiers-${index}` default='open'
+                  @heading
+                    span -- Modifiers
+                  @content
+                    button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
+                    for|modifier, modIndex| of=item.modifies
+                      Section class=`Editor__Items__item__modifier Editor__Items__item__modifier-${index}` default='closed'
+                        @heading
+                          span -- ${modifier.dot}: ${modifier.value}
+                        @heading_open
+                          span.Editor__Items__item__modifier__controls
+                            span.Editor__Items__item__modifier__controls__close on-click('removeItemModifier', index, modIndex) -- &times;
+                        @content
+                          label.Editor__Items__item__modifier__dot
+                            span.Editor__Entry__name -- Target
+                            errorable field=`items.${index}.modifies.${modIndex}.dot`
+                              input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
+                          label.Editor__Items__item__modifier__value
+                            span.Editor__Entry__name -- Value
+                            input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
 datalist id='item-target-fields'
   for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
