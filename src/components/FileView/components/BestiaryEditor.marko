@@ -521,43 +521,45 @@ Section class="Editor__Levels" default='closed'
       div.Editor__Levels__items
         if(d['levels'])
           for|level, index| of=d['levels']
-            div.Editor__Levels__item
-              div.Editor__Levels__item__controls
-                button.Editor__Levels__item__controls__close on-click('removeLevel', index) -- &times;
-              div.Editor__Levels__item__extra title='If favored is checked, bonus hit points are given equal to the class level'
-                span.Editor__Entry__name -- Favored
-                input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
-              div.Editor__Levels__item__extra
-                span.Editor__Entry__name -- Prestige
-                input.Editor__Entry__input type='checkbox' checked=level.prestige on-change('updateLevelField', index, 'prestige')
-              div.Editor__Levels__item__name
-                span.Editor__Entry__name -- Class
+            Section class=`Editor__Levels__item Editor__Levels__item-${index}` default='closed'
+              @heading_closed
+                span -- ${level.class||"Unnamed Class"}
+              @heading_open
                 errorable field=`levels.${index}.class`
-                  input.Editor__Entry__input value=level.class on-change('updateLevelField', index, 'class')
-              div.Editor__Levels__item__level
-                span.Editor__Entry__name -- Level
-                input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
-                div.Editor__Levels__item__hitpips
-                  span.Editor__Entry__name -- HD
-                  select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
-                    for|value| of=[4,6,8,10,12]
-                      option value=value selected=level.hitpips===value -- ${value}
-              div.Editor__Levels__item__bab
-                span.Editor__Entry__name -- BAB
-                select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
-                  for|value| of=[0.5,0.75,1]
-                    option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
-              div.Editor__Levels__item__saves
-                span.Editor__Entry__name -- Good Saves
-                label.Editor__Entry__label
-                  span.Editor__Entry__label -- Fortitude
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
-                label.Editor__Entry__label
-                  span.Editor__Entry__label -- Reflex
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
-                label.Editor__Entry__label
-                  span.Editor__Entry__label -- Will
-                  input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
+                  input.Editor__Entry__input value=level.class placeholder='Unnamed Class' on-change('updateLevelField', index, 'class')
+                span.Editor__Levels__item__controls
+                  button.Editor__Levels__item__controls__close on-click('removeLevel', index) -- &times;
+              @content
+                div.Editor__Levels__item__extra title='If favored is checked, bonus hit points are given equal to the class level'
+                  span.Editor__Entry__name -- Favored
+                  input.Editor__Entry__input type='checkbox' checked=level.favored on-change('updateLevelField', index, 'favored')
+                div.Editor__Levels__item__extra
+                  span.Editor__Entry__name -- Prestige
+                  input.Editor__Entry__input type='checkbox' checked=level.prestige on-change('updateLevelField', index, 'prestige')
+                div.Editor__Levels__item__level
+                  span.Editor__Entry__name -- Level
+                  input.Editor__Entry__input type='number' value=level.level size=4 on-change('updateLevelField', index, 'level')
+                  div.Editor__Levels__item__hitpips
+                    span.Editor__Entry__name -- HD
+                    select.Editor__Entry__input name='die' id='die' on-change('updateLevelField', index, 'hitpips')
+                      for|value| of=[4,6,8,10,12]
+                        option value=value selected=level.hitpips===value -- ${value}
+                div.Editor__Levels__item__bab
+                  span.Editor__Entry__name -- BAB
+                  select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
+                    for|value| of=[0.5,0.75,1]
+                      option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+                div.Editor__Levels__item__saves
+                  span.Editor__Entry__name -- Good Saves
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Fortitude
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.fortitude==='good' on-change('updateLevelField', index, 'saves.fortitude')
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Reflex
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.reflex==='good' on-change('updateLevelField', index, 'saves.reflex')
+                  label.Editor__Entry__label
+                    span.Editor__Entry__label -- Will
+                    input.Editor__Entry__input type='checkbox' checked=level.saves.will==='good' on-change('updateLevelField', index, 'saves.will')
 Section class="Editor__Statistics" default='open'
   @heading
     span -- Statistics
