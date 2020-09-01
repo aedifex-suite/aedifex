@@ -453,10 +453,10 @@ Section class="Editor__Core" default='open'
               option value=value selected=d['hitpips']===value -- ${value}
       label.Editor__Entry
         if(d['hitdice']>0)
-          span.Editor__Entry__name -- BAB Progression
-            select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
-              for|value| of=[0.5,0.75,1]
-                option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+          span.Editor__Entry__name -- BAB
+          select.Editor__Entry__input name='bab' id='bab' on-change('updateField', 'bab')
+            for|value| of=[0.5,0.75,1]
+              option value=value selected=d['bab']===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
       label.Editor__Entry
       div.Editor__Levels__level__saves
         span.Editor__Entry__name -- Good Saves
@@ -502,9 +502,9 @@ Section class="Editor__Levels" default='closed'
                       option value=value selected=level.hitpips===value -- ${value}
               div.Editor__Levels__item__bab
                 span.Editor__Entry__name -- BAB
-                  select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
-                    for|value| of=[0.5,0.75,1]
-                      option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
+                select.Editor__Entry__input name='bab' id='bab' on-change('updateLevelField', index, 'bab')
+                  for|value| of=[0.5,0.75,1]
+                    option value=value selected=level.bab===value -- ${value===0.5?'slow':value===0.75?'medium':'fast'}
               div.Editor__Levels__item__saves
                 span.Editor__Entry__name -- Good Saves
                 label.Editor__Entry__label
