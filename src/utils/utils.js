@@ -301,12 +301,11 @@ function getInitiative(entry) {
 }
 
 
-function getAC(entry) {
+function getACMap(entry) {
   let ac = {
     'armor': 0,
     'deflection': 0,
-    'dex': 0,
-    'size': sizeModifiers[entry.size] !== undefined ? -sizeModifiers[entry.size] : 0,
+    'Dex': 0,
     'dodge': 0,
     'enhancement': 0,
     'insight': 0,
@@ -315,6 +314,7 @@ function getAC(entry) {
     'profane': 0,
     'sacred': 0,
     'shield': 0,
+    'size': sizeModifiers[entry.size] !== undefined ? -sizeModifiers[entry.size] : 0,
   }
   // Feat modifiers.
   for (const feat of entry.feats) {
@@ -334,6 +334,7 @@ function getAC(entry) {
     if (!item.properties.equipped) continue
     for (const modifier of item.modifies) {
       if (modifier.dot.startsWith('ac.')) {
+        // TODO: Merge item's enhancement AC with its armor AC
         let t = modifier.dot.slice(3)
         let v = Number(modifier.value)
         if (ac[t] !== undefined && v > ac[t]) {
@@ -343,10 +344,14 @@ function getAC(entry) {
     }
   }
   // Get our dex mod.
-  ac['dex'] = getAbilityScoreMod(entry, 'dex')
+  ac['Dex'] = getAbilityScoreMod(entry, 'dex')
   // Return our total.
+  return ac
+}
+
+function getAC(entry) {
   let total = 10
-  for(let v of Object.values(ac)) {
+  for(let v of Object.values(getACMap(entry))) {
     total += v
   }
   return total
@@ -398,6 +403,7 @@ module.exports = {
   getBonusHP: getBonusHP,
   collectHD: collectHD,
   getAC: getAC,
+  getACMap: getACMap,
   getTouchAC: getTouchAC,
   getFlatFootedAC: getFlatFootedAC,
   getBaseAttack: getBaseAttack,
