@@ -382,6 +382,17 @@ function getTouchAC(entry) {
   return 10 + dexmod + sizemod + deflection
 }
 
+function getFlatFootedAC(entry) {
+  // Let's be lazy.
+  let ac = getAC(entry)
+  let shouldRemoveDex = true
+  // TODO: Check for Uncanny Dodge feature
+  if (shouldRemoveDex) {
+    ac -= getAbilityScoreMod(entry, 'dex')
+  }
+  return ac
+}
+
 module.exports = {
   averageHP: averageHP,
   conHP: conHP,
@@ -389,6 +400,7 @@ module.exports = {
   collectHD: collectHD,
   getAC: getAC,
   getTouchAC: getTouchAC,
+  getFlatFootedAC: getFlatFootedAC,
   getBaseAttack: getBaseAttack,
   getCMB: getCMB,
   getCMD: getCMD,
