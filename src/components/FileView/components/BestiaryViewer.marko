@@ -98,7 +98,20 @@ section
   h2 -- Defense
   div -- AC ${utils.getAC(input.file.state)}
     <span>, touch ${utils.getTouchAC(input.file.state)}</span>
-    <span>, flat-footed ${utils.getFlatFootedAC(input.file.state)}</span>
+    <span>, flat-footed ${utils.getFlatFootedAC(input.file.state)} </span>
+    $ let acmap = Object.entries(utils.getACMap(input.file.state)).filter(v=>v[1]!==0)
+    if(acmap.length > 0)
+      span -- (
+        for|entry,index| of=acmap
+          if(entry[1] !== 0)
+            if(entry[1] >= 1)
+              span -- +${entry[1]}
+            else
+              span -- ${entry[1]}
+            <span> ${entry[0]}</span>
+            if(index !== acmap.length-1)
+              <span>, </span>
+      span -- )
   $ let [hp, hpErr] = utils.averageHP(dot['hitdice'], dot['hitpips'])
   $ let [lvlhps, lvlhpsErr] = [[],[]]
   $ let bonushp = utils.getBonusHP(input.file.state)
