@@ -523,7 +523,7 @@ Section class="Editor__Levels" default='closed'
           for|level, index| of=d['levels']
             Section class=`Editor__Levels__item Editor__Levels__item-${index}` default='closed'
               @heading_closed
-                span -- ${level.class||"Unnamed Class"}
+                span -- ${level.class||"Unnamed Class"} ${level.level}
               @heading_open
                 errorable field=`levels.${index}.class`
                   input.Editor__Entry__input value=level.class placeholder='Unnamed Class' on-change('updateLevelField', index, 'class')
