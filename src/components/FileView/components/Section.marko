@@ -13,6 +13,7 @@ class {
     _Config.settings.sections[this.input.class] = this.state.closed
   }
   onToggle(e) {
+    if (e.target !== this.getEl('section')) return
     this.state.closed = !e.target.open
     _Config.settings.sections[this.input.class] = this.state.closed
   }
@@ -31,8 +32,12 @@ style {
   }
 }
 
-details.Section class=input.class open=!state.closed on-toggle('onToggle')
+details.Section key='section' class=input.class open=!state.closed on-toggle('onToggle')
   summary.Section__heading
     <${input.heading}/>
+    if(!state.closed)
+      <${input.heading_open}/>
+    else
+      <${input.heading_closed}/>
   section.Section__content
     <${input.content}/>
