@@ -380,6 +380,9 @@ style {
   .Editor__Items__item__controls__close:hover {
     opacity: 1;
   }
+  .Editor__Items__item__modifier__add {
+    margin-left: 1em;
+  }
   .Editor__Items__item__modifier {
     position: relative;
     padding: 1em;
@@ -615,8 +618,9 @@ Section class="Editor__Items" default='open'
                 Section class=`Editor__Items__item__modifiers Editor__Items__item__modifiers-${index}` default='open'
                   @heading
                     span -- Modifiers
+                  @heading_open
+                    button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- +
                   @content
-                    button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
                     for|modifier, modIndex| of=item.modifies
                       div.Editor__Items__item__modifier
                         span.Editor__Items__item__modifier__controls
