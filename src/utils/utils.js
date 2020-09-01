@@ -315,7 +315,6 @@ function getAC(entry) {
     'profane': 0,
     'sacred': 0,
     'shield': 0,
-    'size': 0,
   }
   // Feat modifiers.
   for (const feat of entry.feats) {
