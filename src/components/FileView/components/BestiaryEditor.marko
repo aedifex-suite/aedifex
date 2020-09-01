@@ -304,6 +304,7 @@ style {
   .Editor__Feats__items {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
   }
   .Editor__Feats__item {
     position: relative;
@@ -324,6 +325,7 @@ style {
     justify-content: center;
     opacity: 0.5;
     cursor: default;
+    font-size: 150%;
   }
   .Editor__Feats__item__controls__close:hover {
     opacity: 1;
@@ -487,24 +489,28 @@ Section class="Editor__Feats" default='open'
         button.Editor__Feats__controls__button on-click('addFeat') -- add feat
       div.Editor__Feats__items
         for|feat, index| of=d['feats']
-          div.Editor__Feats__item
-            div.Editor__Feats__item__controls
-              span.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
-            div.Editor__Feats__item__name
-              span.Editor__Entry__name -- Name
-              errorable field=`feats.${index}.name`
-                input.Editor__Entry__input value=feat.name on-change('updateFeatField', index, 'name')
-            div.Editor__Feats__item__modifiers
-              button.Editor__Feats__item__modifier__add on-click('addFeatModifier', index) -- add modifier
-              for|modifier, modIndex| of=feat.modifies
-                div.Editor__Feats__item__modifier
-                  label.Editor__Feats__item__modifier__dot
-                    span.Editor__Entry__name -- Target
-                    errorable field=`feats.${index}.modifies.${modIndex}.dot`
-                      input.Editor__Entry__input list='feat-target-fields' value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
-                  label.Editor__Feats__item__modifier__value
-                    span.Editor__Entry__name -- Value
-                    input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
+          Section class=`Editor__Feats__item Editor__Feats__item-${index}` default='closed'
+            @heading
+              span -- ${feat.name}
+            @heading_open
+              span.Editor__Feats__item__controls
+                span.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
+            @content
+              div.Editor__Feats__item__name
+                span.Editor__Entry__name -- Name
+                errorable field=`feats.${index}.name`
+                  input.Editor__Entry__input value=feat.name on-change('updateFeatField', index, 'name')
+              div.Editor__Feats__item__modifiers
+                button.Editor__Feats__item__modifier__add on-click('addFeatModifier', index) -- add modifier
+                for|modifier, modIndex| of=feat.modifies
+                  div.Editor__Feats__item__modifier
+                    label.Editor__Feats__item__modifier__dot
+                      span.Editor__Entry__name -- Target
+                      errorable field=`feats.${index}.modifies.${modIndex}.dot`
+                        input.Editor__Entry__input list='feat-target-fields' value=modifier.dot on-change('updateFeatModifierField', index, modIndex, 'dot')
+                    label.Editor__Feats__item__modifier__value
+                      span.Editor__Entry__name -- Value
+                      input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateFeatModifierField', index, modIndex, 'value')
 datalist id='feat-target-fields'
   for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
