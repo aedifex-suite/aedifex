@@ -578,7 +578,7 @@ Section class="Editor__Feats" default='open'
         for|feat, index| of=d['feats']
           Section class=`Editor__Feats__item Editor__Feats__item-${index}` default='closed'
             @heading
-              span -- ${feat.name}
+              span -- ${feat.name||"Unnamed Feat"}
             @heading_open
               span.Editor__Feats__item__controls
                 button.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
@@ -626,7 +626,7 @@ Section class="Editor__Items" default='open'
         for|item, index| of=d['items']
           Section class=`Editor__Items__item Editor__Items__item-${index}` default='closed'
             @heading
-              span -- ${item.name}
+              span -- ${item.name||'Unnamed Item'}
             @heading_open
               span.Editor__Items__item__controls
                 button.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
