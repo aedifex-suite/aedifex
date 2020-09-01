@@ -277,6 +277,9 @@ style {
   .Editor__Levels__content {
     padding: .25em;
   }
+  .Editor__Levels__controls__button {
+    margin-left: 1em;
+  }
   .Editor__Levels__items {
     display: flex;
     flex-wrap: wrap;
@@ -307,6 +310,9 @@ style {
   /* Feats */
   .Editor__Feats__content {
     padding: .25em;
+  }
+  .Editor__Feats__controls__button {
+    margin-left: 1em;
   }
   .Editor__Feats__items {
     display: flex;
@@ -340,6 +346,9 @@ style {
   /* Items */
   .Editor__Items__content {
     padding: .25em;
+  }
+  .Editor__Items__controls__button {
+    margin-left: 1em;
   }
   .Editor__Items__items {
     display: flex;
@@ -463,10 +472,10 @@ Section class="Editor__Core" default='open'
 Section class="Editor__Levels" default='closed'
   @heading
     span.Editor__Levels__heading -- Levels
+  @heading_open
+    button.Editor__Levels__controls__button on-click('addLevel') -- +
   @content
     div.Editor__Levels__content
-      div.Editor__Levels__controls
-        button.Editor__Levels__controls__button on-click('addLevel') -- +
       div.Editor__Levels__items
         if(d['levels'])
           for|level, index| of=d['levels']
@@ -519,10 +528,10 @@ Section class="Editor__Statistics" default='open'
 Section class="Editor__Feats" default='open'
   @heading
     span -- Feats
+  @heading_open
+    button.Editor__Feats__controls__button on-click('addFeat') -- +
   @content
     div.Editor__Feats__content
-      div.Editor__Feats__controls
-        button.Editor__Feats__controls__button on-click('addFeat') -- add feat
       div.Editor__Feats__items
         for|feat, index| of=d['feats']
           Section class=`Editor__Feats__item Editor__Feats__item-${index}` default='closed'
@@ -563,10 +572,10 @@ datalist id='feat-target-fields'
 Section class="Editor__Items" default='open'
   @heading
     span -- Items
+  @heading_open
+    button.Editor__Items__controls__button on-click('addItem') -- +
   @content
     div.Editor__Items__content
-      div.Editor__Items__controls
-        button.Editor__Items__controls__button on-click('addItem') -- add item
       div.Editor__Items__items
         for|item, index| of=d['items']
           Section class=`Editor__Items__item Editor__Items__item-${index}` default='closed'
