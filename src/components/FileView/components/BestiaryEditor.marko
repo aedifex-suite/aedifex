@@ -513,7 +513,7 @@ Section class="Editor__Core" default='open'
           input.Editor__Entry__input type='checkbox' checked=d['saves.will']==='good' on-change('updateField', 'saves.will')
 Section class="Editor__Levels" default='closed'
   @heading
-    span.Editor__Levels__heading -- Levels
+    span.Editor__Levels__heading -- Classes (${d['levels'].length})
   @heading_open
     button.Editor__Levels__controls__button on-click('addLevel') -- +
   @content
@@ -569,7 +569,7 @@ Section class="Editor__Statistics" default='open'
           input.Editor__Entry__input type='number' value=d[`ability scores.${key}`] on-change('updateField', `ability scores.${key}`)
 Section class="Editor__Feats" default='open'
   @heading
-    span -- Feats
+    span -- Feats (${d['feats'].length})
   @heading_open
     button.Editor__Feats__controls__button on-click('addFeat') -- +
   @content
@@ -617,7 +617,7 @@ datalist id='feat-target-fields'
       option value=`items.${index}.modifies.${modIndex}` -- ${item.name}: ${itemMod.dot}
 Section class="Editor__Items" default='open'
   @heading
-    span -- Items
+    span -- Items (${d['items'].length})
   @heading_open
     button.Editor__Items__controls__button on-click('addItem') -- +
   @content
