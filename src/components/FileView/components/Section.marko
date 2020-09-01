@@ -17,6 +17,11 @@ class {
     this.state.closed = !e.target.open
     _Config.settings.sections[this.input.class] = this.state.closed
   }
+  onKeyup(e) {
+    if (document.activeElement !== this.getEl('heading')) {
+      e.preventDefault()
+    }
+  }
 }
 
 style {
@@ -33,7 +38,7 @@ style {
 }
 
 details.Section key='section' class=input.class open=!state.closed on-toggle('onToggle')
-  summary.Section__heading
+  summary.Section__heading key='heading' on-keyup('onKeyup')
     <${input.heading}/>
     if(!state.closed)
       <${input.heading_open}/>
