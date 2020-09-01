@@ -577,16 +577,14 @@ Section class="Editor__Feats" default='open'
       div.Editor__Feats__items
         for|feat, index| of=d['feats']
           Section class=`Editor__Feats__item Editor__Feats__item-${index}` default='closed'
-            @heading
+            @heading_closed
               span -- ${feat.name||"Unnamed Feat"}
             @heading_open
+              errorable field=`feats.${index}.name`
+                input.Editor__Entry__input value=feat.name placeholder='Unnamed Feat' on-change('updateFeatField', index, 'name')
               span.Editor__Feats__item__controls
                 button.Editor__Feats__item__controls__close on-click('removeFeat', index) -- &times;
             @content
-              div.Editor__Feats__item__name
-                span.Editor__Entry__name -- Name
-                errorable field=`feats.${index}.name`
-                  input.Editor__Entry__input value=feat.name on-change('updateFeatField', index, 'name')
               Section class=`Editor__Feats__item__modifiers Editor__Feats__item__modifiers-${index}` default='open'
                 @heading
                   span -- Modifiers
@@ -625,9 +623,11 @@ Section class="Editor__Items" default='open'
       div.Editor__Items__items
         for|item, index| of=d['items']
           Section class=`Editor__Items__item Editor__Items__item-${index}` default='closed'
-            @heading
+            @heading_closed
               span -- ${item.name||'Unnamed Item'}
             @heading_open
+              errorable field=`items.${index}.name`
+                input.Editor__Entry__input placeholder='Unnamed Item' value=item.name on-change('updateItemField', index, 'name')
               span.Editor__Items__item__controls
                 button.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
             @content
@@ -636,10 +636,6 @@ Section class="Editor__Items" default='open'
                 select.Editor__Entry__input name='type' on-change('changeItemType', index)
                   for|value| of=['armor', 'weapon', 'magic item', 'goods', 'wealth']
                     option value=value selected=item.properties.type===value -- ${value}
-              div.Editor__Items__item__name
-                span.Editor__Entry__name -- Name
-                errorable field=`items.${index}.name`
-                  input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
               if(item.properties.equipped !== undefined)
                 div.Editor__Items__item__equipped
                   span.Editor__Entry__name -- Equipped
