@@ -335,6 +335,7 @@ style {
   .Editor__Items__items {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
   }
   .Editor__Items__item {
     position: relative;
@@ -355,6 +356,7 @@ style {
     justify-content: center;
     opacity: 0.5;
     cursor: default;
+    font-size: 150%;
   }
   .Editor__Items__item__controls__close:hover {
     opacity: 1;
@@ -525,47 +527,51 @@ Section class="Editor__Items" default='open'
         button.Editor__Items__controls__button on-click('addItem') -- add item
       div.Editor__Items__items
         for|item, index| of=d['items']
-          div.Editor__Items__item
-            div.Editor__Items__item__controls
-              span.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
-            div.Editor__Items__item__type
-              span.Editor__Entry__name -- Type
-              select.Editor__Entry__input name='type' on-change('changeItemType', index)
-                for|value| of=['armor', 'weapon', 'magic item', 'goods', 'wealth']
-                  option value=value selected=item.properties.type===value -- ${value}
-            div.Editor__Items__item__name
-              span.Editor__Entry__name -- Name
-              errorable field=`items.${index}.name`
-                input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
-            if(item.properties.equipped !== undefined)
-              div.Editor__Items__item__equipped
-                span.Editor__Entry__name -- Equipped
-                  input.Editor__Entry__input type='checkbox' checked=item.properties.equipped on-change('updateItemPropertyField', index, 'equipped')
-            if(item.properties.type === 'weapon')
-              div.Editor__Items__item__enchantment
-                span.Editor__Entry__name -- Enchantment
-                errorable field=`items.${index}.properties.enchantment`
-                  input.Editor__Entry__input type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
-              div.Editor__Items__item__attack
-                span.Editor__Entry__name -- Attack
-                errorable field=`items.${index}.properties.attack`
-                  input.Editor__Entry__input type='number' value=item.properties.attack on-change('updateItemPropertyField', index, 'attack')
-              div.Editor__Items__item__damage
-                span.Editor__Entry__name -- Damage
-                errorable field=`items.${index}.properties.damage`
-                  input.Editor__Entry__input value=item.properties.damage on-change('updateItemPropertyField', index, 'damage')
-            if(item.properties.equipped !== undefined)
-              div.Editor__Items__item__modifiers
-                button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
-                for|modifier, modIndex| of=item.modifies
-                  div.Editor__Items__item__modifier
-                    label.Editor__Items__item__modifier__dot
-                      span.Editor__Entry__name -- Target
-                      errorable field=`items.${index}.modifies.${modIndex}.dot`
-                        input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
-                    label.Editor__Items__item__modifier__value
-                      span.Editor__Entry__name -- Value
-                      input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
+          Section class=`Editor__Items__item Editor__Items__item-${index}` default='closed'
+            @heading
+              span -- ${item.name}
+            @heading_open
+              span.Editor__Items__item__controls
+                span.Editor__Items__item__controls__close on-click('removeItem', index) -- &times;
+            @content
+              div.Editor__Items__item__type
+                span.Editor__Entry__name -- Type
+                select.Editor__Entry__input name='type' on-change('changeItemType', index)
+                  for|value| of=['armor', 'weapon', 'magic item', 'goods', 'wealth']
+                    option value=value selected=item.properties.type===value -- ${value}
+              div.Editor__Items__item__name
+                span.Editor__Entry__name -- Name
+                errorable field=`items.${index}.name`
+                  input.Editor__Entry__input value=item.name on-change('updateItemField', index, 'name')
+              if(item.properties.equipped !== undefined)
+                div.Editor__Items__item__equipped
+                  span.Editor__Entry__name -- Equipped
+                    input.Editor__Entry__input type='checkbox' checked=item.properties.equipped on-change('updateItemPropertyField', index, 'equipped')
+              if(item.properties.type === 'weapon')
+                div.Editor__Items__item__enchantment
+                  span.Editor__Entry__name -- Enchantment
+                  errorable field=`items.${index}.properties.enchantment`
+                    input.Editor__Entry__input type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
+                div.Editor__Items__item__attack
+                  span.Editor__Entry__name -- Attack
+                  errorable field=`items.${index}.properties.attack`
+                    input.Editor__Entry__input type='number' value=item.properties.attack on-change('updateItemPropertyField', index, 'attack')
+                div.Editor__Items__item__damage
+                  span.Editor__Entry__name -- Damage
+                  errorable field=`items.${index}.properties.damage`
+                    input.Editor__Entry__input value=item.properties.damage on-change('updateItemPropertyField', index, 'damage')
+              if(item.properties.equipped !== undefined)
+                div.Editor__Items__item__modifiers
+                  button.Editor__Items__item__modifier__add on-click('addItemModifier', index) -- add modifier
+                  for|modifier, modIndex| of=item.modifies
+                    div.Editor__Items__item__modifier
+                      label.Editor__Items__item__modifier__dot
+                        span.Editor__Entry__name -- Target
+                        errorable field=`items.${index}.modifies.${modIndex}.dot`
+                          input.Editor__Entry__input list='item-target-fields' value=modifier.dot on-change('updateItemModifierField', index, modIndex, 'dot')
+                      label.Editor__Items__item__modifier__value
+                        span.Editor__Entry__name -- Value
+                        input.Editor__Entry__input type='number' value=modifier.value size=4 on-change('updateItemModifierField', index, modIndex, 'value')
 datalist id='item-target-fields'
   for|key,value| in=statmap
     option value=`ability scores.${key}` -- ${value}
