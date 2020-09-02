@@ -4,6 +4,7 @@ const electron      = require('electron')
 const ipc           = electron.ipcMain
 const app           = electron.app
 const BrowserWindow = electron.BrowserWindow
+const contextMenu   = require('electron-context-menu')
 const path  = require('path')
 const os    = require('os')
 const formatUrl = require('url').format
@@ -24,6 +25,12 @@ if (liveReload) {
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 let status = 0
+
+contextMenu({
+  showSearchWithGoogle: false,
+  showCopyImage: false,
+  showInspectElement: false,
+})
 
 function createMainWindow() {
   const window = new BrowserWindow({
