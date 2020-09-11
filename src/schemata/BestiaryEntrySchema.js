@@ -124,9 +124,13 @@ const BestiaryItemTypeSchema = schisma({
 const BestiaryItemWeaponSchema = schisma({
   type: 'weapon',
   equipped: Boolean,
+  attacks: Boolean,
   enchantment: Number,
   attack: Number,
-  damage: String,
+  damage: {
+    dice: Number,
+    hitpips: HitPipsSchema,
+  },
 })
 
 const BestiaryItemArmorSchema = schisma({

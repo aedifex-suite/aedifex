@@ -233,9 +233,13 @@ class {
     let k = `items.${index}.properties.${which}`
     if (which === 'attack') {
       d[k] = Number(e.target.value)
-    } else if (which === 'damage') {
-      d[k] = e.target.value
+    } else if (which === 'damage.hitpips') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'damage.dice') {
+      d[k] = Number(e.target.value)
     } else if (which === 'equipped') {
+      d[k] = e.target.checked
+    } else if (which === 'attacks') {
       d[k] = e.target.checked
     } else if (which === 'enchantment') {
       d[k] = Number(e.target.value)
@@ -645,20 +649,28 @@ Section class="Editor__Items" default='open'
               if(item.properties.equipped !== undefined)
                 div.Editor__Items__item__equipped
                   span.Editor__Entry__name -- Equipped
-                    input.Editor__Entry__input type='checkbox' checked=item.properties.equipped on-change('updateItemPropertyField', index, 'equipped')
+                  input.Editor__Entry__input type='checkbox' checked=item.properties.equipped on-change('updateItemPropertyField', index, 'equipped')
+              if(item.properties.attacks !== undefined)
+                div.Editor__Items__item__equipped
+                  span.Editor__Entry__name -- Attacks
+                  input.Editor__Entry__input type='checkbox' checked=item.properties.attacks on-change('updateItemPropertyField', index, 'attacks')
               if(item.properties.type === 'weapon')
                 div.Editor__Items__item__enchantment
                   span.Editor__Entry__name -- Enchantment
                   errorable field=`items.${index}.properties.enchantment`
-                    input.Editor__Entry__input type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
                 div.Editor__Items__item__attack
                   span.Editor__Entry__name -- Attack
                   errorable field=`items.${index}.properties.attack`
-                    input.Editor__Entry__input type='number' value=item.properties.attack on-change('updateItemPropertyField', index, 'attack')
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.attack on-change('updateItemPropertyField', index, 'attack')
                 div.Editor__Items__item__damage
                   span.Editor__Entry__name -- Damage
-                  errorable field=`items.${index}.properties.damage`
-                    input.Editor__Entry__input value=item.properties.damage on-change('updateItemPropertyField', index, 'damage')
+                  span
+                    input.Editor__Entry__input style='width:3em' type='number' value=item.properties.damage.dice size=4 on-change('updateItemPropertyField', index, 'damage.dice')
+                    span -- d
+                    select.Editor__Entry__input name='pips' on-change('updateItemPropertyField', index, 'hitpips')
+                      for|value| of=[4,6,8,10,12]
+                        option value=value selected=item.properties.damage.hitpips===value -- ${value}
               if(item.properties.equipped !== undefined)
                 Section class=`Editor__Items__item__modifiers Editor__Items__item__modifiers-${index}` default='open'
                   @heading
