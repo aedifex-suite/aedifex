@@ -329,6 +329,7 @@ function getACMap(entry) {
     }
   }
   // Items modifiers.
+  let maxdexbonus = -1
   for (let itemIndex = 0; itemIndex < entry.items.length; itemIndex++) {
     let item = entry.items[itemIndex]
     if (!item.properties.equipped) continue
@@ -342,9 +343,17 @@ function getACMap(entry) {
         }
       }
     }
+    // Get our maximum dex for AC if the item has it defined.
+    if (item.properties.maxdexbonus >= 0) {
+      maxdexbonus = item.properties.maxdexbonus
+    }
   }
   // Get our dex mod.
   ac['Dex'] = getAbilityScoreMod(entry, 'dex')
+  // Limit to our defined maximum dex.
+  if (maxdexbonus >= 0) {
+    ac['Dex'] = Math.min(maxdexbonus, ac['Dex'])
+  }
   // Return our total.
   return ac
 }
@@ -381,6 +390,9 @@ function getTouchAC(entry) {
           deflection = modifier.value
         }
       }
+    }
+    if (item.properties.maxdexbonus >= 0) {
+      dexmod = Math.min(item.properties.maxdexbonus, dexmod)
     }
   }
   return 10 + dexmod + sizemod + deflection
