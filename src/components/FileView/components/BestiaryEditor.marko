@@ -243,6 +243,14 @@ class {
       d[k] = e.target.checked
     } else if (which === 'enchantment') {
       d[k] = Number(e.target.value)
+    } else if (which === 'maxdexbonus') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'armorcheckpenalty') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'spellfailure') {
+      d[k] = Number(e.target.value)
+    } else if (which === 'speed') {
+      d[k] = Number(e.target.value)
     }
   }
 }
@@ -671,6 +679,28 @@ Section class="Editor__Items" default='open'
                     select.Editor__Entry__input name='pips' on-change('updateItemPropertyField', index, 'hitpips')
                       for|value| of=[4,6,8,10,12]
                         option value=value selected=item.properties.damage.hitpips===value -- ${value}
+              else-if(item.properties.type === 'armor')
+                div.Editor__Items__item__enchantment
+                  span.Editor__Entry__name -- Enchantment
+                  errorable field=`items.${index}.properties.enchantment`
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.enchantment on-change('updateItemPropertyField', index, 'enchantment')
+                div.Editor__Items__item__maxdexbonus
+                  span.Editor__Entry__name -- Max Dex Bonus
+                  errorable field=`items.${index}.properties.maxdexbonus`
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.maxdexbonus on-change('updateItemPropertyField', index, 'maxdexbonus')
+                div.Editor__Items__item__armorcheckpenalty
+                  span.Editor__Entry__name -- Armor Check Penalty
+                  errorable field=`items.${index}.properties.armorcheckpenalty`
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.armorcheckpenalty on-change('updateItemPropertyField', index, 'armorcheckpenalty')
+                div.Editor__Items__item__spellfailure
+                  span.Editor__Entry__name -- Arcane Spell Failure Chance
+                  errorable field=`items.${index}.properties.spellfailure`
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.spellfailure on-change('updateItemPropertyField', index, 'spellfailure')
+                    span -- %
+                div.Editor__Items__item__speed
+                  span.Editor__Entry__name -- Speed
+                  errorable field=`items.${index}.properties.speed`
+                    input.Editor__Entry__input style='width: 4em' type='number' value=item.properties.speed on-change('updateItemPropertyField', index, 'speed')
               if(item.properties.equipped !== undefined)
                 Section class=`Editor__Items__item__modifiers Editor__Items__item__modifiers-${index}` default='open'
                   @heading
