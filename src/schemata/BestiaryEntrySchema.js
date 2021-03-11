@@ -13,6 +13,20 @@ const DamageSchema  = require('schemata/Damage')
   }
 })*/
 
+const PercentageSchema = schisma({
+  $type: Number,
+  $validate: v => {
+    if (v < 0) {
+      return 'cannot be less than 0'
+    } else if (v > 100) {
+      return 'cannot be more than 100'
+    }
+  },
+  $conform: v => {
+    return Math.round(v)
+  },
+})
+
 const ACSchema = schisma({
   type: {
     $type: String,
@@ -137,6 +151,12 @@ const BestiaryItemArmorSchema = schisma({
   type: 'armor',
   equipped: Boolean,
   enchantment: Number,
+  maxdexbonus: Number,
+  armorcheckpenalty: Number,
+  spellfailure: PercentageSchema,
+  speed: Number,
+  weight: Number,
+  cost: Number,
 })
 
 const BestiaryItemMagicItemSchema = schisma({
