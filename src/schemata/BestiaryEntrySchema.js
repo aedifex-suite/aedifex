@@ -151,7 +151,7 @@ const BestiaryItemArmorSchema = schisma({
   type: 'armor',
   equipped: Boolean,
   enchantment: Number,
-  maxdexbonus: Number,
+  maxdexbonus: -1,
   armorcheckpenalty: Number,
   spellfailure: PercentageSchema,
   speed: Number,
