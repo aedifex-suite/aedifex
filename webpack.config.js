@@ -25,7 +25,18 @@ module.exports = {
 		rules: [
 			{
 				test: /\.marko$/,
-        loader: '@marko/webpack/loader',
+				loader: '@marko/webpack/loader',
+				options: {
+					babelConfig: {
+						"presets": [
+							"@babel/preset-env"
+						],
+						"plugins": [
+							"@babel/plugin-proposal-optional-chaining",
+							"@babel/plugin-transform-runtime",
+						]
+					}
+				}
 			},
 			{
 				test: /\.css$/,
@@ -35,13 +46,13 @@ module.exports = {
 				]
 			},
 			{
-        test: /\.node$/,
-        use: 'node-loader'
-      },
-      {
-        test: /\.ttf$/,
-        use: 'file-loader'
-      }
+				test: /\.node$/,
+				use: 'node-loader'
+			},
+			{
+				test: /\.ttf$/,
+				use: 'file-loader'
+			}
 		]
 	}
 }
