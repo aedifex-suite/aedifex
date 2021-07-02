@@ -40,7 +40,7 @@ style {
     background: #323232;
     color: #8e8e8e;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
     grid-template-rows: minmax(0, 1fr);
     user-select: none;
     font-size: 13px;
@@ -125,9 +125,9 @@ if(process.platform==='win32')
   header.Titlebar class=[state.focused?'-focused':null]
     div.Titlebar__Menu
       <${input.menu}/>
-      ColorModeSwitcher
     div.Titlebar__Dragger
       div.Titlebar__Dragger__Title -- aedifex
+    ColorModeSwitcher
     div.Titlebar__Controls
       div.Titlebar__Controls__Button.-min on-click('onMinimize') -- min
       div.Titlebar__Controls__Button.-max on-click('onMaximize') -- ${state.maximized?'res':'max'}
