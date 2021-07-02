@@ -99,6 +99,7 @@ class YAMLFile extends unreson.StateObject {
     let result = await fs.writeFile(this.path, text, {encoding: 'utf8'})
     if (!result) {
       this._saved = true
+      this.emit('saved')
       return true
     }
     return false
