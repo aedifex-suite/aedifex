@@ -17,7 +17,7 @@ class {
         fullscreen: false,
       },
       openFiles: [],
-      openDir: '',
+      openDirs: [],
       sections: {},
     })
 
@@ -25,7 +25,7 @@ class {
       files: [],
       selectedFilepath: '',
       selectedID: '',
-      openDir: _Config.settings.openDir,
+      openDirs: _Config.settings.openDirs,
     }
 
     // Add YAMLFile entries.
@@ -50,7 +50,6 @@ class {
   }
   async close() {
     _Config.settings.openFiles = []
-    _Config.settings.openDir = this.state.openDir
     for (let file of this.state.files) {
       // Attempt to close the file and bail out of program close if cancel is pressed.
       let result = await file.close()
@@ -151,11 +150,13 @@ class {
       properties: ['openDirectory'],
     })
     if (result) {
-      this.state.openDir = result[0]
+      if (!this.state.openDirs.includes(result[0])) {
+        this.state.openDirs = [...this.state.openDirs, result[0]]
+      }
     }
   }
-  closeDir(e) {
-    this.state.openDir = ''
+  closeDir(dir, e) {
+    this.state.openDirs = this.state.openDirs.filter(v=>v!==dir)
   }
 }
 
@@ -224,7 +225,6 @@ style {
   }
   .Main__Left {
     display: grid;
-    grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
   }
   .Main__Right {
@@ -245,8 +245,9 @@ Titlebar title='aedifex'
     div.Titlebar__Controls__Button class={'-noinput': !file?.unsaved} on-click('saveFile') -- Save File
 div.Main
   div.Main__Left
-    if(state.openDir)
-      FolderListing dir=state.openDir on-select('openFile') on-close('closeDir') selected=file?.path
+    if(state.openDirs.length > 0)
+      for|dir| of=state.openDirs
+        FolderListing dir=dir on-select('openFile') on-close('closeDir', dir) selected=file?.path
     else
       div
   div.Main__Right
