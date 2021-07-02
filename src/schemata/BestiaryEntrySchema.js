@@ -207,6 +207,18 @@ const BestiarySpellSchema = schisma({
   // TODO: summons
 })
 
+const BestiaryTreasureSchema = schisma({
+  combatgear: Boolean,
+  value: {
+    $type: String,
+    $validate: v => {
+      const types = ['standard', 'double', 'triple', 'incidental', 'none', 'npc']
+      if (!types.includes(v)) return `field must be ${types.map(v=>`'${v}'`).join(', ')}`
+    }
+  },
+  extra: [BestiaryItemSchema]
+})
+
 const BestiaryEntrySchema = schisma({
   type: 'bestiary',
   name: StringSchema,
@@ -269,6 +281,10 @@ const BestiaryEntrySchema = schisma({
   items: [BestiaryItemSchema],
   skills: [BestiarySkillSchema],
   languages: [BestiaryLanguageSchema],
+  // Ecology
+  environment: [String],
+  organization: [String],
+  treasure: BestiaryTreasureSchema
 })
 
 module.exports = {
@@ -283,4 +299,5 @@ module.exports = {
   BestiaryItemMagicItemSchema,
   BestiaryItemWealthSchema,
   BestiaryItemGoodsSchema,
+  BestiaryTreasureSchema,
 }
