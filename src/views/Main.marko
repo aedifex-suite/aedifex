@@ -44,6 +44,9 @@ class {
     ipcRenderer.on('app-close', _ => {
       this.close()
     })
+
+    // This always feels bad, but bind our appropriate methods to this.
+    this.refreshFile = this.refreshFile.bind(this)
   }
   async close() {
     _Config.settings.openFiles = []
@@ -65,6 +68,7 @@ class {
   async newFile(type) {
     let f = new YAMLFile('', type)
     await f.load()
+    this.setupFile(f)
     this.state.files.push(f)
     this.state.selectedID = f.id
   }
@@ -74,6 +78,7 @@ class {
       f = new YAMLFile(p)
       await f.load()
       this.state.files.push(f)
+      this.setupFile(f)
     }
     this.state.selectedID = f.id
     this.state.selectedFilepath = p
@@ -95,8 +100,18 @@ class {
           }
         }
         this.state.files = this.state.files.filter(f=>f.id!==file.id)
+        this.unsetupFile(file)
       }
     }
+  }
+  setupFile(file) {
+    ['change', 'undo', 'redo'].forEach(v=>file.on(v, this.refreshFile))
+  }
+  unsetupFile(file) {
+    ['change', 'undo', 'redo'].forEach(v=>file.off(v, this.refreshFile))
+  }
+  refreshFile() {
+    this.setStateDirty('files')
   }
   selectFile(item, index) {
     this.state.selectedID = item.id
@@ -213,7 +228,7 @@ div.Main
   div.Main__Right
     Tabs tabs=state.files.map(f=>({
         id: f.id,
-        title: f.title,
-        icon: (file?file.type:'undefined')+"-icon.png",
+        title: `${f.title} ${f.unsaved?'*':''}`,
+        icon: (f?f.type:'undefined')+"-icon.png",
       })) selected=state.selectedID on-select('selectFile') on-close('closeFile')
       FileView file=file
