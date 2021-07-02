@@ -66,7 +66,7 @@ class Config {
     this._pendingSave = setTimeout(() => {
       this._pendingSave = null
       this.save(true)
-    }, 1000)
+    }, 5000)
   }
 }
 
