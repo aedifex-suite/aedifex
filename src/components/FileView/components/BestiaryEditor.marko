@@ -21,13 +21,7 @@ class {
     }
     this.onFileUpdate = this.onFileUpdate.bind(this)
     if (input.file) {
-      input.file.on('change', this.onFileUpdate)
-      input.file.on('undo', this.onFileUpdate)
-      input.file.on('redo', this.onFileUpdate)
-      this.dot = dd(input.file, {
-        prefix: 'state.',
-        throwErrors: false,
-      })
+      this.hookFile(input.file)
     }
   }
   onDestroy() {
@@ -35,6 +29,29 @@ class {
       this.input.file.off('change', this.onFileUpdate)
       this.input.file.off('undo', this.onFileUpdate)
       this.input.file.off('redo', this.onFileUpdate)
+    }
+  }
+  hookFile(file) {
+    if (!file) return
+    file.on('change', this.onFileUpdate)
+    file.on('undo', this.onFileUpdate)
+    file.on('redo', this.onFileUpdate)
+    this.dot = dd(file, {
+      prefix: 'state.',
+      throwErrors: false,
+    })
+  }
+  unhookFile(file) {
+    if (!file) return
+    file.off('change', this.onFileUpdate)
+    file.off('undo', this.onFileUpdate)
+    file.off('redo', this.onFileUpdate)
+    this.dot = null
+  }
+  onInput(input) {
+    if (input?.file?.id !== this.input?.file?.id) {
+      this.unhookFile(this.input?.file)
+      this.hookFile(input.file)
     }
   }
   onFileUpdate() {
