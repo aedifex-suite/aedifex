@@ -101,7 +101,7 @@ div.Tabs
         if(state.editId === item.id)
           input.Tabs__List__Item__Title key='input' value=item.title on-blur('onInputBlur', item, index) on-keyup('onInputKeyup', item, index)
         else
-          span.Tabs__List__Item__Title on-dblclick('onDoubleclick', item, index) -- ${item.title}
+          span.Tabs__List__Item__Title on-dblclick('onDoubleclick', item, index) title=item.path -- ${item.title}
         span.Tabs__List__Item__Close on-click('closeFile', item, index) -- &times;
   div.Tabs__Content
     <${input.renderBody}/>

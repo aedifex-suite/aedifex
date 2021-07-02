@@ -253,6 +253,7 @@ div.Main
     Tabs tabs=state.files.map(f=>({
         id: f.id,
         title: `${f.title} ${f.unsaved?'*':''}`,
+        path: f.path,
         icon: (f?f.type:'undefined')+"-icon.png",
       })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
       FileView file=file
