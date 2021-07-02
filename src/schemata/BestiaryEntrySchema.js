@@ -1,5 +1,5 @@
 const schisma = require('schisma')
-const StringSchema  = require('schemata/String')
+const StringSchema = require('schemata/String')
 const HitPipsSchema = require('schemata/HitPips')
 const DamageSchema  = require('schemata/Damage')
 
@@ -83,7 +83,7 @@ const SaveSchema = schisma({
   $default: 'bad',
   $validate: v => {
     if (typeof v !== "string" && !(v instanceof String)) return 'field must be a string'
-    if (v !== 'good' || v !== 'bad') return "field must be 'good' or 'bad'"
+    if (!['good','bad'].includes(v)) return "field must be 'good' or 'bad'"
   },
 })
 
@@ -211,7 +211,7 @@ const BestiaryEntrySchema = schisma({
   type: 'bestiary',
   name: StringSchema,
   description: '',
-  race: StringSchema,
+  race: [String],
   size: SizeSchema,
   alignment: AlignmentSchema,
   // Defense
