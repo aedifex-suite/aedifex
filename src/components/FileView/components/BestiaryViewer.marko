@@ -176,7 +176,7 @@ section
     span.CombatScores__item
       $ let cmb = utils.getCMB(input.file.state)
       span.CombatScores__item__name -- CMB
-      <span.CombatScores__item__value> ${cmb>=0?`+${cmb}`:`-${cmb}`}; </span>
+      <span.CombatScores__item__value> ${cmb>=0?`+${cmb}`:`${cmb}`}; </span>
     span.CombatScores__item
       $ let cmd = utils.getCMD(input.file.state)
       span.CombatScores__item__name -- CMD
