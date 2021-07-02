@@ -8,6 +8,7 @@ class YAMLFile extends unreson.StateObject {
   constructor(p, type) {
     super()
     this._path = p
+    this._shortpath = path.basename(this._path) || 'untitled.aedifex'
     this._loaded = false
     this._saved = true
     this._type = type
@@ -55,6 +56,7 @@ class YAMLFile extends unreson.StateObject {
     if (!this.path) {
       let result = dialog.showSaveDialogSync({
         title: 'Save Aedifex file to...',
+        defaultPath: this._shortpath,
         filters: [{
           name: 'aedifex',
           extensions: ['aedifex', 'aed']
@@ -66,6 +68,7 @@ class YAMLFile extends unreson.StateObject {
       })
       if (result) {
         this._path = result
+        this._shortpath = path.basename(this._path)
       }
     }
     if (!this.path) {
@@ -136,6 +139,50 @@ class YAMLFile extends unreson.StateObject {
     return 'cancel'
   }
 
+  // rename renames the file by its short name.
+  async rename(to) {
+    let succeeded = false
+    if (this._path) {
+      let newPath = path.join(this._path.substring(0, this._path.length - path.basename(this._path).length), to + path.extname(this._path))
+      to = to + path.extname(this._path)
+      try {
+        await fs.stat(newPath)
+        let results = dialog.showMessageBoxSync({
+          title: 'File exists',
+          message: `Cannot rename "${this._shortpath}" to "${to}", as a file with that name already exists.`,
+          type: 'warning',
+          buttons: ["Overwrite", "OK"]
+        })
+        if (results === 0) {
+          await fs.rename(this._path, newPath)
+          this._shortpath = to
+          this._path = newPath
+        }
+      } catch(err) {
+        if (err.code === 'ENOENT') {
+          try {
+            await fs.rename(this._path, newPath)
+            this._shortpath = to
+            this._path = newPath
+          } catch(err) {
+            dialog.showMessageBoxSync({
+              title: 'Cannot rename file',
+              message: err.toString(),
+              type: 'error',
+            })
+          }
+        } else {
+          dialog.showMessageBoxSync({
+            title: 'Cannot rename file',
+            message: err.toString(),
+            type: 'error',
+          })
+        }
+      }
+    }
+    this.emit('rename')
+  }
+
   // id gets the unique random ID of the file.
   get id() {
     return this._id
@@ -148,7 +195,7 @@ class YAMLFile extends unreson.StateObject {
 
   // title returns the basename of the file excluding extensions.
   get title() {
-    return path.basename(this._path, path.extname(this._path)) || 'untitled'
+    return path.basename(this._shortpath, path.extname(this._shortpath))
   }
 
   // type returns a string corresponding to the type of aedifex entry this file represents.
