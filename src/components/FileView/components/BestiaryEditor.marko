@@ -31,6 +31,15 @@ class {
       this.input.file.off('redo', this.onFileUpdate)
     }
   }
+  // Update file hooks on input file change.
+  onInput(input) {
+    if (input?.file?.id !== this.input?.file?.id) {
+      this.unhookFile(this.input?.file)
+      this.hookFile(input.file)
+      this.checkFile(input.file)
+    }
+  }
+  // Hook/Unhook methods for target file.
   hookFile(file) {
     if (!file) return
     file.on('change', this.onFileUpdate)
@@ -48,16 +57,11 @@ class {
     file.off('redo', this.onFileUpdate)
     this.dot = null
   }
-  onInput(input) {
-    if (input?.file?.id !== this.input?.file?.id) {
-      this.unhookFile(this.input?.file)
-      this.hookFile(input.file)
-      this.checkFile(input.file)
-    }
-  }
+  // Force refresh when our file changes.
   onFileUpdate() {
     this.checkFile(this.input.file)
   }
+  // checkFile validates the target file, updating the errors state tree as necessary.
   checkFile(file) {
     if (!file) return
     this.state.errors = []
