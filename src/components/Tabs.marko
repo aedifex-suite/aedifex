@@ -8,11 +8,6 @@ class {
   }
 }
 style {
-  :root {
-    --content-bg: #141414;
-    --tabs-bg: #181818;
-    --tab-bg: #222;
-  }
   .Tabs {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
@@ -34,7 +29,7 @@ style {
     border-right: 1px solid var(--content-bg);
     background: var(--tab-bg);
     font-size: 13px;
-    color: #888;
+    color: var(--tab-fg);
     cursor: pointer;
     border: 0;
     border-top: 2px solid transparent;
@@ -57,7 +52,7 @@ style {
   .Tabs__List__Item.-selected {
     background: var(--content-bg);
     border-top: 2px solid gold;
-    color: #ccc;
+    color: var(--tab-fg--selected);
   }
   .Tabs__Content {
     display: grid;

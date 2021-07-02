@@ -132,12 +132,6 @@ class {
 }
 
 style {
-  :root {
-    --primary: #51789d;
-    --secondary: #0c1a13;
-    --tertiary: #667e94;
-    --quaternary: #f3e5ec;
-  }
   @font-face {
     font-family: 'PT Sans';
     font-style: normal;
@@ -169,7 +163,7 @@ style {
     height: 100%;
   }
   body {
-    background-color: black;
+    background-color: (--background);
     color: var(--secondary);
     margin: 0;
     height: 100%;
@@ -185,12 +179,12 @@ style {
   button {
     border: 0;
     border-radius: 0;
-    background: #040404;
-    color: #c2c2c2;
+    background: var(--input-bg);
+    color: var(--input-fg);
   }
   input, select {
-    background: #040404;
-    color: #c2c2c2;
+    background: var(--input-bg);
+    color: var(--input-fg);
     border: 1px solid transparent;
     padding: .25em;
     margin: .1em;

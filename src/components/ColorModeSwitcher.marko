@@ -1,0 +1,94 @@
+import * as _Config from '../models/_Config'
+
+class {
+  onCreate() {
+    this.modes = {
+      dark: `:root {
+  --background: black;
+  --input-fg: #c2c2c2;
+  --input-bg: #040404;
+
+  --editor-fg: #c3c3c3;
+  --editor-bg: #141414;
+  --viewer-fg: #d3d3d3;
+  --viewer-bg: #242424;
+
+  --content-bg: #141414;
+  --tabs-bg: #181818;
+  --tab-bg: #222;
+  --tab-fg: #888;
+  --tab-fg--selected: #ccc;
+
+  --primary: #51789d;
+  --secondary: #0c1a13;
+  --tertiary: #667e94;
+  --quaternary: #f3e5ec;
+}`,
+      light: `:root {
+  --background: white;
+  --input-fg: #040404;
+  --input-bg: #c2c2c2;
+
+  --editor-fg: #141414;
+  --editor-bg: #c3c3c3;
+  --viewer-fg: #242424;
+  --viewer-bg: #d3d3d3;
+
+  --content-bg: #c4c4c4;
+  --tabs-bg: #181818;
+  --tab-bg: #888;
+  --tab-fg: #222;
+  --tab-selected-fg: #ccc;
+
+  --primary: #51789d;
+  --secondary: #0c1a13;
+  --tertiary: #667e94;
+  --quaternary: #f3e5ec;
+}`,
+    }
+    if (!['dark', 'light'].includes(_Config.settings.colorMode)) {
+      _Config.settings.colorMode = 'dark'
+    }
+    this.state = {
+      currentMode: _Config.settings.colorMode
+    }
+    this.setCSS()
+  }
+  onDestroy() {
+    _Config.settings.colorMode = this.state.currentMode
+  }
+  toggle() {
+    if (this.state.currentMode === 'dark') {
+      this.state.currentMode = 'light'
+    } else {
+      this.state.currentMode = 'dark'
+    }
+    this.setCSS()
+  }
+  setCSS() {
+    let el = document.getElementsByTagName('head')[0].querySelector('#colors')
+    if (!el) {
+      el = document.createElement('style')
+      el.setAttribute('type', 'text/css')
+      el.setAttribute('id', 'colors')
+    }
+
+    el.textContent = this.modes[this.state.currentMode]
+
+    document.getElementsByTagName('head')[0].appendChild(el)
+  }
+}
+
+div.ColorModeSwitcher on-click('toggle') -- ${state.currentMode}
+
+style {
+  .ColorModeSwitcher {
+    display: inline-block;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    cursor: pointer;
+  }
+}
+

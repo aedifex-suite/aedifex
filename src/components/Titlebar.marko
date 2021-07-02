@@ -52,7 +52,7 @@ style {
   .Titlebar.-menuonly {
     background: #3C3C3C;
     color: #ccc;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
   }
   .Titlebar__Controls {
     display: grid;
@@ -125,6 +125,7 @@ if(process.platform==='win32')
   header.Titlebar class=[state.focused?'-focused':null]
     div.Titlebar__Menu
       <${input.menu}/>
+      ColorModeSwitcher
     div.Titlebar__Dragger
       div.Titlebar__Dragger__Title -- aedifex
     div.Titlebar__Controls
@@ -135,3 +136,4 @@ else
   header.Titlebar.-menuonly
     div.Titlebar__Menu
       <${input.menu}/>
+    ColorModeSwitcher
