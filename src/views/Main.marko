@@ -17,7 +17,6 @@ class {
         fullscreen: false,
       },
       openFiles: [],
-      openDirs: [],
       sections: {},
     })
 
@@ -30,13 +29,13 @@ class {
     // Add YAMLFile entries.
     YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
 
-    // Restore files or show empty file.
+    // Restore files.
     if (_Config.settings.openFiles.length > 0) {
-      for (let p of _Config.settings.openFiles) {
-        this.openFile(p)
-      }
-    } else {
-      this.newFile('bestiary')
+      (async () => {
+        for (let p of _Config.settings.openFiles) {
+          await this.openFile(p)
+        }
+      })()
     }
 
     // Add hook for app closing.
@@ -48,24 +47,21 @@ class {
     this.refreshFile = this.refreshFile.bind(this)
   }
   onDestroy() {
-    _Config.settings = {
-      ..._Config.settings,
-      openFiles: this.state.files.map(f=>f.path),
-      openDirs: this.state.openDirs,
-      selectedID: this.state.selectedID,
-    }
+    this.syncConfig()
+  }
+  // syncConfig synchronizes our state with the underlying Config file.
+  syncConfig() {
+    _Config.settings.openFiles = this.state.files.map(f=>f.path).filter(f=>f.path!=='')
+    _Config.settings.openDirs = this.state.openDirs
+    _Config.settings.selectedID = this.state.selectedID
   }
   async close() {
-    _Config.settings.openFiles = []
+    this.syncConfig()
     for (let file of this.state.files) {
       // Attempt to close the file and bail out of program close if cancel is pressed.
       let result = await file.close()
       if (result === 'cancel') {
         return
-      }
-      // Otherwise store in the openFiles list.
-      if (file.path !== "") {
-        _Config.settings.openFiles.push(file.path)
       }
     }
     await _Config.save(true)
@@ -77,6 +73,7 @@ class {
     this.setupFile(f)
     this.state.files.push(f)
     this.state.selectedID = f.id
+    this.syncConfig()
   }
   async openFile(p, fullPath) {
     let f = this.state.files.find(f=>f.path===p)
@@ -87,6 +84,7 @@ class {
       this.setupFile(f)
     }
     this.state.selectedID = f.id
+    this.syncConfig()
   }
   async closeFile(item, index) {
     let file = this.state.files.find(f=>f.id===item.id)
@@ -106,6 +104,7 @@ class {
         }
         this.state.files = this.state.files.filter(f=>f.id!==file.id)
         this.unsetupFile(file)
+        this.syncConfig()
       }
     }
   }
@@ -123,6 +122,7 @@ class {
   }
   selectFile(item, index) {
     this.state.selectedID = item.id
+    this.syncConfig()
   }
   async openFileDialog() {
     let result = remote.dialog.showOpenDialogSync({
@@ -141,6 +141,7 @@ class {
       for (let p of result) {
         await this.openFile(p)
       }
+      this.syncConfig()
     }
   }
   async saveFile() {
@@ -148,7 +149,6 @@ class {
     if (file) {
       await file.save()
     }
-    console.log('save current fielel')
   }
   openDir() {
     let result = remote.dialog.showOpenDialogSync({
@@ -159,10 +159,12 @@ class {
       if (!this.state.openDirs.includes(result[0])) {
         this.state.openDirs = [...this.state.openDirs, result[0]]
       }
+      this.syncConfig()
     }
   }
   closeDir(dir, e) {
     this.state.openDirs = this.state.openDirs.filter(v=>v!==dir)
+    this.syncConfig()
   }
 }
 
