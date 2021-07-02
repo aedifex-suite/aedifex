@@ -9,24 +9,23 @@ class {
   onDestroy() {
     this.unhookFile(this.input?.file)
   }
-  hookFile(file) {
-    if (!file) return
-    file.on('change', this.onFileUpdate)
-    file.on('undo', this.onFileUpdate)
-    file.on('redo', this.onFileUpdate)
-  }
-  unhookFile(file) {
-    if (!file) return
-    file.off('change', this.onFileUpdate)
-    file.off('undo', this.onFileUpdate)
-    file.off('redo', this.onFileUpdate)
-  }
+  // Update file hooks on input file change.
   onInput(input) {
     if (input?.file?.id !== this.input?.file?.id) {
       this.unhookFile(this.input?.file)
       this.hookFile(input.file)
     }
   }
+  // Hook/Unhook methods for target file.
+  hookFile(file) {
+    if (!file) return
+    ['change', 'undo', 'redo'].forEach(v=>file.on(v, this.onFileUpdate))
+  }
+  unhookFile(file) {
+    if (!file) return
+    ['change', 'undo', 'redo'].forEach(v=>file.off(v, this.onFileUpdate))
+  }
+  // Force refresh when our file changes.
   onFileUpdate() {
     this.forceUpdate()
   }
