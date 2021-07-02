@@ -11,7 +11,7 @@ class {
     }
   }
   onDestroy() {
-    if (this.input && this.input.file) {
+    if (this.input?.file) {
       this.input.file.off('change', this.onFileUpdate)
       this.input.file.off('undo', this.onFileUpdate)
       this.input.file.off('redo', this.onFileUpdate)

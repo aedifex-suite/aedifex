@@ -246,7 +246,7 @@ Titlebar title='aedifex'
 div.Main
   div.Main__Left
     if(state.openDir)
-      FolderListing dir=state.openDir on-select('openFile') on-close('closeDir') selected=file?file.path:''
+      FolderListing dir=state.openDir on-select('openFile') on-close('closeDir') selected=file?.path
     else
       div
   div.Main__Right
