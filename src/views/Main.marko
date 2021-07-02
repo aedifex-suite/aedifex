@@ -23,7 +23,6 @@ class {
 
     this.state = {
       files: [],
-      selectedFilepath: '',
       selectedID: '',
       openDirs: _Config.settings.openDirs,
     }
@@ -47,6 +46,14 @@ class {
 
     // This always feels bad, but bind our appropriate methods to this.
     this.refreshFile = this.refreshFile.bind(this)
+  }
+  onDestroy() {
+    _Config.settings = {
+      ..._Config.settings,
+      openFiles: this.state.files.map(f=>f.path),
+      openDirs: this.state.openDirs,
+      selectedID: this.state.selectedID,
+    }
   }
   async close() {
     _Config.settings.openFiles = []
@@ -80,7 +87,6 @@ class {
       this.setupFile(f)
     }
     this.state.selectedID = f.id
-    this.state.selectedFilepath = p
   }
   async closeFile(item, index) {
     let file = this.state.files.find(f=>f.id===item.id)
