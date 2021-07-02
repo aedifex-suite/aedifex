@@ -104,11 +104,14 @@ class {
       }
     }
   }
+  async renameFile(item, index, value) {
+    this.state.files.find(f=>f.id===item.id)?.rename(value)
+  }
   setupFile(file) {
-    ['change', 'undo', 'redo', 'saved'].forEach(v=>file.on(v, this.refreshFile))
+    ['change', 'undo', 'redo', 'saved', 'rename'].forEach(v=>file.on(v, this.refreshFile))
   }
   unsetupFile(file) {
-    ['change', 'undo', 'redo', 'saved'].forEach(v=>file.off(v, this.refreshFile))
+    ['change', 'undo', 'redo', 'saved', 'rename'].forEach(v=>file.off(v, this.refreshFile))
   }
   refreshFile() {
     this.setStateDirty('files')
@@ -251,5 +254,5 @@ div.Main
         id: f.id,
         title: `${f.title} ${f.unsaved?'*':''}`,
         icon: (f?f.type:'undefined')+"-icon.png",
-      })) selected=state.selectedID on-select('selectFile') on-close('closeFile')
+      })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
       FileView file=file
