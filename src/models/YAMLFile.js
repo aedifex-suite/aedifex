@@ -52,6 +52,49 @@ class YAMLFile extends unreson.StateObject {
   }
 
   async save() {
+    if (!this.path) {
+      let result = dialog.showSaveDialogSync({
+        title: 'Save Aedifex file to...',
+        filters: [{
+          name: 'aedifex',
+          extensions: ['aedifex', 'aed']
+        },
+        {
+          name: 'yaml',
+          extensions: ['yaml', 'yml']
+        }],
+      })
+      if (result) {
+        this._path = result
+      }
+    }
+    if (!this.path) {
+      return false
+    }
+
+    let schm = YAMLFile._typeMap[this._type]
+    if (schm) {
+      let r = schm.validate(this._state)
+      if (r.length) {
+        let msg = `Cannot save "${this.path}"\n\n`
+        for (let {where, message, code, value} of r) {
+          msg += `"${where}" with a value of "${value}" is ${code}: ${message}\n\n`
+        }
+        msg += `Forcibly saved files may not be openable!`
+        let results = dialog.showMessageBoxSync({
+          title: 'Cannot save file',
+          message: msg,
+          type: 'error',
+          buttons: ['Force Save', 'OK'],
+          defaultId: 1,
+          cancelId: 1,
+        })
+        if (results === 1) {
+          return false
+        }
+      }
+    }
+
     let text = yaml.stringify(this._state)
     let result = await fs.writeFile(this.path, text, {encoding: 'utf8'})
     if (!result) {
