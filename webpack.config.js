@@ -25,7 +25,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.marko$/,
-				use: 'marko-loader'
+        loader: '@marko/webpack/loader',
 			},
 			{
 				test: /\.css$/,

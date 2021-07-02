@@ -14,6 +14,7 @@
         "dist-mac": "gulp build-dist-mac"
     },
     "devDependencies": {
+        "@marko/webpack": "^6.2.10",
         "chokidar": "^3.4.1",
         "css-loader": "^3.4.2",
         "dot-dotty": "^0.2.0",
@@ -25,8 +26,7 @@
         "gulp-concat": "^2.6.1",
         "gulp-shell": "^0.8.0",
         "gulp-uglify": "^3.0.2",
-        "marko": "^4.22.3",
-        "marko-loader": "^1.5.0",
+        "marko": "^5.10.7",
         "node-loader": "^0.6.0",
         "rollup-plugin-cleanup": "^3.1.1",
         "schisma": "^0.7.8",
@@ -42,6 +42,5 @@
             "windows": "build/assets/icons/icon.ico",
             "linux": "build/assets/icons/icon.png"
         }
-    },
-    "dependencies": {}
+    }
 }

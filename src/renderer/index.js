@@ -1,4 +1,4 @@
-const template = require('views/Main.marko')
+const template = require('views/Main.marko').default
 const _Config = require('models/_Config.js')
 
 template.renderSync().appendTo(document.body);
