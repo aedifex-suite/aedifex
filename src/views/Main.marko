@@ -129,8 +129,8 @@ class {
         name: 'yaml',
         extensions: ['yaml', 'yml']
       }],
-      title: "Open File",
-      properties: ['openFile'],
+      title: "Open File(s)",
+      properties: ['openFile', 'multiSelections'],
     })
     if (result) {
       for (let p of result) {
@@ -240,7 +240,7 @@ Titlebar title='aedifex'
     div
       img src='assets/aedifex-icon.png'
     div.Titlebar__Controls__Button on-click('openDir') -- Open Dir
-    div.Titlebar__Controls__Button on-click('openFileDialog') -- Open File
+    div.Titlebar__Controls__Button on-click('openFileDialog') -- Open File(s)
     div.Titlebar__Controls__Button on-click('newFile') -- New File
     div.Titlebar__Controls__Button class={'-noinput': !file?.unsaved} on-click('saveFile') -- Save File
 div.Main
