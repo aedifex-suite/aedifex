@@ -1,10 +1,38 @@
 class {
+  onCreate() {
+    this.state = {
+      editId: '',
+      editValue: '',
+    }
+  }
   selectFile(item, index, e) {
     this.emit('select', item, index)
   }
   closeFile(item, index, e) {
     e.stopPropagation()
     this.emit('close', item, index)
+  }
+  onDoubleclick(item, index, e) {
+    this.state.editId = item.id
+    this.state.editValue = item.title
+    setTimeout(_=> {
+      this.getEl('input').focus()
+    }, 0)
+  }
+  onInputBlur(item, index, e) {
+    if (e.target.value !== item.title) {
+      this.emit('rename', item, index, e.target.value)
+    }
+    this.state.editId = ''
+    this.state.editValue = ''
+  }
+  onInputKeyup(item, index, e) {
+    if (e.key === 'Enter') {
+      e.target.blur()
+    } else if (e.key === 'Escape') {
+      e.target.value = item.title
+      e.target.blur()
+    }
   }
 }
 style {
@@ -70,7 +98,10 @@ div.Tabs
       ] on-click('selectFile', item, index)
         if(item.icon)
           img.Tabs__List__Item__Icon src='assets/'+item.icon
-        span.Tabs__List__Item__Title -- ${item.title}
+        if(state.editId === item.id)
+          input.Tabs__List__Item__Title key='input' value=item.title on-blur('onInputBlur', item, index) on-keyup('onInputKeyup', item, index)
+        else
+          span.Tabs__List__Item__Title on-dblclick('onDoubleclick', item, index) -- ${item.title}
         span.Tabs__List__Item__Close on-click('closeFile', item, index) -- &times;
   div.Tabs__Content
     <${input.renderBody}/>
