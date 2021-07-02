@@ -52,12 +52,17 @@ class {
     if (input?.file?.id !== this.input?.file?.id) {
       this.unhookFile(this.input?.file)
       this.hookFile(input.file)
+      this.checkFile(input.file)
     }
   }
   onFileUpdate() {
+    this.checkFile(this.input.file)
+  }
+  checkFile(file) {
+    if (!file) return
     this.state.errors = []
     try {
-      let errs = BestiaryEntrySchema.validate(this.input.file._state)
+      let errs = BestiaryEntrySchema.validate(file._state)
       for (let err of errs) {
         this.state.errors[err.where] = err.message
       }
