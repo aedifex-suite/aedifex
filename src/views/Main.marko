@@ -105,10 +105,10 @@ class {
     }
   }
   setupFile(file) {
-    ['change', 'undo', 'redo'].forEach(v=>file.on(v, this.refreshFile))
+    ['change', 'undo', 'redo', 'saved'].forEach(v=>file.on(v, this.refreshFile))
   }
   unsetupFile(file) {
-    ['change', 'undo', 'redo'].forEach(v=>file.off(v, this.refreshFile))
+    ['change', 'undo', 'redo', 'saved'].forEach(v=>file.off(v, this.refreshFile))
   }
   refreshFile() {
     this.setStateDirty('files')
@@ -116,14 +116,39 @@ class {
   selectFile(item, index) {
     this.state.selectedID = item.id
   }
+  async openFileDialog() {
+    let result = remote.dialog.showOpenDialogSync({
+      filters: [{
+        name: 'aedifex',
+        extensions: ['aedifex', 'aed']
+      },
+      {
+        name: 'yaml',
+        extensions: ['yaml', 'yml']
+      }],
+      title: "Open File",
+      properties: ['openFile'],
+    })
+    if (result) {
+      for (let p of result) {
+        await this.openFile(p)
+      }
+    }
+  }
+  async saveFile() {
+    let file = this.state.files.find(f=>f.id===this.state.selectedID)
+    if (file) {
+      await file.save()
+    }
+    console.log('save current fielel')
+  }
   openDir() {
-    let [result] = remote.dialog.showOpenDialogSync({
+    let result = remote.dialog.showOpenDialogSync({
       title: "Open Directory",
       properties: ['openDirectory'],
     })
-
     if (result) {
-      this.state.openDir = result
+      this.state.openDir = result[0]
     }
   }
   closeDir(e) {
@@ -206,14 +231,16 @@ style {
   }
 }
 
+$ let file = state.files.find(f=>f.id===state.selectedID)
 Titlebar title='aedifex'
   @menu
     div
       img src='assets/aedifex-icon.png'
     div.Titlebar__Controls__Button on-click('openDir') -- Open Dir
+    div.Titlebar__Controls__Button on-click('openFileDialog') -- Open File
     div.Titlebar__Controls__Button on-click('newFile') -- New File
+    div.Titlebar__Controls__Button class={'-noinput': !file?.unsaved} on-click('saveFile') -- Save File
 div.Main
-  $ let file = state.files.find(f=>f.id===state.selectedID)
   div.Main__Left
     if(state.openDir)
       FolderListing dir=state.openDir on-select('openFile') on-close('closeDir') selected=file?file.path:''
