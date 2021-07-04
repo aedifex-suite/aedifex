@@ -1,0 +1,52 @@
+class {
+  onMount() {
+    this.setup()
+  }
+  async setup(input=this.input) {
+    if (input?.viewer) {
+      let viewer = await input.viewer.render({
+        link: input.link,
+        dot: input.dot,
+        file: input.file,
+      })
+      viewer.replaceChildrenOf(this.getEl('view'))
+    }
+  }
+  // Update file hooks on input file change.
+  onInput(input) {
+    if (input?.file?.id !== this.file?.id) {
+      this.setup(input)
+    }
+  }
+}
+
+style {
+  .SheetViewer {
+    color: var(--viewer-fg);
+    background: var(--viewer-bg);
+    padding: .5em;
+    overflow: auto;
+  }
+  .SheetViewer__Info pre {
+    white-space: pre-wrap;
+  }
+  .SheetViewer__Info {
+    padding-bottom: 1em;
+  }
+  .SheetViewer__Info .-bold {
+    font-weight: bold;
+  }
+}
+ 
+div.SheetViewer key='view'
+  div.SheetViewer__Info
+    span.-bold -- Error:
+    pre -- No viewer available for file
+      br
+      span.-bold -- "${input.file?.path||'missing path'}"
+  div.SheetViewer__Info
+    span.-bold -- Type:&nbsp;
+    pre -- ${input.file?.state?.type||'missing type'}
+  div.SheetViewer__Info
+    span.-bold -- Version:&nbsp;
+    pre -- ${input.file?.state?.version||'missing version'}

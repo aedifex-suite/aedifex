@@ -1,0 +1,49 @@
+class {
+  onMount() {
+    this.setup()
+  }
+  async setup(input=this.input) {
+    if (input?.editor) {
+      let editor = await input.editor.render({
+        link: input.link,
+        dot: input.dot,
+        file: input.file,
+      })
+      editor.replaceChildrenOf(this.getEl('view'))
+    }
+  }
+  // Update file hooks on input file change.
+  onInput(input) {
+    if (input?.file?.id !== this.file?.id) {
+      this.setup(input)
+    }
+  }
+}
+
+style {
+  .SheetEditor {
+    color: var(--editor-fg);
+    background: var(--editor-bg);
+    padding: .5em;
+    overflow: auto;
+  }
+  .SheetEditor__Info {
+    padding-bottom: 1em;
+  }
+  .SheetEditor__Info .-bold {
+    font-weight: bold;
+  }
+}
+ 
+div.SheetEditor key='view'
+  div.SheetEditor__Info
+    span.-bold -- Error:
+    pre -- No editor available for file
+      br
+      span.-bold -- "${input.file?.path||'missing path'}"
+  div.SheetEditor__Info
+    span.-bold -- Type:&nbsp;
+    pre -- ${input.file?.state?.type||'missing type'}
+  div.SheetEditor__Info
+    span.-bold -- Version:&nbsp;
+    pre -- ${input.file?.state?.version||'missing version'}
