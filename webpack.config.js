@@ -11,7 +11,7 @@ module.exports = {
 		filename: 'js/bundle.min.js'
 	},
 	resolve: {
-		extensions: ['.js', '.marko'],
+		extensions: ['.js', '.mjs', '.marko'],
 //		aliasFields: ["browser"],
 		alias: {
 			schemata: path.resolve(__dirname, 'src/schemata/'),
@@ -32,6 +32,25 @@ module.exports = {
 							"@babel/preset-env"
 						],
 						"plugins": [
+							"@babel/plugin-proposal-optional-chaining",
+							"@babel/plugin-transform-runtime",
+						]
+					}
+				}
+			},
+			{
+				test: /\.mjs$/,
+				include: [
+					path.resolve(__dirname, 'src/models')
+				],
+				use: {
+					loader: 'babel-loader',
+					options: {
+						"presets": [
+							"@babel/preset-env"
+						],
+						"plugins": [
+							"@babel/plugin-proposal-private-methods",
 							"@babel/plugin-proposal-optional-chaining",
 							"@babel/plugin-transform-runtime",
 						]
