@@ -23,7 +23,7 @@ div.Settings
             td
               Section class='Settings__Packets__List__Item' default='open'
                 @heading 
-                  span.Settings__Packets__List__Item__Title -- ${packet.package?.aedifex?.title || packet.package?.name || packet.source}
+                  span.Settings__Packets__List__Item__Title -- ${packet.package?.aedifex?.name || packet.package?.name || packet.source}
                 @content
                   pre.Settings__Packets__List__Item__Description -- ${packet.package?.aedifex?.description || packet.package?.description || 'Missing description'}
       div.Settings__Packets__Controls
