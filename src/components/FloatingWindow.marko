@@ -1,0 +1,63 @@
+style {
+  .FloatingWindow__Container {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+  .FloatingWindow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .FloatingWindow__Titlebar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr);
+    background: var(--window-title-bg);
+  }
+  .FloatingWindow__Titlebar__Title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--window-title-fg);
+  }
+  .FloatingWindow__Titlebar__Controls {
+    font-weight: bold;
+    color: var(--window-title-fg);
+    min-height: 2em;
+    display: flex;
+  }
+  .FloatingWindow__Titlebar__Controls__Button {
+    padding: .25em;
+    cursor: pointer;
+    background: var(--window-title-bg);
+    color: var(--window-title-fg);
+  }
+  .FloatingWindow__Content {
+    padding: .5em;
+    color: var(--window-fg);
+    background: var(--window-bg);
+  }
+}
+
+div.FloatingWindow__Container
+  div.FloatingWindow
+    div.FloatingWindow__Titlebar
+      div.FloatingWindow__Titlebar__Title
+        <${input.title}/>
+      div.FloatingWindow__Titlebar__Controls
+        button.FloatingWindow__Titlebar__Controls__Button on-click(e=>component.emit('close')) -- close
+    div.FloatingWindow__Content
+      <${input.body}/>
