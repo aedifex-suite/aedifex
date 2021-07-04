@@ -1,6 +1,5 @@
 import { ipcRenderer } from 'electron'
 import YAMLFile from '../models/YAMLFile'
-import { BestiaryEntrySchema } from '../schemata/BestiaryEntrySchema'
 import * as fs from 'fs'
 import * as path from 'path'
 import { remote } from 'electron'
@@ -18,16 +17,17 @@ class {
       },
       openFiles: [],
       sections: {},
+      packets: [],
     })
 
     this.state = {
       files: [],
       selectedID: '',
       openDirs: _Config.settings.openDirs,
+      showSettings: false
     }
 
     // Add YAMLFile entries.
-    YAMLFile.addSchisma('bestiary', BestiaryEntrySchema)
 
     // Restore files.
     if (_Config.settings.openFiles.length > 0) {
@@ -37,6 +37,13 @@ class {
         }
       })()
     }
+
+    // FIXME: Temporary loading of specific packet modules.
+    ;(async () => {
+      await Packets.load(path.resolve("../aedifex-horde-3"))
+      await Packets.load(path.resolve("../aedifex-pathfinder"))
+    })()
+
 
     // Add hook for app closing.
     ipcRenderer.on('app-close', _ => {
@@ -251,6 +258,7 @@ Titlebar title='aedifex'
     div.Titlebar__Controls__Button on-click('openFileDialog') -- Open File(s)
     div.Titlebar__Controls__Button on-click('newFile') -- New File
     div.Titlebar__Controls__Button class={'-noinput': !file?.unsaved} on-click('saveFile') -- Save File
+    div.Titlebar__Controls__Button on-click(_=>component.state.showSettings=true) -- Settings
 div.Main
   div.Main__Left
     if(state.openDirs.length > 0)
@@ -266,3 +274,9 @@ div.Main
         icon: (f?f.type:'undefined')+"-icon.png",
       })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
       FileView file=file
+  if(state.showSettings)
+    FloatingWindow on-close(_=>{component.state.showSettings=false;console.log('should close')})
+      @title
+        span -- Settings
+      @body
+        Settings
