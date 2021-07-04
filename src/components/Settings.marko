@@ -1,0 +1,61 @@
+import Config from 'models/_Config'
+import Packets from 'models/_Packets'
+
+class {
+  onCreate() {
+    ['add', 'loading', 'loaded', 'failed'].forEach(v => {
+      this.subscribeTo(Packets).on(v, _ => {
+        this.forceUpdate()
+      })
+    })
+  }
+  onMount() {
+  }
+}
+
+div.Settings
+  div.Settings__Section.Settings__Packets
+    header -- packets
+    article
+      table.Settings__Packets__List
+        for|packet| of=Packets.packets
+          tr
+            td
+              Section class='Settings__Packets__List__Item' default='open'
+                @heading 
+                  span.Settings__Packets__List__Item__Title -- ${packet.package?.aedifex?.title || packet.package?.name || packet.source}
+                @content
+                  pre.Settings__Packets__List__Item__Description -- ${packet.package?.aedifex?.description || packet.package?.description || 'Missing description'}
+      div.Settings__Packets__Controls
+        button.Settings__Packets__Controls__Remove -- remove selected
+        button.Settings__Packets__Controls__Add -- add new
+
+style {
+  .Settings {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .Settings__Section > header {
+    font-size: 125%;
+    font-weight: bold;
+  }
+  .Settings__Packets {
+  }
+  .Settings__Packets__List {
+    width: 100%;
+  }
+  .Settings__Packets__List tr {
+    background: var(--listing-bg);
+    border: 1px solid var(--listing-item-fg);
+  }
+  .Settings__Packets__List__Item {
+
+  }
+  .Settings__Packets__Controls {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+}
