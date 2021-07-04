@@ -1,4 +1,63 @@
+import path from 'path'
+import dd from 'dot-dotty'
+import PacketLink from 'models/PacketLink'
+import Packets from '../../models/_Packets.mjs'
+
 class {
+  onCreate(input) {
+    this.state = {
+      sheet: null,
+    }
+    if (input?.file) {
+      this.hookFile(input.file)
+    }
+    this.onFileUpdate = this.onFileUpdate.bind(this)
+    this.link = new PacketLink()
+  }
+  onInput(input) {
+    if (input?.file?.id !== this.file?.id) {
+      this.hookFile(input.file)
+    }
+  }
+  async hookFile(file) {
+    if (this.file) {
+      this.file.off('change', this.onFileUpdate)
+      this.file.off('undo', this.onFileUpdate)
+      this.file.off('redo', this.onFileUpdate)
+      this.link.destroy()
+    }
+    if (file) {
+      this.file = file
+      this.file.on('change', this.onFileUpdate)
+      this.file.on('undo', this.onFileUpdate)
+      this.file.on('redo', this.onFileUpdate)
+      this.dot = dd(this.file, {
+        prefix: 'state.',
+        throwErrors: false,
+      })
+      // Get sheet
+      this.state.sheet = Packets.findSupportingSheet(file.state.type, file.state.version)
+      this.checkFile()
+      this.link.ready()
+    }
+  }
+  onFileUpdate(e) {
+    this.checkFile()
+  }
+  checkFile() {
+    this.errors = []
+    if (this.state?.sheet?.schema) {
+      try {
+        let errs = this.state.sheet.schema.validate(this.file._state)
+        for (let err of errs) {
+          this.errors[err.where] = err.message
+        }
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    this.link.errors(this.errors)
+  }
 }
 
 style {
@@ -16,26 +75,12 @@ style {
     justify-content: center;
     color: var(--editor-fg);
   }
-  .FileView__Editor {
-    color: var(--editor-fg);
-    background: var(--editor-bg);
-    overflow: auto;
-  }
-  .FileView__Viewer {
-    color: var(--viewer-fg);
-    background: var(--viewer-bg);
-    padding: .5em;
-  }
 }
 
 if(input.file)
   div.FileView
-      div.FileView__Editor
-        if(input.file.type === 'bestiary')
-          BestiaryEditor file=input.file
-      div.FileView__Viewer
-        if(input.file.type === 'bestiary')
-          BestiaryViewer file=input.file
+    SheetEditor link=component.link dot=component.dot file=component.file editor=state.sheet?.editor
+    SheetViewer link=component.link dot=component.dot file=component.file viewer=state.sheet?.viewer
 else
   div.FileView.-single
     div.FileView__Message
