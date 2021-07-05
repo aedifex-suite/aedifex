@@ -4,7 +4,7 @@ import YAMLFile from '../models/YAMLFile'
 import * as fs from 'fs'
 import * as path from 'path'
 import { remote } from 'electron'
-import * as _Config from '../models/_Config'
+import _Config from '../models/_Config'
 
 class {
   onCreate() {
@@ -17,6 +17,7 @@ class {
         fullscreen: false,
       },
       openFiles: [],
+      lastIndex: 0,
       sections: {},
       packets: [],
     })
@@ -33,9 +34,11 @@ class {
     // Restore files.
     if (_Config.settings.openFiles.length > 0) {
       (async () => {
+        let targetIndex = _Config.settings.lastIndex
         for (let p of _Config.settings.openFiles) {
           await this.openFile(p)
         }
+        this.state.selectedID = this.state.files.find((_,i)=>i===targetIndex)?.id
       })()
     }
 
@@ -62,6 +65,7 @@ class {
     _Config.settings.openFiles = this.state.files.map(f=>f.path).filter(f=>f.path!=='')
     _Config.settings.openDirs = this.state.openDirs
     _Config.settings.selectedID = this.state.selectedID
+    _Config.settings.lastIndex = this.state.files.findIndex(f=>f.id === this.state.selectedID)
   }
   async close() {
     this.syncConfig()

@@ -1,13 +1,12 @@
-const path        = require('path')
-const fs          = require('fs')
-const fsPromises  = require('fs').promises
-const unreson     = require('unreson')
-const yaml        = require('yaml')
+import path     from 'path'
+import fs       from 'fs'
+import unreson  from 'unreson'
+import yaml     from 'yaml'
 
 // Get our locations.
-const appData         = process.env.APPDATA || (process.platform == 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : path.join(process.env.HOME, "/.local/share"))
-const userData        = path.join(appData, 'aedifex')
-const settingsPath    = path.join(userData, 'settings.yml')
+export const appData         = process.env.APPDATA || (process.platform == 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : path.join(process.env.HOME, "/.local/share"))
+export const userData        = path.join(appData, 'aedifex')
+export const settingsPath    = path.join(userData, 'settings.yml')
 
 /**
  * Config is a standalone configuration system that supports automatic saving.
@@ -46,8 +45,8 @@ class Config {
   async save(force) {
     if (force) {
       try {
-        await fsPromises.mkdir(userData, { recursive: true, mode: 0o755 })
-        await fsPromises.writeFile(settingsPath, yaml.stringify(this._settings._state))
+        await fs.promises.mkdir(userData, { recursive: true, mode: 0o755 })
+        await fs.promises.writeFile(settingsPath, yaml.stringify(this._settings._state))
       } catch(e) {
         console.log(e)
       }
@@ -66,8 +65,8 @@ class Config {
     this._pendingSave = setTimeout(() => {
       this._pendingSave = null
       this.save(true)
-    }, 5000)
+    }, 3000)
   }
 }
 
-module.exports = new Config()
+export default new Config()
