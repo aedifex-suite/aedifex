@@ -6,16 +6,6 @@ import EventEmitter from 'events'
 
 /**
  * Packets provides an interface to loading external packet modules.
- * A packet module is simply a zip file that is expected to conform to the following:
- *   * package.json
- *     * contains aedifex.schemata: [file entry] for target JavaScript CSM modules.
- *     * contains aedifex.editor: file entry for editor JavaScript CSM module. If ommitted, the DumbEntryEditor component is used.
- *     * contains aedifex.view: file entry for view JavaScript CSM module. If ommitted, the DumbEntryViewer component is used.
- * 
- * Each of these files obey the following:
- *  * [schemata] provides schisma-compatible schemas to be used for data.
- *  * editor exports a compiled Marko CSM module that accepts an input of "file"
- *  * view exports a compiled Marko CSM module that accepts an input of "file"
  */
 class Packets extends EventEmitter {
   #packets = []

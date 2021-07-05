@@ -28,6 +28,11 @@ class Config {
       this.startPendingSave()
     })
   }
+  /**
+   * load merges the current state with the given defaults.
+   * 
+   * @param {Object} defaults - A JSON-safe object representing the settings to store.
+   */
   load(defaults) {
     // Convert it to an unreson StateObject.
     this._settings.state = Object.assign(defaults, this._settings._state)

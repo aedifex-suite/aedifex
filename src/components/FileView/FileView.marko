@@ -1,3 +1,4 @@
+// FileView provides and handles the split-view for sheets. From the current file selected, it attempts to acquire the associated Packet and set up various needed structures for updating the packet view and editor components.
 import path from 'path'
 import dd from 'dot-dotty'
 import PacketLink from 'models/PacketLink'
@@ -19,6 +20,7 @@ class {
       this.hookFile(input.file)
     }
   }
+  // hookFiles sets the given file to be the source of updating our editor and view marko sub-components.
   async hookFile(file) {
     if (this.file) {
       this.file.off('change', this.onFileUpdate)

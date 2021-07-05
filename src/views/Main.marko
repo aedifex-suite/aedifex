@@ -1,3 +1,6 @@
+/**
+ * Our main view, providing the base of our app structure.
+ */
 import { ipcRenderer } from 'electron'
 import Packets from 'models/_Packets'
 import YAMLFile from '../models/YAMLFile'
@@ -8,6 +11,7 @@ import _Config from '../models/_Config'
 
 class {
   onCreate() {
+    // Set up Config defaults.
     _Config.load({
       win: {
         x: 0,
@@ -28,8 +32,6 @@ class {
       openDirs: _Config.settings.openDirs,
       showSettings: false
     }
-
-    // Add YAMLFile entries.
 
     // Restore files.
     if (_Config.settings.openFiles.length > 0) {
