@@ -1,8 +1,9 @@
-const yaml = require('yaml')
-const unreson = require('unreson')
-const fs = require('fs').promises
-const path = require('path')
-const dialog = require('electron').remote.dialog
+import yaml from 'yaml'
+import unreson from 'unreson'
+import fs from 'fs'
+import path from 'path'
+import electron from 'electron'
+const dialog = electron.remote.dialog
 
 class YAMLFile extends unreson.StateObject {
   constructor(p, type) {
@@ -31,7 +32,7 @@ class YAMLFile extends unreson.StateObject {
 
   async load() {
     if (this.path) {
-      let text = await fs.readFile(this.path, {encoding: 'utf8'})
+      let text = await fs.promises.readFile(this.path, {encoding: 'utf8'})
       let obj = yaml.parse(text)
       this._type = obj.type
       let schm = YAMLFile._typeMap[this._type]
@@ -99,7 +100,7 @@ class YAMLFile extends unreson.StateObject {
     }
 
     let text = yaml.stringify(this._state)
-    let result = await fs.writeFile(this.path, text, {encoding: 'utf8'})
+    let result = await fs.promises.writeFile(this.path, text, {encoding: 'utf8'})
     if (!result) {
       this._saved = true
       this.emit('saved')
@@ -146,7 +147,7 @@ class YAMLFile extends unreson.StateObject {
       let newPath = path.join(this._path.substring(0, this._path.length - path.basename(this._path).length), to + path.extname(this._path))
       to = to + path.extname(this._path)
       try {
-        await fs.stat(newPath)
+        await fs.promises.stat(newPath)
         let results = dialog.showMessageBoxSync({
           title: 'File exists',
           message: `Cannot rename "${this._shortpath}" to "${to}", as a file with that name already exists.`,
@@ -154,14 +155,14 @@ class YAMLFile extends unreson.StateObject {
           buttons: ["Overwrite", "OK"]
         })
         if (results === 0) {
-          await fs.rename(this._path, newPath)
+          await fs.promises.rename(this._path, newPath)
           this._shortpath = to
           this._path = newPath
         }
       } catch(err) {
         if (err.code === 'ENOENT') {
           try {
-            await fs.rename(this._path, newPath)
+            await fs.promises.rename(this._path, newPath)
             this._shortpath = to
             this._path = newPath
           } catch(err) {
@@ -208,4 +209,4 @@ YAMLFile.addSchisma = (type, schm) => {
 }
 YAMLFile._typeMap = {}
 
-module.exports = YAMLFile
+export default YAMLFile
