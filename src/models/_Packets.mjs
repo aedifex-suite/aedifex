@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import _Config from 'models/_Config'
+import _Config, { userData } from 'models/_Config'
 import semver from 'semver'
 import EventEmitter from 'events'
 
@@ -25,7 +25,7 @@ class Packets extends EventEmitter {
   get packets() {
     return this.#packets
   }
-  // load attempts to load a packet from a given directory location.
+  // load attempts to load a packet from a given directory location. If loc is not an absolute path, then "<appdata>/packets" is used.
   async load(loc) {
     let index = this.#packets.length
     this.#packets.push({
@@ -40,6 +40,11 @@ class Packets extends EventEmitter {
     this.emit('loading', {
       packet: p
     })
+    // If the path is not absolute, assume we're loading from our own packets directory.
+    if (!path.isAbsolute(loc)) {
+      loc = path.resolve(path.join(userData, 'packets', loc))
+      console.log('set local path to absolute', loc)
+    }
     if (loc.endsWith('.aedpak') || loc.endsWith('.aedifex-pack')) {
       // TODO: acquire app data dir, check if zip has entries or is a subdir, acquire new loc from this, then await unpack(loc) to that dir and set loc to new loc.
     }
