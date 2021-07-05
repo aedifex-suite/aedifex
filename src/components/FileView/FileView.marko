@@ -43,6 +43,7 @@ class {
   }
   onFileUpdate(e) {
     this.checkFile()
+    this.link.refresh()
   }
   checkFile() {
     this.errors = []
