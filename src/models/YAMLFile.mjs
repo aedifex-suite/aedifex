@@ -5,6 +5,9 @@ import path from 'path'
 import electron from 'electron'
 const dialog = electron.remote.dialog
 
+/**
+ * YAMLFile provides a method to load, store, and modify YAML files backed by a schema.
+ */
 class YAMLFile extends unreson.StateObject {
   constructor(p, type) {
     super()
@@ -30,6 +33,9 @@ class YAMLFile extends unreson.StateObject {
     })
   }
 
+  /**
+   * load reads and parses a YAML document into the YAMLFile's state. It also attempts to acquire a schema from the static typeMap.
+   */
   async load() {
     if (this.path) {
       let text = await fs.promises.readFile(this.path, {encoding: 'utf8'})
@@ -53,6 +59,9 @@ class YAMLFile extends unreson.StateObject {
     }
   }
 
+  /**
+   * save attempts to save the current state to the current path. If no path is provided, then a save as dialog is shown to the user. If the state does not pass schema validation, then a prompt is provided and the user is given the option to forcibly save.
+   */
   async save() {
     if (!this.path) {
       let result = dialog.showSaveDialogSync({
@@ -115,6 +124,9 @@ class YAMLFile extends unreson.StateObject {
   }
 
   // close closes the file.
+  /**
+   * close attempts to close the file. If there are unsaved changes, a prompt is shown allowing the user to save, not save, or cancel the operation.
+   */
   async close() {
     let shouldClose = false
     if (!this._saved) {
@@ -141,6 +153,11 @@ class YAMLFile extends unreson.StateObject {
   }
 
   // rename renames the file by its short name.
+  /**
+   * rename attempts to rename the file's underlying path to the given parameter. If a file exists at the location, a prompt is shown asking to overwrite.
+   * 
+   * @param {string} to - The file path to rename to.
+   */
   async rename(to) {
     let succeeded = false
     if (this._path) {
