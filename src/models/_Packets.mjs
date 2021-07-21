@@ -12,8 +12,19 @@ class Packets extends EventEmitter {
   constructor() {
     super()
   }
+  async restore() {
+    if (_Config.settings.packets?.entries?.length) {
+      for (let loc of _Config.settings.packets.entries) {
+        await this.load(loc)
+      }
+    }
+    this.emit('ready')
+  }
   get packets() {
     return this.#packets
+  }
+  async install(loc) {
+    // Install from loc, unpacking/copying as needed into our appdata dir.
   }
   // load attempts to load a packet from a given directory location. If loc is not an absolute path, then "<appdata>/packets" is used.
   async load(loc) {
