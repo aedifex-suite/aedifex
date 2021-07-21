@@ -2,6 +2,7 @@ import path     from 'path'
 import fs       from 'fs'
 import unreson  from 'unreson'
 import yaml     from 'yaml'
+import SettingsSchema from 'schemata/Settings'
 
 // Get our locations.
 export const appData         = process.env.APPDATA || (process.platform == 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : path.join(process.env.HOME, "/.local/share"))
@@ -14,11 +15,11 @@ export const settingsPath    = path.join(userData, 'settings.yml')
 class Config {
   constructor() {
     // Load our settings from disk.
-    let settings = {}
+    let settings = SettingsSchema.create({})
     try {
-      settings = yaml.parse(fs.readFileSync(settingsPath, { encoding: 'utf-8'}))
+      settings = {...settings, ...yaml.parse(fs.readFileSync(settingsPath, { encoding: 'utf-8'}))}
     } catch (e) {
-      settings = {}
+      settings = {...settings}
     }
 
     // Convert it to an unreson StateObject.
