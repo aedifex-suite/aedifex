@@ -3,13 +3,24 @@ import Packets from 'models/_Packets'
 
 class {
   onCreate() {
-    ['add', 'loading', 'loaded', 'failed'].forEach(v => {
+    this.state = {
+      selectedPacketIndex: 0,
+    }
+    ;['add', 'loading', 'loaded', 'failed'].forEach(v => {
       this.subscribeTo(Packets).on(v, _ => {
         this.forceUpdate()
       })
     })
   }
   onMount() {
+  }
+  handleSelect(index) {
+    this.state.selectedPacketIndex = index
+  }
+  handleRemove() {
+  }
+  handleAdd() {
+    // TODO: show dialog
   }
 }
 
@@ -18,9 +29,9 @@ div.Settings
     header -- packets
     article
       table.Settings__Packets__List
-        for|packet| of=Packets.packets
+        for|packet, packetIndex| of=Packets.packets
           tr
-            td
+            td.Settings__Packets__List__ItemContainer class={'-selected': state.selectedPacketIndex===packetIndex} on-click('handleSelect', packetIndex)
               Section class='Settings__Packets__List__Item' default='open'
                 @heading 
                   span.Settings__Packets__List__Item__Title -- ${packet.package?.aedifex?.name || packet.package?.name || packet.source}
@@ -52,6 +63,12 @@ style {
   }
   .Settings__Packets__List__Item {
 
+  }
+  .Settings__Packets__List__ItemContainer {
+    border: 2px solid transparent;
+  }
+  .Settings__Packets__List__ItemContainer.-selected {
+    border: var(--tab-border--selected);
   }
   .Settings__Packets__Controls {
     display: flex;
