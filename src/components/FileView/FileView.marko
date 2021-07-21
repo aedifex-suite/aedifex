@@ -9,11 +9,12 @@ class {
     this.state = {
       sheet: null,
     }
+    this.onFileUpdate = this.onFileUpdate.bind(this)
+    this.link = new PacketLink()
+
     if (input?.file) {
       this.hookFile(input.file)
     }
-    this.onFileUpdate = this.onFileUpdate.bind(this)
-    this.link = new PacketLink()
   }
   onInput(input) {
     if (input?.file?.id !== this.file?.id) {
