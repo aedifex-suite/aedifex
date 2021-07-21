@@ -13,8 +13,7 @@ class {
     _Config.settings.sections[this.input.class] = this.state.closed
   }
   onToggle(e) {
-    if (e.target !== this.getEl('section')) return
-    this.state.closed = !e.target.open
+    this.state.closed = !this.state.closed
     _Config.settings.sections[this.input.class] = this.state.closed
   }
   onKeyup(e) {
@@ -27,22 +26,40 @@ class {
 style {
   .Section {
     padding: .5em;
+    overflow: hidden;
   }
   .Section__heading {
     user-select: none;
     cursor: pointer;
+    display: grid;
+    grid-template-columns: 2em minmax(0, 1fr);
   }
   .Section__content {
     padding: .5em;
+    transition: all .5s ease;
+  }
+  .Section.-open > .Section__content {
+    max-height: 100vh;
+  }
+  .Section.-closed > .Section__content {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
   }
 }
 
-details.Section key='section' class=input.class open=!state.closed on-toggle('onToggle')
-  summary.Section__heading key='heading' on-keyup('onKeyup')
-    <${input.heading}/>
-    if(!state.closed)
-      <${input.heading_open}/>
-    else
-      <${input.heading_closed}/>
-  section.Section__content
+div.Section key='section' class=[input.class, !state.closed?'-open':'-closed']
+  div.Section__heading key='heading' on-click('onToggle') key='heading' on-keyup('onKeyup')
+    div.Section__heading__control
+      if(state.closed)
+        -- ▶
+      else
+        -- ▼
+    div.Section__heading__content
+      <${input.heading}/>
+      if(!state.closed)
+        <${input.heading_open}/>
+      else
+        <${input.heading_closed}/>
+  div.Section__content
     <${input.content}/>
