@@ -30,26 +30,33 @@ class {
       files: [],
       selectedID: '',
       openDirs: _Config.settings.openDirs,
-      showSettings: false
+      showSettings: false,
+      ready: false,
     }
 
-    // Restore files.
-    if (_Config.settings.openFiles.length > 0) {
-      (async () => {
-        let targetIndex = _Config.settings.lastIndex
-        for (let p of _Config.settings.openFiles) {
-          await this.openFile(p)
-        }
-        this.state.selectedID = this.state.files.find((_,i)=>i===targetIndex)?.id
-      })()
-    }
+    ;(async () => {
+      await Promise.all([
+        // Load packets.
+        Packets.restore(),
+        // Restore files.
+        (async () => {
+          if (_Config.settings.openFiles.length > 0) {
+            let targetIndex = _Config.settings.lastIndex
+            for (let p of _Config.settings.openFiles) {
+              await this.openFile(p)
+            }
+            this.state.selectedID = this.state.files.find((_,i)=>i===targetIndex)?.id
+          }
+        })()
+      ])
+      this.state.ready = true
+    })()
 
     // FIXME: Temporary loading of specific packet modules.
     ;(async () => {
       await Packets.load(path.resolve("../aedifex-horde-3"))
       await Packets.load(path.resolve("../aedifex-pathfinder"))
     })()
-
 
     // Add hook for app closing.
     ipcRenderer.on('app-close', _ => {
@@ -209,6 +216,7 @@ style {
   }
   * {
     box-sizing: border-box;
+    transition: all 0.05s ease-in-out;
   }
   html {
     height: 100%;
@@ -244,15 +252,69 @@ style {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
     grid-template-columns: auto minmax(0, 1fr);
+    transition: all 0.5s ease-out;
   }
   .Main__Left {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    transition: all 0.5s ease-out;
   }
   .Main__Right {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
+    transition: all 0.5s ease-out;
+  }
+  .Main.-loading .Main__Right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .LoadingThrobber {
+    display: grid;
+    grid-template-columns: 0fr 1fr 0fr;
+    grid-template-rows: 1fr;
+    width: 25vmin;
+    height: 25vmin;
+    animation: 2s ease-in-out 0s infinite rotate;
+    opacity: 0.5;
+  }
+  .LoadingThrobber__Center {
+    display: grid;
+    grid-template-rows: 1fr .25fr 1fr;
+    grid-template-columns: 1fr;
+  }
+  .LoadingThrobber__Top {
+    border-top-left-radius: 500px;
+    border-top-right-radius: 500px;
+    border: 5vmin solid var(--primary);
+    border-bottom: 0;
+  }
+  .LoadingThrobber__Bottom {
+    display: block;
+    border-bottom-left-radius: 500px;
+    border-bottom-right-radius: 500px;
+    border: 5vmin solid var(--primary);
+    border-top: 0;
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+      width: 10vmin;
+      height: 10vmin;
+    }
+    50% {
+      width: 20vmin;
+      height: 20vmin;
+    }
+    99% {
+      transform: rotate(359deg);
+    }
+    100% {
+      transform: rotate(360deg);
+      width: 10vmin;
+      height: 10vmin;
+    }
   }
 }
 
@@ -266,24 +328,35 @@ Titlebar title='aedifex'
     div.Titlebar__Controls__Button on-click('newFile') -- New File
     div.Titlebar__Controls__Button class={'-noinput': !file?.unsaved} on-click('saveFile') -- Save File
     div.Titlebar__Controls__Button on-click(_=>component.state.showSettings=true) -- Settings
-div.Main
-  div.Main__Left
-    if(state.openDirs.length > 0)
-      for|dir| of=state.openDirs
-        FolderListing dir=dir on-select('openFile') on-close('closeDir', dir) selected=file?.path
-    else
-      div
-  div.Main__Right
-    Tabs tabs=state.files.map(f=>({
-        id: f.id,
-        title: `${f.title} ${f.unsaved?'*':''}`,
-        path: f.path,
-        icon: (f?f.type:'undefined')+"-icon.png",
-      })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
-      FileView file=file
-  if(state.showSettings)
-    FloatingWindow on-close(_=>{component.state.showSettings=false;console.log('should close')})
-      @title
-        span -- Settings
-      @body
-        Settings
+div.Main class={'-loading': !state.ready}
+  if(!state.ready)
+    div.Main__Left
+    div.Main__Right
+      div.LoadingThrobber
+        div.LoadingThrobber__Left
+        div.LoadingThrobber__Center
+          div.LoadingThrobber__Top
+          div.LoadingThrobber__Middle
+          div.LoadingThrobber__Bottom
+        div.LoadingThrobber__Right
+  else
+    div.Main__Left
+      if(state.openDirs.length > 0)
+        for|dir| of=state.openDirs
+          FolderListing dir=dir on-select('openFile') on-close('closeDir', dir) selected=file?.path
+      else
+        div
+    div.Main__Right
+      Tabs tabs=state.files.map(f=>({
+          id: f.id,
+          title: `${f.title} ${f.unsaved?'*':''}`,
+          path: f.path,
+          icon: (f?f.type:'undefined')+"-icon.png",
+        })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
+        FileView file=file
+    if(state.showSettings)
+      FloatingWindow on-close(_=>{component.state.showSettings=false;console.log('should close')})
+        @title
+          span -- Settings
+        @body
+          Settings
