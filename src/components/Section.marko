@@ -36,10 +36,11 @@ style {
   }
   .Section__content {
     padding: .5em;
-    transition: all .5s ease;
+    transition: max-height .1s cubic-bezier(0, 1, 0, 1);
   }
   .Section.-open > .Section__content {
     max-height: 100vh;
+    transition: max-height .1s ease-in-out;
   }
   .Section.-closed > .Section__content {
     max-height: 0;
