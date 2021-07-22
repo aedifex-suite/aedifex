@@ -22,7 +22,7 @@
         "babel-loader": "^8.2.2",
         "chokidar": "^3.5.2",
         "css-loader": "^3.4.2",
-        "dot-dotty": "^0.2.0",
+        "dot-dotty": "^0.7.0",
         "electron": "^9.1.2",
         "electron-context-menu": "^2.3.0",
         "electron-reload": "^1.5.0",
