@@ -58,6 +58,7 @@ class Packets extends EventEmitter {
       p.module = m
       p.package = pkg
     } catch(err) {
+      console.log(err)
       this.#packets.splice(index, 1)
       this.emit('failed', {
         packet: p,
