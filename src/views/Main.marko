@@ -32,6 +32,7 @@ class {
       openDirs: _Config.settings.openDirs,
       showSettings: false,
       ready: false,
+      showNewFileDialog: false,
     }
 
     ;(async () => {
@@ -88,13 +89,23 @@ class {
     await _Config.save(true)
     ipcRenderer.send('closed')
   }
+  onNewFile({packetIndex=0, sheetIndex=0}) {
+    let schema = Packets.packets[packetIndex]?.module?.sheets?.[sheetIndex]?.schema
+    if (!schema) {
+      console.error('missing schema')
+      // TODO: Error popup
+      return
+    }
+    console.log('make new file', schema.create({}))
+  }
   async newFile(type) {
-    let f = new YAMLFile('', type)
+    this.state.showNewFileDialog = true
+    /*let f = new YAMLFile('', type)
     await f.load()
     this.setupFile(f)
     this.state.files.push(f)
     this.state.selectedID = f.id
-    this.syncConfig()
+    this.syncConfig()*/
   }
   async openFile(p, fullPath) {
     let f = this.state.files.find(f=>f.path===p)
@@ -355,8 +366,15 @@ div.Main class={'-loading': !state.ready}
         })) selected=state.selectedID on-select('selectFile') on-close('closeFile') on-rename('renameFile')
         FileView file=file
     if(state.showSettings)
-      FloatingWindow on-close(_=>{component.state.showSettings=false;console.log('should close')})
+      FloatingWindow on-close(_=>{component.state.showSettings=false})
         @title
           span -- Settings
         @body
           Settings
+    if(state.showNewFileDialog)
+      FloatingWindow on-close(_=>{component.state.showNewFileDialog=false})
+        @title
+          span -- New File
+        @body
+          NewFileDialog on-cancel(_=>{component.state.showNewFileDialog=false}) on-create('onNewFile')
+
