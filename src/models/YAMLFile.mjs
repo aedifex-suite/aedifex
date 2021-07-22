@@ -5,17 +5,19 @@ import path from 'path'
 import electron from 'electron'
 const dialog = electron.remote.dialog
 
+import Packets from 'models/_Packets'
+
 /**
  * YAMLFile provides a method to load, store, and modify YAML files backed by a schema.
  */
 class YAMLFile extends unreson.StateObject {
-  constructor(p, type) {
+  constructor(p, obj={}) {
     super()
     this._path = p
+    this._state = obj
     this._shortpath = path.basename(this._path) || 'untitled.aedifex'
     this._loaded = false
     this._saved = true
-    this._type = type
 
     this._id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
@@ -34,27 +36,33 @@ class YAMLFile extends unreson.StateObject {
   }
 
   /**
-   * load reads and parses a YAML document into the YAMLFile's state. It also attempts to acquire a schema from the static typeMap.
+   * load reads and parses a YAML document into the YAMLFile's state.
    */
   async load() {
     if (this.path) {
       let text = await fs.promises.readFile(this.path, {encoding: 'utf8'})
       let obj = yaml.parse(text)
-      this._type = obj.type
-      let schm = YAMLFile._typeMap[this._type]
-      if (schm) {
-        console.log(schm.validate(obj))
-        this._state = schm.conform(obj)
-      } else {
-        this._state = obj
+      // Try to conform it using any supporting sheet we find.
+      try {
+        let schm = Packets.findSupportingSheet(obj.type, obj.version)?.schema
+        if (schm) {
+          obj = schm.conform(obj)
+        }
+      } catch(err) {
+        console.error(err)
       }
+      // Set it regardless.
+      this._state = obj
     } else {
-      if (!this._type || typeof this._type !== 'string') {
-        this._type = Object.keys(YAMLFile._typeMap)[0]
-      }
-      let schm = YAMLFile._typeMap[this._type]
-      if (schm) {
-        this._state = schm.create()
+      if (this._state?.type) {
+        let schm = Packets.findSupportingSheet(this._state.type, this._state.version)?.schema
+        if (schm) {
+          this._state = schm.create()
+        } else {
+          this._state = {}
+        }
+      } else {
+        this._state = {}
       }
     }
   }
@@ -85,7 +93,8 @@ class YAMLFile extends unreson.StateObject {
       return false
     }
 
-    let schm = YAMLFile._typeMap[this._type]
+    let schm = Packets.findSupportingSheet(this._state.type, this._state.version)?.schema
+
     if (schm) {
       let r = schm.validate(this._state)
       if (r.length) {
@@ -215,15 +224,6 @@ class YAMLFile extends unreson.StateObject {
   get title() {
     return path.basename(this._shortpath, path.extname(this._shortpath))
   }
-
-  // type returns a string corresponding to the type of aedifex entry this file represents.
-  get type() {
-    return this._type
-  }
 }
-YAMLFile.addSchisma = (type, schm) => {
-  YAMLFile._typeMap[type] = schm
-}
-YAMLFile._typeMap = {}
 
 export default YAMLFile
