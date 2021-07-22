@@ -1,0 +1,88 @@
+import Packets from 'models/_Packets'
+
+class {
+  onCreate() {
+    this.state = {
+      selectedPacketIndex: 0,
+      selectedSheetIndex: 0,
+    }
+    console.log(Packets.packets)
+  }
+  handleSelect(packetIndex, sheetIndex) {
+    console.log(packetIndex, sheetIndex)
+    this.state.selectedPacketIndex = packetIndex
+    this.state.selectedSheetIndex = sheetIndex
+  }
+}
+
+div.NewFileDialog
+  div.NewFileDialog__content
+    table.NewFileDialog__Packets__List
+      for|packet, packetIndex| of=Packets.packets
+        tr
+          td.NewFileDialog__Packets__List__ItemContainer
+            Section class='NewFileDialog__Packets__List__Item' default='open'
+              @heading 
+                span.NewFileDialog__Packets__List__Item__Title -- ${packet.package?.aedifex?.name || packet.package?.name || packet.source}
+              @content
+                for|sheet, sheetIndex| of=packet.module?.sheets
+                  div.NewFileDialog__Packets__List__Item__Sheet class={'-selected': state.selectedPacketIndex===packetIndex&&state.selectedSheetIndex===sheetIndex} on-click('handleSelect', packetIndex, sheetIndex)
+                    div.NewFileDialog__Packets__List__Item__Sheet__name -- ${sheet.name||'missing name'}
+                    div.NewFileDialog__Packets__List__Item__Sheet__description -- ${sheet.description||'missing description'}
+  div.NewFileDialog__buttons
+    Button on-click(_=>{component.emit('cancel')}) -- cancel
+    Button on-click(_=>{component.emit('create', {packetIndex: state.selectedPacketIndex, sheetIndex: state.selectedSheetIndex})}) -- create
+
+style {
+  .NewFileDialog {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100%;
+  }
+  .NewFileDialog__content {
+  }
+  .NewFileDialog__buttons {
+    display: flex;
+  }
+  .NewFileDialog__buttons > * {
+    flex: 1;
+  }
+  .NewFileDialog__Packets__List {
+    width: 100%;
+  }
+  .NewFileDialog__Packets__List tr {
+    background: var(--listing-bg);
+    border: 1px solid var(--listing-item-fg);
+  }
+  .NewFileDialog__Packets__List__Item {
+
+  }
+  .NewFileDialog__Packets__List__Item__Description {
+    white-space: pre-wrap;
+  }
+  .NewFileDialog__Packets__List__ItemContainer {
+    border: 2px solid transparent;
+  }
+  .NewFileDialog__Packets__List__ItemContainer.-selected {
+    border: var(--tab-border--selected);
+  }
+  .NewFileDialog__Packets__List__Item__Sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    border: 2px solid transparent;
+    user-select: none;
+    cursor: pointer;
+  }
+  .NewFileDialog__Packets__List__Item__Sheet.-selected {
+    border: var(--tab-border--selected);
+  }
+  .NewFileDialog__Packets__List__Item__Sheet__name {
+    font-weight: bold;
+  }
+  .NewFileDialog__Packets__List__Item__Sheet__description {
+    padding-left: 1em;
+  }
+}
