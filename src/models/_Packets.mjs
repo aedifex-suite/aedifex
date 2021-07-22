@@ -76,6 +76,7 @@ class Packets extends EventEmitter {
   }
   //
   findSupportingSheet(type, version) {
+    if (!type) return
     for (let p of this.#packets) {
       for (let s of p.module.sheets) {
         for (let m of s.match) {
