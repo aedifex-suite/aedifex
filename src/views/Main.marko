@@ -89,23 +89,21 @@ class {
     await _Config.save(true)
     ipcRenderer.send('closed')
   }
-  onNewFile({packetIndex=0, sheetIndex=0}) {
+  async onNewFile({packetIndex=0, sheetIndex=0}) {
     let schema = Packets.packets[packetIndex]?.module?.sheets?.[sheetIndex]?.schema
     if (!schema) {
       console.error('missing schema')
       // TODO: Error popup
       return
     }
-    console.log('make new file', schema.create({}))
-  }
-  async newFile(type) {
-    this.state.showNewFileDialog = true
-    /*let f = new YAMLFile('', type)
-    await f.load()
+    let f = new YAMLFile('', schema.create())
     this.setupFile(f)
     this.state.files.push(f)
     this.state.selectedID = f.id
-    this.syncConfig()*/
+    this.syncConfig()
+  }
+  async newFile(type) {
+    this.state.showNewFileDialog = true
   }
   async openFile(p, fullPath) {
     let f = this.state.files.find(f=>f.path===p)
