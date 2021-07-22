@@ -1,0 +1,23 @@
+div.Button on-click(e=>{component.emit('click', e)})
+  <${input.renderBody}/>
+
+style {
+  .Button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2em;
+    min-width: 2em;
+    padding: .15em .5em;
+    background: var(--tab-bg);
+    color: var(--tab-fg);
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--tab-bg);
+    color: var(--tab-fg);
+  }
+  .Button:hover {
+    background: var(--content-bg);
+    color: var(--tab-fg--selected);
+  }
+}
