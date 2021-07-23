@@ -223,6 +223,10 @@ style {
     font-weight: 700;
     src: url('../assets/fonts/PTSans-BoldItalic.ttf');
   }
+  @font-face {
+    font-family: 'Dosis';
+    src: url('../assets/fonts/Dosis-VariableFont_wght.ttf');
+  }
   * {
     box-sizing: border-box;
     transition: all 0.05s ease-in-out;
@@ -249,13 +253,22 @@ style {
     border-radius: 0;
     background: var(--input-bg);
     color: var(--input-fg);
+    font-family: 'Dosis', sans-serif;
+    font-weight: 500;
+    font-size: 10pt;
   }
   input, select, textarea {
     background: var(--input-bg);
     color: var(--input-fg);
     border: 1px solid transparent;
     padding: .25em;
-    margin: .1em;
+    font-family: 'Dosis', sans-serif;
+    font-size: 10pt;
+  }
+  label {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 500;
+    font-size: 10pt;
   }
   .Main {
     display: grid;
