@@ -231,6 +231,16 @@ style {
     box-sizing: border-box;
     transition: all 0.05s ease-in-out;
   }
+  ::-webkit-scrollbar {
+    width: 12px;  /* for vertical scrollbars */
+    height: 12px; /* for horizontal scrollbars */
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--input-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--input-fg);
+  }
   html {
     height: 100%;
   }
