@@ -54,7 +54,7 @@ class {
       try {
         let errs = this.state.sheet.schema.validate(this.file._state)
         for (let err of errs) {
-          this.errors[err.where] = err.message
+          this.errors[err.where] = err.message || err.code
         }
       } catch(e) {
         console.log(e)
