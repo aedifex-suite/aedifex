@@ -63,6 +63,13 @@ style {
     margin: .1em;
     padding: .25em;
   }
+  .SheetEditor fieldset {
+    border: 1px solid var(--editor-fg);
+  }
+  .SheetEditor legend {
+    font-size: 10pt;
+    text-transform: capitalize;
+  }
   .SheetEditor .errorable {
     display: flex;
     align-items: stretch;
@@ -73,6 +80,11 @@ style {
   .SheetEditor .errorable > * {
     flex: 1;
   }
+  .SheetEditor .errorable.-error > input {
+    border: 1px solid var(--error-fg);
+    background: var(--error-bg);
+  }
+
 }
  
 div.SheetEditor key='view'
