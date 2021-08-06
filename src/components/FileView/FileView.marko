@@ -2,6 +2,7 @@
 import path from 'path'
 import dd from 'dot-dotty'
 import PacketLink from 'models/PacketLink'
+import Config from 'models/_Config.mjs'
 import Packets from '../../models/_Packets.mjs'
 
 class {
@@ -38,8 +39,16 @@ class {
         prefix: 'state.',
         throwErrors: false,
       })
-      // Get sheet
+      if (!Config.settings.packetSettings) {
+        Config.settings.packetSettings = {}
+      }
       this.state.sheet = Packets.findSupportingSheet(file.state.type, file.state.version)
+      if (!Config.settings.packetSettings[this.state.sheet.name]) {
+        Config.settings.packetSettings[this.state.sheet.name] = []
+      }
+      this.config = dd(Config.settings.packetSettings[this.state.sheet.name], {
+        throwErrors: false,
+      })
       this.checkFile()
       this.link.ready()
     }
@@ -83,8 +92,8 @@ style {
 
 if(input.file)
   div.FileView
-    SheetEditor link=component.link dot=component.dot file=component.file editor=state.sheet?.editor
-    SheetViewer link=component.link dot=component.dot file=component.file viewer=state.sheet?.viewer
+    SheetEditor link=component.link dot=component.dot file=component.file editor=state.sheet?.editor config=component.config
+    SheetViewer link=component.link dot=component.dot file=component.file viewer=state.sheet?.viewer config=component.config
 else
   div.FileView.-single
     div.FileView__Message
