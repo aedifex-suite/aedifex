@@ -44,7 +44,12 @@ class {
           if (_Config.settings.openFiles.length > 0) {
             let targetIndex = _Config.settings.lastIndex
             for (let p of _Config.settings.openFiles) {
-              await this.openFile(p)
+              try {
+                await this.openFile(p)
+              } catch(err) {
+                // TODO: Show error of missing file.
+                console.error(err)
+              }
             }
             this.state.selectedID = this.state.files.find((_,i)=>i===targetIndex)?.id
           }
@@ -55,7 +60,7 @@ class {
 
     // FIXME: Temporary loading of specific packet modules.
     ;(async () => {
-      await Packets.load(path.resolve("../aedifex-horde-3"))
+      await Packets.load(path.resolve("../hord/aedifex-packet"))
       await Packets.load(path.resolve("../aedifex-pathfinder"))
     })()
 
