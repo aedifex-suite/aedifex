@@ -38,6 +38,7 @@ class {
       this.dot = dd(this.file, {
         prefix: 'state.',
         throwErrors: false,
+        throwTraps: false,
       })
       if (!Config.settings.packetSettings) {
         Config.settings.packetSettings = {}
@@ -48,6 +49,7 @@ class {
       }
       this.config = dd(Config.settings.packetSettings[this.state.sheet.name], {
         throwErrors: false,
+        throwTraps: false,
       })
       this.checkFile()
       this.link.ready()
