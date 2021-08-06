@@ -83,6 +83,7 @@ class Packets extends EventEmitter {
           if (type.match(m.type)) {
             if (semver.satisfies(version, m.version) || !version) {
               return {
+                name: p.package.name,
                 editor: s.editor,
                 viewer: s.viewer,
                 schema: s.schema,
