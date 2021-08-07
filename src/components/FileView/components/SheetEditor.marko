@@ -85,7 +85,17 @@ style {
     border: 1px solid var(--error-fg);
     background: var(--error-bg);
   }
-
+  .SheetEditor summary.-titleAndButtons {
+    display: inline-grid;
+    width: 100%;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+  .SheetEditor summary.-titleAndButtons > :first-child > :nth-child(2) > * {
+    margin-left: 1em;
+    opacity: 0.75;
+    font-size: 70%;
+  }
 }
  
 div.SheetEditor key='view'
